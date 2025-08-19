@@ -164,13 +164,14 @@ button {
   width: 25%;
 }
 
-.main__aside_btn_wrapper {
+.main__aside_btn_groups {
   display: flex;
-  gap: 14px;
   padding: 50px 0;
+  gap: 14px;
+  justify-content: space-between;
 }
 
-.main__aside_btn {
+.main__aside_btn_item {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -180,12 +181,18 @@ button {
   padding: 8px 16px;
   border: 1px solid var(--grey--50);
   color: var(--grey--60);
+  font-size: 14px;
 }
 
-.main__aside_btn:hover {
+.main__aside_btn_item:hover {
   color: var(--grey--80);
   border: 1px solid var(--grey--80);
   background-color: var(--dark--25);
+}
+
+.main__aside_btn_item > svg {
+  width: 18px;
+  height: 18px;
 }
 
 .main__aside_info_section {
@@ -482,4 +489,24 @@ button {
 
 .footer__copyright {
   font-size: 14px;
+}
+
+.main__aside_author_info {
+  margin-top: 40px;
+  background-color: var(--dark--15);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.main__aside_author_photo_wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.main__aside_author_photo {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
