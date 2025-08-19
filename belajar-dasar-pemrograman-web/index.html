@@ -40,8 +40,8 @@
 
     <main class="container main__container">
       <article class="main__article">
-        <section>
-          <h2 class="text-white">Introduction</h2>
+        <section class="main__article_introduction">
+          <h2 class="text-white main__article_title">Introduction</h2>
           <p>
             Artificial Intelligence (AI) has emerged as a transformative force
             in the healthcare industry, reshaping patient care, diagnostics, and
@@ -51,8 +51,10 @@
           </p>
         </section>
 
-        <section>
-          <h2 class="text-white">Artificial Intelligence (AI)</h2>
+        <section class="main__article_section">
+          <h2 class="text-white main__article_title">
+            Artificial Intelligence (AI)
+          </h2>
           <p>
             Artificial Intelligence (AI) has permeated virtually every aspect of
             our lives, and healthcare is no exception. The integration of AI in
@@ -78,8 +80,8 @@
           </p>
         </section>
 
-        <section>
-          <h2 class="text-white">
+        <section class="main__article_section">
+          <h2 class="text-white main__article_title">
             Predictive Analytics and Disease Prevention
           </h2>
           <p>
@@ -97,40 +99,86 @@
       </article>
 
       <aside class="main__aside">
-        <div class="flex">
-          <button><i data-feather="heart"></i> <span>24,5k</span></button>
-          <button><i data-feather="eye"></i> <span>50k</span></button>
-          <button><i data-feather="send"></i> <span>206</span></button>
+        <div class="main__aside_btn_wrapper">
+          <button class="main__aside_btn">
+            <i data-feather="heart"></i> <span>24,5k</span>
+          </button>
+          <button class="main__aside_btn">
+            <i data-feather="eye"></i> <span>50k</span>
+          </button>
+          <button class="main__aside_btn">
+            <i data-feather="send"></i> <span>206</span>
+          </button>
         </div>
 
-        <section>
-          <h3>Article Info</h3>
-          <dl>
-            <dt>Publication Date</dt>
-            <dd>October 13, 2023</dd>
-            <dt>Category</dt>
-            <dd>Healthcare</dd>
-            <dt>Reading Time</dt>
-            <dd>10 Min</dd>
-            <dt>Author</dt>
-            <dd>Dr. Emily Walker</dd>
+        <section class="main__aside_info_section">
+          <h3 class="text-white">Article Info</h3>
+          <dl class="main__aside_info_details">
+            <div class="main__aside_info_wrapper">
+              <dt class="main__aside_title">Publication Date</dt>
+              <dd class="main__aside_data">October 13, 2023</dd>
+            </div>
+            <div class="main__aside_info_wrapper">
+              <dt class="main__aside_title">Category</dt>
+              <dd class="main__aside_data">Healthcare</dd>
+            </div>
+            <div class="main__aside_info_wrapper">
+              <dt class="main__aside_title">Reading Time</dt>
+              <dd class="main__aside_data">10 Min</dd>
+            </div>
+            <div class="main__aside_info_wrapper">
+              <dt class="main__aside_title">Author</dt>
+              <dd class="main__aside_data">Dr. Emily Walker</dd>
+            </div>
           </dl>
         </section>
 
         <nav aria-label="Table of Contents">
-          <h3>Table of Contents</h3>
-          <ul>
-            <li><a href="#">Introduction</a></li>
-            <li><a href="#">AI in Diagnostic Imaging</a></li>
+          <h3 class="main__aside_table_content_title">Table of Contents</h3>
+          <ul class="main__aside_table_content_menu">
             <li>
-              <a href="#">Predictive Analytics and Disease Prevention</a>
+              <a href="#" class="main__aside_table_content_item"
+                >Introduction</a
+              >
             </li>
-            <li><a href="#">Personalized Treatment Plan</a></li>
-            <li><a href="#">Drug Discovery and Research</a></li>
-            <li><a href="#">AI in Telemedicine</a></li>
-            <li><a href="#">Ethical Considerations</a></li>
-            <li><a href="#">The Future of AI in HealthCare</a></li>
-            <li><a href="#">Conclusion</a></li>
+            <li>
+              <a href="#" class="main__aside_table_content_item"
+                >AI in Diagnostic Imaging</a
+              >
+            </li>
+            <li>
+              <a href="#" class="main__aside_table_content_item"
+                >Predictive Analytics and Disease Prevention</a
+              >
+            </li>
+            <li>
+              <a href="#" class="main__aside_table_content_item"
+                >Personalized Treatment Plan</a
+              >
+            </li>
+            <li>
+              <a href="#" class="main__aside_table_content_item"
+                >Drug Discovery and Research</a
+              >
+            </li>
+            <li>
+              <a href="#" class="main__aside_table_content_item"
+                >AI in Telemedicine</a
+              >
+            </li>
+            <li>
+              <a href="#" class="main__aside_table_content_item"
+                >Ethical Considerations</a
+              >
+            </li>
+            <li>
+              <a href="#" class="main__aside_table_content_item"
+                >The Future of AI in HealthCare</a
+              >
+            </li>
+            <li>
+              <a href="#" class="main__aside_table_content_item">Conclusion</a>
+            </li>
           </ul>
         </nav>
       </aside>
