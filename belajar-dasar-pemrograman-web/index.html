@@ -7,9 +7,7 @@
     <title>Belajar Dasar Pembuatan Website</title>
   </head>
   <body>
-    <!-- Header -->
     <header>
-      <!-- Navbar -->
       <nav class="nav__container container">
         <a href="/">
           <img
@@ -24,9 +22,26 @@
           <li class="nav__item"><a href="#">Podcasts</a></li>
           <li class="nav__item"><a href="#">Resources</a></li>
         </ul>
-        <div>
-          <button class="btn__contact_us">Contact Us</button>
-        </div>
+        <button class="btn__contact_us">Contact Us</button>
+
+        <button id="menu-toggle" class="nav__btn_menu">
+          <img src="./assets/hamburger-icon.svg" alt="Hamburger Icon" />
+        </button>
+
+        <ul id="mobile-menu" class="nav__mobile_menu hidden">
+          <li class="nav__mobile_item">
+            <a href="#">Home</a>
+          </li>
+          <li class="nav__mobile_item">
+            <a href="#">News</a>
+          </li>
+          <li class="nav__mobile_item">
+            <a href="#">Podcasts</a>
+          </li>
+          <li class="nav__mobile_item">
+            <a href="#">Resources</a>
+          </li>
+        </ul>
       </nav>
 
       <!-- Header Hero -->
@@ -476,5 +491,6 @@
     <script>
       feather.replace();
     </script>
+    <script src="./navbar.js"></script>
   </body>
 </html>

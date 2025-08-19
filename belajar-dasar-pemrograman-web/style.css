@@ -41,7 +41,7 @@ body {
 
 a {
   text-decoration: none;
-  color: var(--grey--50);
+  color: var(--grey--60);
 }
 
 a:hover {
@@ -56,7 +56,6 @@ button {
 .container {
   max-width: 1124px;
   margin: 0 auto;
-  width: 100%;
   padding: 0 24px;
 }
 
@@ -77,11 +76,16 @@ button {
   margin: 0;
 }
 
+.hidden {
+  display: none;
+}
+
 .nav__container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
+  position: relative;
 }
 
 .nav__menu {
@@ -89,6 +93,29 @@ button {
   list-style: none;
   justify-content: space-between;
   gap: 20px;
+}
+
+.nav__mobile_menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 60px;
+  margin-right: 30px;
+  list-style: none;
+  z-index: 10;
+  background-color: var(--dark--15);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--grey--60);
+}
+
+.nav__mobile_item {
+  color: var(--grey--60);
+  padding: 8px 4px;
+}
+
+.nav__mobile_item > a {
+  display: block;
 }
 
 .btn__contact_us {
@@ -104,10 +131,18 @@ button {
   opacity: 0.75;
 }
 
+.nav__btn_menu {
+  display: none;
+  background-color: transparent;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+}
+
 .hero__container {
   position: relative;
   background-image: url("./assets/hero-background.jpg");
-  background-position: center;
+  background-position: top center;
   background-size: cover;
   background-repeat: no-repeat;
   width: 100%;
@@ -130,7 +165,7 @@ button {
   text-align: center;
   margin-bottom: 30px;
   font-weight: 500;
-  font-size: 48px;
+  font-size: 3rem;
 }
 
 .main__container {
@@ -509,4 +544,31 @@ button {
   width: 100%;
   height: auto;
   object-fit: cover;
+}
+
+@media (width >= 64rem) {
+  .nav__mobile_menu {
+    display: none;
+  }
+}
+
+@media (width < 64rem) {
+  .nav__menu,
+  .btn__contact_us {
+    display: none;
+  }
+
+  .nav__btn_menu {
+    display: block;
+  }
+
+  .hero__title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (width < 48rem) {
+  .hero__title {
+    font-size: 1.6rem;
+  }
 }
