@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kumbh+Sans:wght@100..900&display=swap");
 
 :root {
   /* Color styles */
@@ -28,6 +28,7 @@
   --grey--95: #f1f1f3;
   --grey--97: #f7f7f8;
   --grey--99: #fcfcfd;
+  --font-kumbh: "Kumbh Sans";
 }
 
 body {
@@ -70,6 +71,10 @@ button {
 
 .text-normal {
   font-weight: normal;
+}
+
+.m-0 {
+  margin: 0;
 }
 
 .nav__container {
@@ -351,4 +356,101 @@ button {
 
 .similar_news__article_btn_readmore:hover {
   background-color: var(--dark--15);
+}
+
+.additional__section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: 80px;
+}
+
+.additional__brand_logo_wrapper {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+}
+
+.additional__brand_logo {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+}
+
+.additional__info {
+  flex: 1;
+}
+
+.additional__info_slogan {
+  width: fit-content;
+  background-color: var(--dark--15);
+  color: var(--absolute---white);
+  border-radius: 4px;
+  font-size: 14px;
+  padding: 6px 10px;
+}
+
+.additional__info_title {
+  font-family: var(--font-kumbh);
+  color: var(--absolute---white);
+  font-weight: 500;
+  font-size: 38px;
+  margin-top: 16px;
+  margin-bottom: 30px;
+}
+
+.additional__info_text {
+  font-size: 14px;
+}
+
+.additional__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 100px;
+  list-style: none;
+  padding: 20px;
+  column-gap: 20px;
+  background-color: var(--dark--08);
+  border-radius: 12px;
+}
+
+.additional__list_item {
+  flex: 1;
+  background-color: var(--dark--15);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.additional__list_item_title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.additional__list_item_title:hover h3 {
+  color: var(--grey--60);
+}
+
+.additional__list_item_title > svg {
+  background-color: var(--yellow--55);
+  color: var(--dark--10);
+  width: 18px;
+  height: 18px;
+  padding: 6px;
+  border-radius: 50%;
+}
+
+.additional__list_item_title:hover svg {
+  background-color: var(--yellow--80);
+}
+
+.additional__list_item_content {
+  margin: 0;
+  font-size: 14px;
 }
