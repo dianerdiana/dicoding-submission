@@ -1,0 +1,142 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+:root {
+  /* Color styles */
+  --absolute---white: #ffffff;
+  --absolute---black: #000000;
+  --yellow--55: #ffd11a;
+  --yellow--60: #ffd633;
+  --yellow--70: #ffe066;
+  --yellow--80: #ffeb99;
+  --yellow--90: #fff5cc;
+  --yellow--95: #fffae5;
+  --yellow--97: #fffcf0;
+  --yellow--99: #fffefa;
+  --dark--08: #141414;
+  --dark--10: #1a1a1a;
+  --dark--15: #262626;
+  --dark--20: #333333;
+  --dark--25: #404040;
+  --dark--30: #4d4d4d;
+  --dark--35: #595959;
+  --dark--40: #666666;
+  --grey--50: #7e7e81;
+  --grey--60: #98989a;
+  --grey--70: #b3b3b3;
+  --grey--80: #cccccc;
+  --grey--90: #e4e4e7;
+  --grey--95: #f1f1f3;
+  --grey--97: #f7f7f8;
+  --grey--99: #fcfcfd;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Inter, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--dark--10);
+  color: var(--grey--60);
+}
+
+a {
+  text-decoration: none;
+  color: var(--grey--50);
+}
+
+a:hover {
+  color: var(--grey--80);
+}
+
+button {
+  outline: none;
+  border: none;
+}
+
+.container {
+  max-width: 1124px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 24px;
+}
+
+.brand_logo_text {
+  width: 140px;
+  height: 40px;
+}
+
+.text-white {
+  color: var(--absolute---white);
+}
+
+.nav__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+}
+
+.nav__menu {
+  display: flex;
+  list-style: none;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.btn__contact_us {
+  opacity: 1;
+  padding: 12px 16px;
+  background-color: var(--yellow--55);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn__contact_us:hover {
+  background-color: var(--yellow--55);
+  opacity: 0.75;
+}
+
+.hero__container {
+  position: relative;
+  background-image: url("./assets/hero-background.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 400px;
+  border-bottom: 2px solid var(--dark--15);
+}
+
+.hero__bg_gradient {
+  position: absolute;
+  background-image: linear-gradient(to bottom, #14141400, #14141488, #141414);
+  width: 100%;
+  height: 400px;
+  top: 0;
+}
+
+.hero__title {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 500;
+  font-size: 48px;
+}
+
+.main__container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.main__article {
+  width: calc(75% - 40px);
+  font-size: 16px;
+  border-right: 2px;
+}
+
+.main__aside {
+  width: 25%;
+}
