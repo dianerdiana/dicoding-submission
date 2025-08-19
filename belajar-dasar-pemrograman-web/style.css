@@ -454,3 +454,32 @@ button {
   margin: 0;
   font-size: 14px;
 }
+
+.footer__container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer__nav > a:first-child {
+  border-right: 1px solid var(--grey--60);
+}
+
+.footer__nav > a {
+  font-size: 14px;
+  padding: 0 8px;
+}
+
+.footer__btn_groups {
+  display: flex;
+  column-gap: 20px;
+}
+
+.footer__btn_item {
+  background-color: transparent;
+}
+
+.footer__copyright {
+  font-size: 14px;
+}
