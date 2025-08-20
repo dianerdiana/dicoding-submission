@@ -281,7 +281,7 @@
           </ul>
         </nav>
 
-        <section class="main__aside_author_info">
+        <section class="main__aside_author_info top_author_info">
           <h3 class="text-white text-normal">Author Info</h3>
           <div class="main__aside_author_photo_wrapper">
             <img
@@ -302,7 +302,7 @@
       <section class="similar_news__section">
         <h2 class="text-white text-normal" style="margin: 0">Similar News</h2>
         <a href="#" class="similar_news__btn_all_news">
-          <span>View All News</span> <i data-feather="arrow-up-right"></i>
+          <span>All News</span> <i data-feather="arrow-up-right"></i>
         </a>
 
         <ul class="similar_news__list">
@@ -329,7 +329,7 @@
                   </button>
                 </div>
 
-                <div>
+                <div class="similar_news__article_btn_readmore_wrapper">
                   <a href="#" class="similar_news__article_btn_readmore">
                     <span>Readmore</span> <i data-feather="arrow-up-right"></i>
                   </a>
@@ -360,7 +360,7 @@
                   </button>
                 </div>
 
-                <div>
+                <div class="similar_news__article_btn_readmore_wrapper">
                   <a href="#" class="similar_news__article_btn_readmore">
                     <span>Readmore</span> <i data-feather="arrow-up-right"></i>
                   </a>
@@ -389,7 +389,7 @@
                   </button>
                 </div>
 
-                <div>
+                <div class="similar_news__article_btn_readmore_wrapper">
                   <a href="#" class="similar_news__article_btn_readmore">
                     <span>Readmore</span> <i data-feather="arrow-up-right"></i>
                   </a>
@@ -456,12 +456,29 @@
           </li>
         </ul>
       </section>
+
+      <section class="main__aside_author_info bottom_author_info">
+        <h3 class="text-white text-normal">Author Info</h3>
+        <div class="main__aside_author_photo_wrapper">
+          <img
+            src="./assets/henry-tuchez-unsplash.jpg"
+            alt="Photo Author"
+            class="main__aside_author_photo"
+          />
+        </div>
+        <h4 class="text-white text-normal">Dr. Emily Walker</h4>
+        <p>
+          "I’m Dr. Emily Walker, a writer fascinated by the spaces where science
+          meets story. I love exploring how technology, psychology, and human
+          experience shape the way we live and imagine the future."
+        </p>
+      </section>
     </main>
 
     <footer class="footer__container container">
       <nav aria-label="Footer Navigation" class="footer__nav">
         <a href="#">Terms & Conditions</a>
-        <a href="#">Privacy Policy</a>
+        <a href="#" style="padding-left: 6px">Privacy Policy</a>
       </nav>
 
       <div class="footer__btn_groups">
@@ -484,7 +501,9 @@
         </a>
       </div>
 
-      <p class="footer__copyright">© 2025 FutureTech. All rights reserved.</p>
+      <p class="footer__copyright m-0">
+        © 2025 FutureTech. All rights reserved.
+      </p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
