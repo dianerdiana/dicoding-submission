@@ -508,6 +508,7 @@ button {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 24px;
 }
 
 .footer__nav > a:first-child {
@@ -656,7 +657,6 @@ button {
 
   .footer__container {
     gap: 12px;
-    padding-bottom: 24px;
   }
 
   .bottom_author_info {

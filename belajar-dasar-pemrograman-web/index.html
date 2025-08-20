@@ -305,99 +305,7 @@
           <span>All News</span> <i data-feather="arrow-up-right"></i>
         </a>
 
-        <ul class="similar_news__list">
-          <li class="similar_news__list_item">
-            <article class="similar_news__article_card">
-              <div class="similar_news__article_img_cover_wrapper">
-                <img
-                  src="./assets/article-image-01.jpg"
-                  alt="article-img-01"
-                  class="similar_news__article_img_cover"
-                />
-              </div>
-              <h3 class="similar_news__article_title">
-                A Decision Victory for Progressive Policies
-              </h3>
-              <p class="similar_news__article_tag">Politics</p>
-              <footer class="similar_news__article_footer">
-                <div class="similar_news__article_btn_wrapper">
-                  <button class="similar_news__article_btn">
-                    <i data-feather="heart"></i> <span>2,2k</span>
-                  </button>
-                  <button class="similar_news__article_btn">
-                    <i data-feather="send"></i> <span>90</span>
-                  </button>
-                </div>
-
-                <div class="similar_news__article_btn_readmore_wrapper">
-                  <a href="#" class="similar_news__article_btn_readmore">
-                    <span>Readmore</span> <i data-feather="arrow-up-right"></i>
-                  </a>
-                </div>
-              </footer>
-            </article>
-          </li>
-          <li class="similar_news__list_item">
-            <article class="similar_news__article_card">
-              <div class="similar_news__article_img_cover_wrapper">
-                <img
-                  src="./assets/article-image-02.jpg"
-                  alt="article-img-01"
-                  class="similar_news__article_img_cover"
-                />
-              </div>
-              <h3 class="similar_news__article_title">
-                Tech Giants Unveil Cutting-Edge AI Innovations
-              </h3>
-              <p class="similar_news__article_tag">Technology</p>
-              <footer class="similar_news__article_footer">
-                <div class="similar_news__article_btn_wrapper">
-                  <button class="similar_news__article_btn">
-                    <i data-feather="heart"></i> <span>2,2k</span>
-                  </button>
-                  <button class="similar_news__article_btn">
-                    <i data-feather="send"></i> <span>90</span>
-                  </button>
-                </div>
-
-                <div class="similar_news__article_btn_readmore_wrapper">
-                  <a href="#" class="similar_news__article_btn_readmore">
-                    <span>Readmore</span> <i data-feather="arrow-up-right"></i>
-                  </a>
-                </div>
-              </footer>
-            </article>
-          </li>
-          <li class="similar_news__list_item">
-            <article class="similar_news__article_card">
-              <div class="similar_news__article_img_cover_wrapper">
-                <img
-                  src="./assets/article-image-03.jpg"
-                  alt="article-img-01"
-                  class="similar_news__article_img_cover"
-                />
-              </div>
-              <h3 class="similar_news__article_title">Covid-19 Variant</h3>
-              <p class="similar_news__article_tag">Health</p>
-              <footer class="similar_news__article_footer">
-                <div class="similar_news__article_btn_wrapper">
-                  <button class="similar_news__article_btn">
-                    <i data-feather="heart"></i> <span>2,2k</span>
-                  </button>
-                  <button class="similar_news__article_btn">
-                    <i data-feather="send"></i> <span>90</span>
-                  </button>
-                </div>
-
-                <div class="similar_news__article_btn_readmore_wrapper">
-                  <a href="#" class="similar_news__article_btn_readmore">
-                    <span>Readmore</span> <i data-feather="arrow-up-right"></i>
-                  </a>
-                </div>
-              </footer>
-            </article>
-          </li>
-        </ul>
+        <ul id="similar_news__items" class="similar_news__list"></ul>
       </section>
 
       <section class="additional__section">
@@ -507,9 +415,10 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="./navbar.js"></script>
+    <script src="./similar-news.js"></script>
     <script>
       feather.replace();
     </script>
-    <script src="./navbar.js"></script>
   </body>
 </html>
