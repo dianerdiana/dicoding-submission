@@ -70,6 +70,10 @@ input {
   border: 1px solid var(--blue);
 }
 
+.invalid {
+  border: 1px solid red;
+}
+
 .input_group {
   margin-bottom: 12px;
 }
@@ -145,13 +149,14 @@ input {
 }
 
 .form__input_search {
-  width: 80%;
+  width: 90%;
 }
 
 .section__unread {
   width: 100%;
   border-radius: 10px;
-  margin-top: 24px;
+  margin-top: 60px;
+  margin-bottom: 60px;
 }
 
 .section__read {
@@ -171,7 +176,7 @@ input {
 }
 
 .book_item > h3[data-testid='bookItemTitle'] {
-  font-size: 20px;
+  font-size: 16px;
   width: calc(21% - 10px);
   padding: 12px;
   margin: 0;
