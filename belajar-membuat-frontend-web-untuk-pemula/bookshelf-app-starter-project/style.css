@@ -7,6 +7,7 @@
   --genteng: #f4683c;
   --grey: #d6d6d6;
   --blue: #0071e3;
+  --green: #42bb4e;
 }
 
 * {
@@ -35,13 +36,6 @@ header {
 header > h1 {
   color: var(--white);
   margin: 0;
-}
-
-main {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 32px;
 }
 
 input::placeholder {
@@ -120,7 +114,6 @@ input {
 }
 
 .section__form_add {
-  width: calc(50% - 32px);
   border-radius: 10px;
   background-color: var(--white);
   padding: 28px 48px 48px 48px;
@@ -134,7 +127,6 @@ input {
 }
 
 .section__form_search {
-  width: calc(50% - 32px);
   border-radius: 10px;
   background-color: var(--white);
   padding: 28px 48px 48px 48px;
@@ -159,15 +151,84 @@ input {
 .section__unread {
   width: 100%;
   border-radius: 10px;
-  background-color: var(--white);
-  padding: 28px 48px 48px 48px;
   margin-top: 24px;
 }
 
 .section__read {
   width: 100%;
   border-radius: 10px;
-  background-color: var(--white);
-  padding: 28px 48px 48px 48px;
   margin-top: 24px;
+}
+
+.book_item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  background-color: var(--white);
+  border-radius: 6px;
+}
+
+.book_item > h3[data-testid='bookItemTitle'] {
+  font-size: 20px;
+  width: calc(21% - 10px);
+  padding: 12px;
+  margin: 0;
+}
+
+.book_item > p[data-testid='bookItemAuthor'] {
+  width: calc(24% - 10px);
+  padding: 12px;
+  margin: 0;
+}
+
+.book_item > p[data-testid='bookItemYear'] {
+  width: calc(12% - 10px);
+  padding: 12px;
+  margin: 0;
+}
+
+.book_item_actions {
+  width: calc(43% - 10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+}
+
+.btn_actions {
+  outline: none;
+  border: none;
+  border-radius: 4px;
+  color: var(--white);
+  padding: 8px 20px;
+  cursor: pointer;
+}
+.book_item_actions > button[data-testid='bookItemIsCompleteButton'] {
+  background-color: var(--green);
+}
+.book_item_actions > button[data-testid='bookItemDeleteButton'] {
+  background-color: var(--genteng);
+}
+.book_item_actions > button[data-testid='bookItemEditButton'] {
+  background-color: var(--blue);
+}
+
+@media (width < 1024px) {
+  .book_item {
+    display: block;
+  }
+
+  .book_item > h3[data-testid='bookItemTitle'],
+  .book_item > h3[data-testid='bookItemAuthor'],
+  .book_item > h3[data-testid='bookItemYear'],
+  .book_item_actions {
+    width: 100%;
+  }
+
+  .book_item_actions {
+    justify-content: start;
+    gap: 24px;
+  }
 }
