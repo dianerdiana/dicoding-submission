@@ -217,9 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
       appService.updateStatusBookById(bookId);
       appService.renderBooks();
     }
-  });
 
-  document.addEventListener('click', (e) => {
     if (e.target.matches('[data-testid="bookItemDeleteButton"]')) {
       const bookItem = e.target.closest('[data-testid="bookItem"]');
       const bookId = bookItem.getAttribute('data-bookid');
