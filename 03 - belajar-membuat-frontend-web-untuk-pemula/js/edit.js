@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+function main() {
   const appService = new AppService(STORAGE_NAME);
 
   const queryString = window.location.search;
@@ -31,4 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
     alert(`Berhasil mengubah data buku`);
     window.location.href = 'index.html';
   });
-});
+}
+
+document.addEventListener('DOMContentLoaded', main);
