@@ -16,8 +16,12 @@ function main() {
 
     const title = inputTitle.value.trim();
     const author = inputAuthor.value.trim();
-    const year = inputYear.value.trim();
+    const year = Number(inputYear.value.trim());
     const isComplete = checkboxIsComplete.checked;
+
+    if (typeof year !== 'number') {
+      return alert('Tahun harus berupa angka.');
+    }
 
     appService.createBook(title, author, year, isComplete);
     createBookForm.reset();
