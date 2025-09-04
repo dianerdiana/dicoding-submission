@@ -1,6 +1,3 @@
-import { AppService } from './AppService.js';
-import { STORAGE_NAME } from './constant.js';
-
 document.addEventListener('DOMContentLoaded', () => {
   const appService = new AppService(STORAGE_NAME);
 

@@ -1,6 +1,3 @@
-import { AppService } from './AppService.js';
-import { STORAGE_NAME } from './constant.js';
-
 function main() {
   const appService = new AppService(STORAGE_NAME);
   appService.initializeData();

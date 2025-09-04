@@ -1,1 +1,1 @@
-export const STORAGE_NAME = 'BOOK_LIST';
+const STORAGE_NAME = 'BOOK_LIST';

@@ -1,6 +1,14 @@
-import { Book } from './Book.js';
+class Book {
+  constructor(id, title, author, year, isComplete) {
+    this.id = id;
+    this.title = title;
+    this.author = author;
+    this.year = year;
+    this.isComplete = isComplete;
+  }
+}
 
-export class AppService {
+class AppService {
   constructor(storageName) {
     this.STORAGE_NAME = storageName;
   }
