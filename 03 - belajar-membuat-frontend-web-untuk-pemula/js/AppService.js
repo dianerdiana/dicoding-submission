@@ -82,6 +82,15 @@ export class AppService {
     }
   }
 
+  getBooksByTitle(title) {
+    const storageData = this.getParsedStorageData();
+    const books = storageData.filter((book) =>
+      String(book.title).toLowerCase().includes(title.toLowerCase())
+    );
+
+    return books;
+  }
+
   renderBooks() {
     const incompleteBookList = document.getElementById('incompleteBookList');
     const completeBookList = document.getElementById('completeBookList');
@@ -174,6 +183,59 @@ export class AppService {
       `;
 
       completeBookList.append(bookItem);
+    });
+  }
+
+  renderSearchBooks(books = []) {
+    const searchResultBookList = document.getElementById('searchResultBookList');
+    const searchResultBookListHeader = document.getElementById('searchResultBookListHeader');
+    const searchResultEmpty = document.getElementById('searchResultEmpty');
+
+    if (books.length) {
+      searchResultBookListHeader.classList.remove('hidden');
+      searchResultEmpty.classList.add('hidden');
+    } else {
+      searchResultBookListHeader.classList.add('hidden');
+      searchResultEmpty.classList.remove('hidden');
+    }
+
+    searchResultBookList.innerHTML = '';
+
+    books.forEach((book) => {
+      const bookItem = document.createElement('div');
+
+      bookItem.setAttribute('data-bookid', book.id);
+      bookItem.setAttribute('data-testid', 'bookItem');
+      bookItem.classList.add('book_item');
+
+      bookItem.innerHTML = `
+        <h3 data-testid="bookItemTitle">${book.title}</h3>
+        <p data-testid="bookItemAuthor">${book.author}</p>
+        <p data-testid="bookItemYear">${book.year}</p>
+        <div class="book_item_actions">
+          <button 
+            data-testid="bookItemIsCompleteButton" 
+            class="btn_actions"
+          >
+            ${book.isComplete ? 'Belum Selesai' : 'Selesai Dibaca'}
+          </button>
+          <button 
+            data-testid="bookItemDeleteButton" 
+            class="btn_actions"
+          >
+            Hapus Buku
+          </button>
+          <a 
+            data-testid="bookItemEditButton" 
+            class="btn_actions"
+            href="edit.html?bookId=${book.id}"
+          >
+            Edit Buku
+          </a>
+        </div>
+      `;
+
+      searchResultBookList.append(bookItem);
     });
   }
 }

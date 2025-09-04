@@ -6,19 +6,15 @@ function main() {
   appService.initializeData();
   appService.renderBooks();
 
-  // Book Form Elements
-  const formCreate = document.getElementById('bookForm');
+  const createBookForm = document.getElementById('bookForm');
   const inputTitle = document.getElementById('bookFormTitle');
   const inputAuthor = document.getElementById('bookFormAuthor');
   const inputYear = document.getElementById('bookFormYear');
   const checkboxIsComplete = document.getElementById('bookFormIsComplete');
+  const searchBookForm = document.getElementById('searchBook');
+  const searchBookTitleInput = document.getElementById('searchBookTitle');
 
-  // Button Element
-  const bookItemIsCompleteButton = document.querySelector(
-    '[data-testid="bookItemIsCompleteButton"]'
-  );
-
-  formCreate.addEventListener('submit', (event) => {
+  createBookForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const title = inputTitle.value.trim();
@@ -27,27 +23,36 @@ function main() {
     const isComplete = checkboxIsComplete.checked;
 
     appService.createBook(title, author, year, isComplete);
-    formCreate.reset();
+    createBookForm.reset();
     appService.renderBooks();
     alert(`Buku dengan judul "${title}" berhasil ditambahkan`);
   });
 
-  document.addEventListener('click', (e) => {
-    if (e.target.matches('[data-testid="bookItemIsCompleteButton"]')) {
-      const bookItem = e.target.closest('[data-testid="bookItem"]');
+  document.addEventListener('click', (event) => {
+    if (event.target.matches('[data-testid="bookItemIsCompleteButton"]')) {
+      const bookItem = event.target.closest('[data-testid="bookItem"]');
       const bookId = bookItem.getAttribute('data-bookid');
 
       appService.updateStatusBookById(bookId);
       appService.renderBooks();
     }
 
-    if (e.target.matches('[data-testid="bookItemDeleteButton"]')) {
-      const bookItem = e.target.closest('[data-testid="bookItem"]');
+    if (event.target.matches('[data-testid="bookItemDeleteButton"]')) {
+      const bookItem = event.target.closest('[data-testid="bookItem"]');
       const bookId = bookItem.getAttribute('data-bookid');
 
       appService.deleteBookById(bookId);
       appService.renderBooks();
     }
+  });
+
+  searchBookForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const title = searchBookTitleInput.value.trim();
+    const books = appService.getBooksByTitle(title);
+
+    appService.renderSearchBooks(books);
   });
 }
 

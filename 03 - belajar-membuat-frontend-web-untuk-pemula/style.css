@@ -152,14 +152,14 @@ input {
   width: 90%;
 }
 
-.section__unread {
+.section__incomplete {
   width: 100%;
   border-radius: 10px;
   margin-top: 60px;
   margin-bottom: 60px;
 }
 
-.section__read {
+.section__completed {
   width: 100%;
   border-radius: 10px;
   margin-top: 24px;
@@ -177,13 +177,13 @@ input {
 
 .book_item > h3[data-testid='bookItemTitle'] {
   font-size: 16px;
-  width: calc(21% - 10px);
+  width: calc(23% - 10px);
   padding: 12px;
   margin: 0;
 }
 
 .book_item > p[data-testid='bookItemAuthor'] {
-  width: calc(24% - 10px);
+  width: calc(22% - 10px);
   padding: 12px;
   margin: 0;
 }
@@ -222,6 +222,53 @@ input {
   text-decoration: none;
 }
 
+.book_item_header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  background-color: var(--white);
+  border-radius: 6px;
+}
+
+.book_item_header > .title {
+  font-size: 16px;
+  width: calc(23% - 10px);
+  padding: 12px;
+  margin: 0;
+  font-weight: bold;
+}
+
+.book_item_header > .author {
+  width: calc(22% - 10px);
+  padding: 12px;
+  margin: 0;
+  font-weight: bold;
+}
+
+.book_item_header > .year {
+  width: calc(12% - 10px);
+  padding: 12px;
+  margin: 0;
+  font-weight: bold;
+}
+
+.book_item_header > .actions {
+  width: calc(43% - 10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin: 0;
+  text-align: end;
+  font-weight: bold;
+}
+
+.hidden {
+  display: none !important;
+}
+
 @media (width < 1024px) {
   .book_item {
     display: block;
@@ -237,5 +284,9 @@ input {
   .book_item_actions {
     justify-content: start;
     gap: 24px;
+  }
+
+  .book_item_header {
+    display: none;
   }
 }

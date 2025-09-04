@@ -67,7 +67,7 @@
             data-testid="bookFormSubmitButton"
             class="btn__submit"
           >
-            Masukkan Buku ke rak <span>Belum selesai dibaca</span>
+            Masukkan Buku ke Rak
           </button>
         </form>
       </section>
@@ -82,6 +82,7 @@
               type="text"
               data-testid="searchBookFormTitleInput"
               class="form__input"
+              required
             />
           </div>
           <div class="btn__search_wrapper">
@@ -95,52 +96,46 @@
             </button>
           </div>
         </form>
-        <div>
-          <div
-            id="search_title"
-            data-testid="bookItem"
-            class="book_item"
-            style="background-color: transparent"
-          >
-            <h3 data-testid="bookItemTitle" style="font-size: 16px">Judul Buku</h3>
-            <p data-testid="bookItemAuthor" style="font-weight: bold">Penulis</p>
-            <p data-testid="bookItemYear" style="font-weight: bold">Tahun</p>
-            <div class="book_item_actions">
-              <p style="margin: 0; font-weight: bold; text-align: center; width: 100%">Actions</p>
-            </div>
-          </div>
-          <div data-bookid="456456456" data-testid="bookItem" class="book_item">
-            <h3 data-testid="bookItemTitle">Judul Buku 2</h3>
-            <p data-testid="bookItemAuthor">Penulis: Penulis Buku 2</p>
-            <p data-testid="bookItemYear">Tahun: 2030</p>
-            <div class="book_item_actions">
-              <button data-testid="bookItemIsCompleteButton" class="btn_actions">
-                Selesai dibaca
-              </button>
-              <button data-testid="bookItemDeleteButton" class="btn_actions">Hapus Buku</button>
-              <button data-testid="bookItemEditButton" class="btn_actions">Edit Buku</button>
-            </div>
+
+        <div id="searchResultBookListHeader" class="book_item_header hidden">
+          <p class="title">Judul Buku</p>
+          <p class="author">Penulis</p>
+          <p class="year">Tahun</p>
+          <div class="actions">
+            <p style="width: 100%; text-align: center; margin: 0">Actions</p>
           </div>
         </div>
+        <div id="searchResultEmpty" class="hidden" style="margin-top: 10px">
+          <p style="text-align: center">Hasil tidak ditemukan</p>
+        </div>
+        <div id="searchResultBookList"></div>
       </section>
 
-      <section class="section__unread">
+      <section class="section__incomplete">
         <h2>Belum selesai dibaca</h2>
 
-        <div data-testid="bookItem" class="book_item" style="background-color: transparent">
-          <h3 data-testid="bookItemTitle" style="font-size: 16px">Judul Buku</h3>
-          <p data-testid="bookItemAuthor" style="font-weight: bold">Penulis</p>
-          <p data-testid="bookItemYear" style="font-weight: bold">Tahun</p>
-          <div class="book_item_actions">
-            <p style="margin: 0; font-weight: bold; text-align: center; width: 100%">Actions</p>
+        <div class="book_item_header">
+          <p class="title">Judul Buku</p>
+          <p class="author">Penulis</p>
+          <p class="year">Tahun</p>
+          <div class="actions">
+            <p style="width: 100%; text-align: center; margin: 0">Actions</p>
           </div>
         </div>
         <div id="incompleteBookList" data-testid="incompleteBookList"></div>
       </section>
 
-      <section class="section__read">
+      <section class="section__completed">
         <h2>Selesai dibaca</h2>
 
+        <div class="book_item_header">
+          <p class="title">Judul Buku</p>
+          <p class="author">Penulis</p>
+          <p class="year">Tahun</p>
+          <div class="actions">
+            <p style="width: 100%; text-align: center; margin: 0">Actions</p>
+          </div>
+        </div>
         <div id="completeBookList" data-testid="completeBookList"></div>
       </section>
     </main>
