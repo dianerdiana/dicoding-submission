@@ -209,15 +209,17 @@ input {
   color: var(--white);
   padding: 8px 20px;
   cursor: pointer;
+  font-size: 13px;
 }
-.book_item_actions > button[data-testid='bookItemIsCompleteButton'] {
+.book_item_actions > [data-testid='bookItemIsCompleteButton'] {
   background-color: var(--green);
 }
-.book_item_actions > button[data-testid='bookItemDeleteButton'] {
+.book_item_actions > [data-testid='bookItemDeleteButton'] {
   background-color: var(--genteng);
 }
-.book_item_actions > button[data-testid='bookItemEditButton'] {
+.book_item_actions > [data-testid='bookItemEditButton'] {
   background-color: var(--blue);
+  text-decoration: none;
 }
 
 @media (width < 1024px) {

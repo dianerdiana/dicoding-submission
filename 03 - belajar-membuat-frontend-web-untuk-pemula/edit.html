@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Bookshelf App</title>
+
+    <!-- Impor script kamu di sini -->
+    <!-- Lampirkan `defer` jika pemanggilan dilakukan dalam <head> -->
+    <script defer src="./js/edit.js" type="module"></script>
+  </head>
+  <body>
+    <header>
+      <h1 class="container">Bookshelf App</h1>
+    </header>
+
+    <main class="container" style="padding-top: 32px; padding-bottom: 50px">
+      <section class="section__form_add">
+        <h2>Edit Buku</h2>
+        <form id="bookForm" data-testid="bookForm" style="overflow: hidden">
+          <div class="input_group">
+            <label for="bookFormTitle" class="form_label">Judul</label>
+            <input
+              class="form__input"
+              id="bookFormTitle"
+              type="text"
+              required
+              data-testid="bookFormTitleInput"
+              placeholder="Judul"
+            />
+          </div>
+          <div class="input_group">
+            <label for="bookFormAuthor" class="form_label">Penulis</label>
+            <input
+              class="form__input"
+              id="bookFormAuthor"
+              type="text"
+              required
+              data-testid="bookFormAuthorInput"
+              placeholder="Penulis"
+            />
+          </div>
+          <div class="input_group">
+            <label for="bookFormYear" class="form_label">Tahun</label>
+            <input
+              class="form__input"
+              id="bookFormYear"
+              type="number"
+              required
+              data-testid="bookFormYearInput"
+              placeholder="Tahun"
+            />
+          </div>
+          <div class="input_group">
+            <input
+              class="form__checkbox"
+              id="bookFormIsComplete"
+              type="checkbox"
+              data-testid="bookFormIsCompleteCheckbox"
+            />
+            <label for="bookFormIsComplete" class="form_label_checkbox">Selesai dibaca</label>
+          </div>
+          <button
+            id="bookFormSubmit"
+            type="submit"
+            data-testid="bookFormSubmitButton"
+            class="btn__submit"
+          >
+            Edit Buku
+          </button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,17 +1,6 @@
-const STORAGE_NAME = 'BOOK_LIST';
-const FORM_CREATE_ID = 'bookForm';
+import { Book } from './Book.js';
 
-class Book {
-  constructor(id, title, author, year, isComplete) {
-    this.id = id;
-    this.title = title;
-    this.author = author;
-    this.year = year;
-    this.isComplete = isComplete;
-  }
-}
-
-class AppService {
+export class AppService {
   constructor(storageName) {
     this.STORAGE_NAME = storageName;
   }
@@ -74,6 +63,15 @@ class AppService {
     this.updateStorage(storageData);
   }
 
+  updateBookById(bookId, title, author, year, isComplete) {
+    const storageData = this.getParsedStorageData();
+    const indexBook = storageData.findIndex((book) => book.id === bookId);
+    const book = storageData[indexBook];
+    storageData[indexBook] = { ...book, title, author, year, isComplete };
+
+    this.updateStorage(storageData);
+  }
+
   deleteBookById(bookId) {
     const storageData = this.getParsedStorageData();
     const userConfirmed = confirm('Apakah kamu yakin ingin menghapus buku ini?');
@@ -127,12 +125,13 @@ class AppService {
           >
             Hapus Buku
           </button>
-          <button 
+          <a 
             data-testid="bookItemEditButton" 
             class="btn_actions"
+            href="edit.html?bookId=${book.id}"
           >
             Edit Buku
-          </button>
+          </a>
         </div>
       `;
 
@@ -164,12 +163,13 @@ class AppService {
           >
             Hapus Buku
           </button>
-          <button 
+          <a 
             data-testid="bookItemEditButton" 
             class="btn_actions"
+            href="edit.html?bookId=${book.id}"
           >
             Edit Buku
-          </button>
+          </a>
         </div>
       `;
 
@@ -177,53 +177,3 @@ class AppService {
     });
   }
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-  const appService = new AppService(STORAGE_NAME);
-  appService.initializeData();
-  appService.renderBooks();
-
-  // Book Form Elements
-  const formCreate = document.getElementById('bookForm');
-  const inputTitle = document.getElementById('bookFormTitle');
-  const inputAuthor = document.getElementById('bookFormAuthor');
-  const inputYear = document.getElementById('bookFormYear');
-  const checkboxIsComplete = document.getElementById('bookFormIsComplete');
-
-  // Button Element
-  const bookItemIsCompleteButton = document.querySelector(
-    '[data-testid="bookItemIsCompleteButton"]'
-  );
-
-  formCreate.addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    const title = inputTitle.value.trim();
-    const author = inputAuthor.value.trim();
-    const year = inputYear.value.trim();
-    const isComplete = checkboxIsComplete.checked;
-
-    appService.createBook(title, author, year, isComplete);
-    formCreate.reset();
-    appService.renderBooks();
-    alert(`Buku dengan judul "${title}" berhasil ditambahkan`);
-  });
-
-  document.addEventListener('click', (e) => {
-    if (e.target.matches('[data-testid="bookItemIsCompleteButton"]')) {
-      const bookItem = e.target.closest('[data-testid="bookItem"]');
-      const bookId = bookItem.getAttribute('data-bookid');
-
-      appService.updateStatusBookById(bookId);
-      appService.renderBooks();
-    }
-
-    if (e.target.matches('[data-testid="bookItemDeleteButton"]')) {
-      const bookItem = e.target.closest('[data-testid="bookItem"]');
-      const bookId = bookItem.getAttribute('data-bookid');
-
-      appService.deleteBookById(bookId);
-      appService.renderBooks();
-    }
-  });
-});
