@@ -1,8 +1,8 @@
 export const FormSearch = () => {
   return (
-    <section className="rounded-2xl shadow-2xl bg-secondary px-5 py-5 mt-5">
+    <section className="rounded-2xl shadow bg-secondary px-5 py-5 mt-5">
       <h1 className="font-semibold text-xl text-primary mb-2">Search Note</h1>
-      <form>
+      <form className="flex flex-col">
         <input
           name="search"
           id="search"
