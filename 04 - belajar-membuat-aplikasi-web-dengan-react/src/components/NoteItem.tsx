@@ -1,6 +1,6 @@
 import { Archive, FileText, Trash2 } from "react-feather";
 import type { NoteItemType } from "../types/noteItem";
-import { timeAgo } from "../utils/timeAgo";
+import { showFormattedDate } from "../utils";
 
 type NoteItemProps = NoteItemType & {
   deleteNote: CallableFunction;
@@ -39,7 +39,7 @@ export const NoteItem = ({
         </div>
       </section>
       <p>{body}</p>
-      <p className="text-sm justify-self-end">{timeAgo(createdAt)}</p>
+      <p className="text-sm justify-self-end">{showFormattedDate(createdAt)}</p>
     </li>
   );
 };

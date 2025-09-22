@@ -15,9 +15,10 @@ import { Archive, FileText } from "react-feather";
 
 // Types
 import type { NoteItemType } from "./types/noteItem";
+import { getInitialData } from "./utils";
 
 function App() {
-  const [notes, setNotes] = useState<NoteItemType[] | []>([]);
+  const [notes, setNotes] = useState<NoteItemType[] | []>(getInitialData());
   const [searchResults, setSearchResults] = useState<NoteItemType[] | []>([]);
   const [searchText, setSearchText] = useState("");
 
