@@ -27,8 +27,10 @@ export const NoteList = ({ notes, deleteNote }: NoteListType) => {
             />
           ))
         ) : (
-          <li>
-            <p>Tidak ada catatan</p>
+          <li className="bg-secondary rounded-2xl px-4 py-4 w-full">
+            <p className="text-center font-semibold text-primary">
+              Tidak ada catatan
+            </p>
           </li>
         )}
       </ul>

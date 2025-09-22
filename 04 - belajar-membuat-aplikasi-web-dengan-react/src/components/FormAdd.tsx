@@ -1,6 +1,8 @@
 import { useState, type FormEventHandler } from "react";
 import toast from "react-hot-toast";
 
+const MAX_LENGTH_TITLE = 50;
+
 export const FormAdd = ({ addNote }: { addNote: CallableFunction }) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -12,18 +14,29 @@ export const FormAdd = ({ addNote }: { addNote: CallableFunction }) => {
     toast.success("Successfuly add a new note");
   };
 
+  const onChangeTitle = (value: string) => {
+    if (value.length > MAX_LENGTH_TITLE) return;
+
+    setTitle(value);
+  };
+
   return (
     <section className="rounded-2xl shadow bg-secondary px-9 py-10">
       <h1 className="font-semibold text-3xl text-primary mb-2">Add a Note</h1>
       <form className="flex flex-col" onSubmit={onSubmit}>
-        <input
-          name="title"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Title"
-          className="text-2xl mb-4 text-primary border-none outline-none"
-        />
+        <div className="mb-4">
+          <input
+            name="title"
+            id="title"
+            value={title}
+            onChange={(e) => onChangeTitle(e.target.value)}
+            placeholder="Title"
+            className="text-2xl text-primary border-none outline-none w-full"
+          />
+          <p className="text-xs text-primary">
+            Remaining Characters: {MAX_LENGTH_TITLE - title.length}
+          </p>
+        </div>
         <textarea
           name="body"
           id="body"
