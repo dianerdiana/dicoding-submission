@@ -1,4 +1,10 @@
-export const FormSearch = () => {
+export const FormSearch = ({
+  searchNote,
+  searchText,
+}: {
+  searchNote: CallableFunction;
+  searchText: string;
+}) => {
   return (
     <section className="rounded-2xl shadow bg-secondary px-5 py-5 mt-5">
       <h1 className="font-semibold text-xl text-primary mb-2">Search Note</h1>
@@ -6,6 +12,8 @@ export const FormSearch = () => {
         <input
           name="search"
           id="search"
+          value={searchText}
+          onChange={(e) => searchNote(e.target.value)}
           placeholder="Search Title..."
           className="text-lg mb-4 text-primary border-none outline-none"
         />
