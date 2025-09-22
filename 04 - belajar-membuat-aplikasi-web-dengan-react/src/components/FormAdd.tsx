@@ -12,6 +12,8 @@ export const FormAdd = ({ addNote }: { addNote: CallableFunction }) => {
     addNote({ title, body });
 
     toast.success("Successfuly add a new note");
+    setTitle("");
+    setBody("");
   };
 
   const onChangeTitle = (value: string) => {

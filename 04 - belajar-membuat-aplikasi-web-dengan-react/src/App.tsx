@@ -1,13 +1,20 @@
+// React
 import { useState } from "react";
+
+// Custom Components
 import { FormAdd } from "./components/FormAdd";
 import { FormSearch } from "./components/FormSearch";
 import { Header } from "./components/Header";
 import { NoteList } from "./components/NoteList";
-import type { NoteItemType } from "./types/noteItem";
-import toast from "react-hot-toast";
-import { Archive, FileText } from "react-feather";
 import { NoteCategory } from "./components/NoteCategory";
 import { Footer } from "./components/Footer";
+
+// Thirdparty
+import toast from "react-hot-toast";
+import { Archive, FileText } from "react-feather";
+
+// Types
+import type { NoteItemType } from "./types/noteItem";
 
 function App() {
   const [notes, setNotes] = useState<NoteItemType[] | []>([]);
@@ -68,10 +75,8 @@ function App() {
   const getNotes = () => {
     let allNotes: NoteItemType[] = [];
 
-    if (searchText.length > 0 && searchResults.length > 0) {
+    if (searchText.length > 0) {
       allNotes = searchResults;
-    } else if (searchText.length > 0 && searchResults.length === 0) {
-      allNotes = notes;
     } else {
       allNotes = notes;
     }

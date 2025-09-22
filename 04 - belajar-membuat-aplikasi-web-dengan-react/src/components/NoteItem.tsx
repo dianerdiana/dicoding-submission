@@ -17,8 +17,11 @@ export const NoteItem = ({
   updateArchived,
 }: NoteItemProps) => {
   return (
-    <li key={id} className="rounded-2xl bg-secondary w-[32%] p-5 shadow">
-      <section className="flex justify-between mb-4">
+    <li
+      key={id}
+      className="rounded-2xl bg-secondary w-[32%] p-5 shadow flex flex-col justify-between gap-4"
+    >
+      <section className="flex justify-between">
         <h3 className="text-primary font-semibold text-2xl flex-1">{title}</h3>
         <div className="flex gap-2">
           <button
@@ -35,8 +38,8 @@ export const NoteItem = ({
           </button>
         </div>
       </section>
-      <p className="mb-6">{body}</p>
-      <p className="text-sm">{timeAgo(createdAt)}</p>
+      <p>{body}</p>
+      <p className="text-sm justify-self-end">{timeAgo(createdAt)}</p>
     </li>
   );
 };
