@@ -3,7 +3,7 @@ import Header from "../components/Header";
 
 const Layout = () => {
   return (
-    <main className="min-h-screen max-w-7xl mx-auto py-4 font-montserrat ">
+    <main className="min-h-screen max-w-7xl mx-auto px-4 py-4 font-montserrat ">
       <Header />
       <Outlet />
     </main>

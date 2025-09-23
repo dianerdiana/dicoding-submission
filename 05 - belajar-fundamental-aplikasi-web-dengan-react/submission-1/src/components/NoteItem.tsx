@@ -8,7 +8,7 @@ const NoteItem = ({ id, title, body, createdAt }: NoteItemProps) => {
   return (
     <li
       key={id}
-      className="rounded-2xl bg-secondary w-[24%] p-5 shadow flex flex-col justify-between gap-4"
+      className="rounded-2xl bg-secondary lg:w-[24%] md:w-[48%] w-full p-5 shadow flex flex-col justify-between gap-4"
     >
       <h3 className="text-primary font-semibold text-2xl">
         <Link to={`/notes/detail/${id}`}>{title}</Link>
