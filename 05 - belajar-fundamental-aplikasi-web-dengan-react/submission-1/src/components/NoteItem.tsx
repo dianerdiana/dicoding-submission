@@ -7,7 +7,7 @@ type NoteItemProps = NoteItemType & {
   updateArchived: CallableFunction;
 };
 
-export const NoteItem = ({
+const NoteItem = ({
   id,
   title,
   body,
@@ -19,7 +19,7 @@ export const NoteItem = ({
   return (
     <li
       key={id}
-      className="rounded-2xl bg-secondary w-[32%] p-5 shadow flex flex-col justify-between gap-4"
+      className="rounded-2xl bg-secondary w-[24%] p-5 shadow flex flex-col justify-between gap-4"
     >
       <section className="flex justify-between">
         <h3 className="text-primary font-semibold text-2xl flex-1">{title}</h3>
@@ -43,3 +43,5 @@ export const NoteItem = ({
     </li>
   );
 };
+
+export default NoteItem;

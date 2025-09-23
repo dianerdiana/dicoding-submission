@@ -1,4 +1,4 @@
-export const NoteCategory = ({
+const NoteCategory = ({
   children,
   title,
   icon: Icon,
@@ -16,3 +16,5 @@ export const NoteCategory = ({
     </section>
   );
 };
+
+export default NoteCategory;

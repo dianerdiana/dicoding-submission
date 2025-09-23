@@ -1,8 +1,8 @@
-export const FormSearch = ({
-  searchNote,
+const FormSearch = ({
+  handleSearch,
   searchText,
 }: {
-  searchNote: CallableFunction;
+  handleSearch: CallableFunction;
   searchText: string;
 }) => {
   return (
@@ -13,7 +13,7 @@ export const FormSearch = ({
           name="search"
           id="search"
           value={searchText}
-          onChange={(e) => searchNote(e.target.value)}
+          onChange={(e) => handleSearch(e.target.value)}
           placeholder="Search Title..."
           className="text-lg mb-4 text-primary border-none outline-none"
         />
@@ -21,3 +21,5 @@ export const FormSearch = ({
     </section>
   );
 };
+
+export default FormSearch;
