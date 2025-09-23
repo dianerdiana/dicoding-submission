@@ -1,9 +1,12 @@
 import { useState, type FormEventHandler } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 const MAX_LENGTH_TITLE = 50;
 
 const FormCreate = ({ createNote }: { createNote: CallableFunction }) => {
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
@@ -14,6 +17,8 @@ const FormCreate = ({ createNote }: { createNote: CallableFunction }) => {
     toast.success("Successfuly add a new note");
     setTitle("");
     setBody("");
+
+    navigate("/");
   };
 
   const onChangeTitle = (value: string) => {
