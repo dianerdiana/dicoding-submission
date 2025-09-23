@@ -1,5 +1,5 @@
 export type NoteItemType = {
-  id: string | number;
+  id: string;
   title: string;
   body: string;
   archived: boolean;

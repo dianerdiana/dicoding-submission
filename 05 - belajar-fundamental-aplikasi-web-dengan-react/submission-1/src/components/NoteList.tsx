@@ -3,11 +3,9 @@ import type { NoteItemType } from "../types/noteItem";
 
 type NoteListType = {
   notes: NoteItemType[] | [];
-  deleteNote: CallableFunction;
-  updateArchived: CallableFunction;
 };
 
-const NoteList = ({ notes, deleteNote, updateArchived }: NoteListType) => {
+const NoteList = ({ notes }: NoteListType) => {
   return (
     <ul className="flex flex-wrap gap-4">
       {notes.length > 0 ? (
@@ -19,8 +17,6 @@ const NoteList = ({ notes, deleteNote, updateArchived }: NoteListType) => {
             body={note.body}
             archived={note.archived}
             createdAt={note.createdAt}
-            deleteNote={deleteNote}
-            updateArchived={updateArchived}
           />
         ))
       ) : (

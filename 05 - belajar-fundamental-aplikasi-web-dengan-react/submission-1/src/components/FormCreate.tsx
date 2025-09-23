@@ -3,13 +3,13 @@ import toast from "react-hot-toast";
 
 const MAX_LENGTH_TITLE = 50;
 
-export const FormAdd = ({ addNote }: { addNote: CallableFunction }) => {
+const FormCreate = ({ createNote }: { createNote: CallableFunction }) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    addNote({ title, body });
+    createNote({ title, body });
 
     toast.success("Successfuly add a new note");
     setTitle("");
@@ -60,3 +60,5 @@ export const FormAdd = ({ addNote }: { addNote: CallableFunction }) => {
     </section>
   );
 };
+
+export default FormCreate;
