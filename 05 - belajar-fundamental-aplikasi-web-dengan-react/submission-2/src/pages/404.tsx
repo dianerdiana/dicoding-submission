@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { getHomeRouteForLoggedInUser } from "../utils";
 
 const NotFoundPage = () => {
   return (
@@ -7,7 +8,7 @@ const NotFoundPage = () => {
       <p className="text-primary">Page Not Found</p>
 
       <Link
-        to={"/"}
+        to={getHomeRouteForLoggedInUser()}
         className="border-none outline-none bg-primary rounded-md text-secondary px-8 py-2"
       >
         Back To Home

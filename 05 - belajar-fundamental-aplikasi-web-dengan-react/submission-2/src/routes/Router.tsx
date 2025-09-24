@@ -5,7 +5,7 @@ import { createBrowserRouter, Navigate } from "react-router";
 import Layout from "../layout/Layout";
 
 // Pages
-import HomePage from "../pages/HomePage";
+import AppPage from "../pages/(private)/page";
 import ArchivePage from "../pages/archives/ArchivePage";
 import NoteDetailPage from "../pages/notes/detail/NoteDetailPage";
 import CreateNotePage from "../pages/notes/create/NoteCreatePage";
@@ -40,7 +40,7 @@ export const Router = createBrowserRouter([
       {
         element: <Layout />,
         children: [
-          { index: true, Component: HomePage },
+          { index: true, Component: AppPage },
           { path: "archives", Component: ArchivePage },
           { path: "notes/detail/:noteId", Component: NoteDetailPage },
           { path: "notes/create", Component: CreateNotePage },
