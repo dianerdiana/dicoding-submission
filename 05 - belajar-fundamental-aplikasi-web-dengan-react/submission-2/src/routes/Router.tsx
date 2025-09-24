@@ -15,27 +15,37 @@ import NotFoundPage from "../pages/404";
 import LoginPage from "../pages/(public)/auth/login/page";
 import RegisterPage from "../pages/(public)/auth/register/page";
 
+// PrivateRoute
+import PrivateRoute from "./PrivateRoute";
+import PublicRoute from "./PublicRoute";
+import { getHomeRouteForLoggedInUser } from "../utils";
+
 export const Router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to={"/login"} />,
+    element: <Navigate to={getHomeRouteForLoggedInUser()} replace />,
   },
   {
-    path: "/login",
-    Component: LoginPage,
-  },
-  {
-    path: "/register",
-    Component: RegisterPage,
+    path: "/",
+    element: <PublicRoute />,
+    children: [
+      { path: "login", Component: LoginPage },
+      { path: "register", Component: RegisterPage },
+    ],
   },
   {
     path: "/app",
-    element: <Layout />,
+    element: <PrivateRoute />,
     children: [
-      { index: true, Component: HomePage },
-      { path: "archives", Component: ArchivePage },
-      { path: "notes/detail/:noteId", Component: NoteDetailPage },
-      { path: "notes/create", Component: CreateNotePage },
+      {
+        element: <Layout />,
+        children: [
+          { index: true, Component: HomePage },
+          { path: "archives", Component: ArchivePage },
+          { path: "notes/detail/:noteId", Component: NoteDetailPage },
+          { path: "notes/create", Component: CreateNotePage },
+        ],
+      },
     ],
   },
   {
