@@ -51,7 +51,7 @@ const FormEdit = ({
 
   const handleArchive = (noteId: string) => {
     archiveNote(noteId);
-    navigate("/");
+    navigate("/archives");
   };
 
   const handleUnarchive = (noteId: string) => {

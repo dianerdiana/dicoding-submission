@@ -1,12 +1,15 @@
 // Router
 import { createBrowserRouter } from "react-router";
 
+// Layout
+import Layout from "../layout/Layout";
+
 // Pages
 import HomePage from "../pages/HomePage";
 import ArchivePage from "../pages/archives/ArchivePage";
 import NoteDetailPage from "../pages/notes/detail/NoteDetailPage";
-import Layout from "../layout/Layout";
 import CreateNotePage from "../pages/notes/create/NoteCreatePage";
+import NotFoundPage from "../pages/404";
 
 export const Router = createBrowserRouter([
   {
@@ -21,6 +24,6 @@ export const Router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <div>Halaman Error</div>,
+    Component: NotFoundPage,
   },
 ]);
