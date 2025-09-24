@@ -1,17 +1,22 @@
 import { Archive } from "react-feather";
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 
 const Header = () => {
   return (
-    <header className="flex justify-between items-center mb-5">
-      <h1 className="font-bold text-4xl text-primary items-center">
-        <Link to={"/"}>Note App</Link>
-      </h1>
+    <header className="mb-5">
+      <nav className="flex justify-between items-center ">
+        <NavLink
+          to={"/"}
+          className="font-bold text-4xl text-primary items-center"
+        >
+          Note App
+        </NavLink>
 
-      <Link to={"/archives"} className="flex items-center">
-        <Archive className="me-2" size={16} />
-        <span>Archives</span>
-      </Link>
+        <NavLink to={"/archives"} className="flex items-center">
+          <Archive className="me-2" size={16} />
+          <span>Archives</span>
+        </NavLink>
+      </nav>
     </header>
   );
 };
