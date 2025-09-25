@@ -1,5 +1,5 @@
 import type { FormEventHandler } from "react";
-import useInput from "../../../../hooks/useInput";
+import useInput from "../../../../utils/hooks/useInput";
 import { login, putAccessToken } from "../../../../services/note.service";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
