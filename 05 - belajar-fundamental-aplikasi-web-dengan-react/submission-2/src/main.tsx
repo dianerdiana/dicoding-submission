@@ -9,9 +9,9 @@ import { AuthContextProvider } from "./utils/context/AuthContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AuthContextProvider>
-      <ThemeContextProvider>
-        <LanguageContextProvider>
+    <ThemeContextProvider>
+      <LanguageContextProvider>
+        <AuthContextProvider>
           <Toaster
             position="top-right"
             reverseOrder={false}
@@ -40,8 +40,8 @@ createRoot(document.getElementById("root")!).render(
             }}
           />
           <App />
-        </LanguageContextProvider>
-      </ThemeContextProvider>
-    </AuthContextProvider>
+        </AuthContextProvider>
+      </LanguageContextProvider>
+    </ThemeContextProvider>
   </StrictMode>
 );

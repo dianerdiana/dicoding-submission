@@ -3,9 +3,12 @@ import useInput from "../../../../utils/hooks/useInput";
 import { register } from "../../../../services/note.service";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useTranslate } from "../../../../utils/hooks/useTranslate";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const t = useTranslate();
+
   const [name, onChangeName] = useInput("");
   const [email, onChangeEmail] = useInput("");
   const [password, onChangePassword] = useInput("");
@@ -17,14 +20,14 @@ const RegisterPage = () => {
       const response = await register({ name, email, password });
 
       if (response.error) {
-        return toast.error("Registration Failed!");
+        return toast.error(t("failed"));
       }
 
-      toast.success("Success! please login with registered account");
+      toast.success(t("registration_success"));
       navigate("/login");
     } catch (error) {
       console.error(error);
-      toast.error("Error: Registration failed!");
+      toast.error(`Error: ${t("failed")}`);
     }
   };
 

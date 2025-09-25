@@ -1,7 +1,6 @@
 import type { FormEventHandler } from "react";
 import useInput from "../../../../utils/hooks/useInput";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import { useAuth } from "../../../../utils/hooks/useAuth";
 
 const LoginPage = () => {
@@ -12,14 +11,8 @@ const LoginPage = () => {
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
-
-    try {
-      await handleLogin({ email, password });
-      navigate("/app");
-    } catch (error) {
-      console.error(error);
-      toast.error("Error: Login failed!");
-    }
+    await handleLogin({ email, password });
+    navigate("/app");
   };
 
   return (

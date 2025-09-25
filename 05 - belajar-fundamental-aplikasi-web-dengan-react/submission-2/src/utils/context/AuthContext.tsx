@@ -7,6 +7,7 @@ import {
   putAccessToken,
 } from "../../services/note.service";
 import toast from "react-hot-toast";
+import { useTranslate } from "../hooks/useTranslate";
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -32,6 +33,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const t = useTranslate();
 
   const handleLogin = async ({
     email,
@@ -44,10 +46,10 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
       const response = await login({ email, password });
 
       if (response.error) {
-        return toast.error("Login Failed!");
+        return toast.error(`Login ${t("failed")}`);
       }
 
-      toast.success("Login Success!");
+      toast.success(`Login ${t("success")}`);
       putAccessToken(response.data.accessToken);
       setAccessToken(response.data.accessToken);
 
@@ -63,7 +65,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       setIsAuthenticated(false);
       console.error(error);
-      toast.error("Error: Login failed!");
+      toast.error(`Login ${t("failed")}`);
     }
   };
 
