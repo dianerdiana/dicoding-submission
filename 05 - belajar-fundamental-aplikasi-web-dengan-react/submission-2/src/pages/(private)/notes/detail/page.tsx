@@ -43,14 +43,14 @@ const NoteDetailPage = () => {
 
   if (error)
     return (
-      <div className="text-center space-y-6 h-[80vh] flex items-center flex-col justify-center">
+      <div className="text-center space-y-6 h-[80vh] flex items-center flex-col justify-center dark:text-gray-100">
         <p>
           ID Note: <strong>{noteId}</strong> {t("is_not_found")}.
         </p>
 
         <Link
           to={getHomeRouteForLoggedInUser()}
-          className="border-none outline-none bg-primary rounded-md text-secondary px-8 py-2"
+          className="px-8 py-2 border-none rounded-md outline-none bg-primary text-secondary"
         >
           {t("back_to_list")}
         </Link>

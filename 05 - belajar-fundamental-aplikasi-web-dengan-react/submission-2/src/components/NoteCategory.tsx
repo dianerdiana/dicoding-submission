@@ -9,7 +9,7 @@ const NoteCategory = ({
 }) => {
   return (
     <section className="mt-5">
-      <h2 className="font-semibold text-xl text-primary mb-2 flex">
+      <h2 className="flex mb-2 text-xl font-semibold text-primary dark:text-gray-100">
         <Icon className="me-2" /> <span>{title}</span>
       </h2>
       {children}

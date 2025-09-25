@@ -1,19 +1,28 @@
 import { useContext } from "react";
-import { Archive, Moon } from "react-feather";
-import { NavLink } from "react-router";
+import { Archive, LogOut, Moon, Sun } from "react-feather";
+import { NavLink, useNavigate } from "react-router";
 import { LanguageContext } from "../utils/context/LanguangeContext";
 import { useTranslate } from "../utils/hooks/useTranslate";
+import { useTheme } from "../utils/hooks/useTheme";
+import { logout } from "../services/note.service";
 
 const Header = () => {
   const { lang, toggleChangeLang } = useContext(LanguageContext);
+  const { theme, toggleChangeTheme } = useTheme();
   const t = useTranslate();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <header className="mb-5">
-      <nav className="flex justify-between items-center ">
+      <nav className="flex items-center justify-between ">
         <NavLink
           to={"/"}
-          className="font-bold text-4xl text-primary items-center"
+          className="items-center text-4xl font-bold text-primary dark:text-secondary"
         >
           {t("note_app")}
         </NavLink>
@@ -21,20 +30,31 @@ const Header = () => {
         <div className="flex gap-1">
           <NavLink
             to={"/app/archives"}
-            className="flex items-center justify-center bg-secondary rounded-full shadow p-3"
+            className="flex items-center justify-center p-3 rounded-full shadow bg-secondary dark:bg-gray-800 dark:text-gray-100"
           >
             <Archive size={16} />
           </NavLink>
 
-          <button className="flex items-center justify-center bg-secondary rounded-full shadow p-3 cursor-pointer">
-            <Moon size={16} />
+          <button
+            onClick={toggleChangeTheme}
+            className="flex items-center justify-center p-3 rounded-full shadow cursor-pointer bg-secondary dark:bg-gray-800 dark:text-gray-100"
+          >
+            {theme === "light" ? <Sun size={16} /> : <Moon size={16} />}
           </button>
 
           <button
             onClick={toggleChangeLang}
-            className="flex items-center justify-center bg-secondary rounded-full shadow p-3 cursor-pointer"
+            className="flex items-center justify-center p-3 rounded-full shadow cursor-pointer bg-secondary dark:bg-gray-800 dark:text-gray-100"
           >
-            <span className="align-middle leading-4">{lang.toUpperCase()}</span>
+            <span className="leading-4 align-middle">{lang.toUpperCase()}</span>
+          </button>
+
+          <button
+            onClick={handleLogout}
+            title={t("logout")}
+            className="flex items-center justify-center p-3 rounded-full shadow cursor-pointer bg-secondary dark:bg-gray-800 dark:text-gray-100"
+          >
+            <LogOut size={16} />
           </button>
         </div>
       </nav>

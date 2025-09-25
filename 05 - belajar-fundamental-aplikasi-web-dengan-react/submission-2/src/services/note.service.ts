@@ -169,6 +169,12 @@ async function deleteNote(id: string) {
   return { error: false, data: responseJson.data };
 }
 
+function logout() {
+  localStorage.removeItem("accessToken");
+
+  return { error: false };
+}
+
 export {
   getAccessToken,
   putAccessToken,
@@ -182,4 +188,5 @@ export {
   archiveNote,
   unarchiveNote,
   deleteNote,
+  logout,
 };

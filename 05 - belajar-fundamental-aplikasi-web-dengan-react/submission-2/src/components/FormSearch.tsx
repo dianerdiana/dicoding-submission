@@ -12,9 +12,9 @@ const FormSearch = ({
   const t = useTranslate();
 
   return (
-    <div className="flex flex-col md:flex-row gap-2">
-      <section className="rounded-2xl shadow bg-secondary px-5 py-5 flex-1">
-        <h1 className="font-semibold text-xl text-primary mb-2">
+    <div className="flex flex-col gap-2 md:flex-row">
+      <section className="flex-1 px-5 py-5 shadow rounded-2xl bg-secondary dark:bg-gray-800">
+        <h1 className="mb-2 text-xl font-semibold text-primary dark:text-gray-100">
           {t("search_note")}
         </h1>
         <form className="flex flex-col">
@@ -24,14 +24,14 @@ const FormSearch = ({
             value={searchText}
             onChange={(e) => handleSearch(e.target.value)}
             placeholder={`${t("search_title")}...`}
-            className="text-lg mb-4 text-primary border-none outline-none"
+            className="mb-4 text-lg border-none outline-none text-primary dark:text-secondary"
           />
         </form>
       </section>
 
       <Link
         to={"/app/notes/create"}
-        className="flex flex-col items-center justify-center bg-primary text-white rounded-2xl px-10 py-2 font-semibold"
+        className="flex flex-col items-center justify-center px-10 py-2 font-semibold text-white bg-primary rounded-2xl"
       >
         <Plus size={24} />
         <p>{t("add_note")}</p>

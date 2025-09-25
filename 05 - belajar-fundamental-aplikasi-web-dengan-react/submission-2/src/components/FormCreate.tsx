@@ -45,8 +45,8 @@ const FormCreate = () => {
   };
 
   return (
-    <section className="rounded-2xl shadow bg-secondary px-9 py-10">
-      <h1 className="font-semibold text-3xl text-primary mb-2">
+    <section className="py-10 shadow rounded-2xl bg-secondary px-9 dark:bg-gray-800">
+      <h1 className="mb-2 text-3xl font-semibold text-primary dark:text-gray-100">
         {t("add_a_note")}
       </h1>
       <form className="flex flex-col" onSubmit={onSubmit}>
@@ -57,9 +57,9 @@ const FormCreate = () => {
             value={title}
             onChange={(e) => onChangeTitle(e.target.value)}
             placeholder={t("title")}
-            className="text-2xl text-primary border-none outline-none w-full"
+            className="w-full text-2xl border-none outline-none text-primary dark:text-gray-100"
           />
-          <p className="text-xs text-primary">
+          <p className="text-xs text-primary dark:text-gray-300">
             {t("remaining_characters")}: {MAX_LENGTH_TITLE - title.length}
           </p>
         </div>
@@ -70,13 +70,13 @@ const FormCreate = () => {
           value={body}
           onChange={(e) => setBody(e.target.value)}
           placeholder={`${t("take_a_note")}...`}
-          className="text-xl text-primary border-none outline-none"
+          className="text-xl border-none outline-none text-primary dark:text-gray-100"
         ></textarea>
         <div className="flex justify-end mt-5">
           <button
             disabled={loading}
             type="submit"
-            className="px-8 py-2 outline-none bg-primary text-white rounded-sm cursor-pointer mt-4 hover:bg-blue-900"
+            className="px-8 py-2 mt-4 text-white rounded-sm outline-none cursor-pointer bg-primary hover:bg-blue-900 dark:bg-blue-800 dark:hover:bg-primary"
           >
             {t("save")}
           </button>

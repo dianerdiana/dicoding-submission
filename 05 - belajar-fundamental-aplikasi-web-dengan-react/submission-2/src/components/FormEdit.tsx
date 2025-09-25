@@ -93,9 +93,9 @@ const FormEdit = ({
   };
 
   return (
-    <section className="rounded-2xl shadow bg-secondary px-9 py-10">
+    <section className="py-10 shadow rounded-2xl bg-secondary px-9 dark:bg-gray-800">
       <section className="flex justify-between mb-2">
-        <h1 className="font-semibold text-3xl text-primary">
+        <h1 className="text-3xl font-semibold text-primary dark:text-gray-100">
           {t("edit_a_note")}
         </h1>
         <div className="flex gap-2">
@@ -104,21 +104,21 @@ const FormEdit = ({
               title={t("activate")}
               onClick={() => handleUnarchive(noteId)}
             >
-              <FileText size={24} className="text-secondary" />
+              <FileText size={20} className="text-secondary" />
             </ButtonAction>
           ) : (
             <ButtonAction
               title={t("archived")}
               onClick={() => handleArchive(noteId)}
             >
-              <Archive size={24} className="text-secondary" />
+              <Archive size={20} className="text-secondary" />
             </ButtonAction>
           )}
           <ButtonAction
             title={t("delete")}
             onClick={() => handleDelete(noteId)}
           >
-            <Trash2 size={24} className="text-secondary" />
+            <Trash2 size={20} className="text-secondary" />
           </ButtonAction>
         </div>
       </section>
@@ -131,9 +131,9 @@ const FormEdit = ({
             value={title}
             onChange={(e) => onChangeTitle(e.target.value)}
             placeholder={t("title")}
-            className="text-2xl text-primary border-none outline-none w-full"
+            className="w-full text-2xl border-none outline-none text-primary dark:text-gray-100"
           />
-          <p className="text-xs text-primary">
+          <p className="text-xs text-primary dark:text-gray-300">
             {t("remaining_characters")}: {MAX_LENGTH_TITLE - title.length}
           </p>
         </div>
@@ -145,7 +145,7 @@ const FormEdit = ({
           value={body}
           onChange={(e) => setBody(e.target.value)}
           placeholder={`${t("take_a_note")}...`}
-          className="text-xl text-primary border-none outline-none"
+          className="text-xl border-none outline-none text-primary dark:text-gray-100"
         ></textarea>
       </form>
     </section>
