@@ -25,7 +25,7 @@ const FormSearch = ({
       </section>
 
       <Link
-        to={"/notes/create"}
+        to={"/app/notes/create"}
         className="flex flex-col items-center justify-center bg-primary text-white rounded-2xl px-10 py-2 font-semibold"
       >
         <Plus size={24} />

@@ -1,24 +1,39 @@
 import { useState, type FormEventHandler } from "react";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import { addNote } from "../services/note.service";
+import toast from "react-hot-toast";
 
 const MAX_LENGTH_TITLE = 50;
 
-const FormCreate = ({ createNote }: { createNote: CallableFunction }) => {
+const FormCreate = () => {
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    createNote({ title, body });
+    setLoading(true);
 
-    toast.success("Successfuly add a new note");
-    setTitle("");
-    setBody("");
+    try {
+      const response = await addNote({ title, body });
 
-    navigate("/");
+      if (response.error) {
+        throw new Error("Failed!");
+      }
+
+      toast.success("Successfuly add a new note");
+      setTitle("");
+      setBody("");
+
+      navigate("/");
+    } catch (error) {
+      console.error(`Error: ${error}`);
+      toast.error("Failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onChangeTitle = (value: string) => {
@@ -55,8 +70,9 @@ const FormCreate = ({ createNote }: { createNote: CallableFunction }) => {
         ></textarea>
         <div className="flex justify-end mt-5">
           <button
+            disabled={loading}
             type="submit"
-            className="border-none outline-none bg-primary rounded-md text-secondary px-8 py-2"
+            className="px-8 py-2 outline-none bg-primary text-white rounded-sm cursor-pointer mt-4 hover:bg-blue-900"
           >
             Save
           </button>

@@ -6,9 +6,9 @@ import Layout from "../layout/Layout";
 
 // Pages
 import AppPage from "../pages/(private)/page";
-import ArchivePage from "../pages/archives/ArchivePage";
-import NoteDetailPage from "../pages/notes/detail/NoteDetailPage";
-import CreateNotePage from "../pages/notes/create/NoteCreatePage";
+import ArchivePage from "../pages/(private)/archives/page";
+import NoteDetailPage from "../pages/(private)/notes/detail/page";
+import CreateNotePage from "../pages/(private)/notes/create/page";
 import NotFoundPage from "../pages/404";
 
 // Public Pages

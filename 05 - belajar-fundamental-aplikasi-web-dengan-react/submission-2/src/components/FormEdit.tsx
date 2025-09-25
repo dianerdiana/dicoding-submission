@@ -12,7 +12,6 @@ type FormEditProps = {
   title: string;
   body: string;
   archived: boolean;
-  editNote: CallableFunction;
 };
 
 const FormEdit = ({
@@ -20,7 +19,6 @@ const FormEdit = ({
   title: defaultTitle,
   body: defaultBody,
   archived,
-  editNote,
 }: FormEditProps) => {
   const navigate = useNavigate();
 
@@ -29,7 +27,6 @@ const FormEdit = ({
 
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    editNote({ id: noteId, title, body });
 
     toast.success("Successfuly edit a note");
     setTitle("");
@@ -87,6 +84,7 @@ const FormEdit = ({
       <form className="flex flex-col" onSubmit={onSubmit}>
         <div className="mb-4">
           <input
+            disabled
             name="title"
             id="title"
             value={title}
@@ -99,6 +97,7 @@ const FormEdit = ({
           </p>
         </div>
         <textarea
+          disabled
           name="body"
           id="body"
           rows={3}
@@ -107,14 +106,6 @@ const FormEdit = ({
           placeholder="Take a note..."
           className="text-xl text-primary border-none outline-none"
         ></textarea>
-        <div className="flex justify-end mt-5">
-          <button
-            type="submit"
-            className="border-none outline-none bg-primary rounded-md text-secondary px-8 py-2"
-          >
-            Save
-          </button>
-        </div>
       </form>
     </section>
   );
