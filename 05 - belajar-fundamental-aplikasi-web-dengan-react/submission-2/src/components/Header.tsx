@@ -14,7 +14,7 @@ const Header = () => {
 
         <div className="flex gap-2">
           <NavLink
-            to={"/archives"}
+            to={"/app/archives"}
             className="flex items-center justify-center bg-secondary rounded-full shadow p-3"
           >
             <Archive size={16} />

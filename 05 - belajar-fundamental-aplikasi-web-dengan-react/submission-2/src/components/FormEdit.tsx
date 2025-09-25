@@ -2,8 +2,12 @@ import { useState, type FormEventHandler } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { Archive, FileText, Trash2 } from "react-feather";
-import { archiveNote, deleteNote, unarchiveNote } from "../utils/localData";
 import ButtonAction from "./ButtonAction";
+import {
+  archiveNote,
+  deleteNote,
+  unarchiveNote,
+} from "../services/note.service";
 
 const MAX_LENGTH_TITLE = 50;
 
@@ -41,19 +45,49 @@ const FormEdit = ({
     setTitle(value);
   };
 
-  const handleDelete = (noteId: string) => {
-    deleteNote(noteId);
-    navigate("/");
+  const handleDelete = async (noteId: string) => {
+    try {
+      const response = await deleteNote(noteId);
+
+      if (response.error) {
+        throw new Error("Failed!");
+      }
+
+      navigate("/app");
+    } catch (error) {
+      console.error(`Error: ${error}`);
+      toast.error("Failed!");
+    }
   };
 
-  const handleArchive = (noteId: string) => {
-    archiveNote(noteId);
-    navigate("/archives");
+  const handleArchive = async (noteId: string) => {
+    try {
+      const response = await archiveNote(noteId);
+
+      if (response.error) {
+        throw new Error("Failed!");
+      }
+
+      navigate("/app/archives");
+    } catch (error) {
+      console.error(`Error: ${error}`);
+      toast.error("Failed!");
+    }
   };
 
-  const handleUnarchive = (noteId: string) => {
-    unarchiveNote(noteId);
-    navigate("/");
+  const handleUnarchive = async (noteId: string) => {
+    try {
+      const response = await unarchiveNote(noteId);
+
+      if (response.error) {
+        throw new Error("Failed!");
+      }
+
+      navigate("/app");
+    } catch (error) {
+      console.error(`Error: ${error}`);
+      toast.error("Failed!");
+    }
   };
 
   return (
@@ -66,18 +100,18 @@ const FormEdit = ({
               title="Activate"
               onClick={() => handleUnarchive(noteId)}
             >
-              <FileText size={24} />
+              <FileText size={24} className="text-secondary" />
             </ButtonAction>
           ) : (
             <ButtonAction
               title="Archived"
               onClick={() => handleArchive(noteId)}
             >
-              <Archive size={24} />
+              <Archive size={24} className="text-secondary" />
             </ButtonAction>
           )}
           <ButtonAction title="Delete" onClick={() => handleDelete(noteId)}>
-            <Trash2 size={24} />
+            <Trash2 size={24} className="text-secondary" />
           </ButtonAction>
         </div>
       </section>

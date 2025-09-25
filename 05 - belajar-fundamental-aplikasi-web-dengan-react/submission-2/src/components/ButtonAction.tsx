@@ -13,7 +13,7 @@ const ButtonAction = ({
     <button
       title={title}
       onClick={onClick}
-      className="border-none outline-none cursor-pointer"
+      className="border-none outline-none cursor-pointer bg-primary rounded-full p-3"
     >
       {children}
     </button>

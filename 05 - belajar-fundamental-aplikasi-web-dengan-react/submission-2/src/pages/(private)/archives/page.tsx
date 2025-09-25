@@ -1,38 +1,63 @@
-import { Fragment } from "react/jsx-runtime";
-
-// Hooks
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router";
 
 // Custom Components
 import FormSearch from "../../../components/FormSearch";
 import NoteCategory from "../../../components/NoteCategory";
 import NoteList from "../../../components/NoteList";
+import NoteListSkeleton from "../../../components/skeleton/NoteListSkeleton";
 
 // Utils
-import { Archive } from "react-feather";
-import { getArchivedNotes } from "../../../utils/localData";
+import { FileText } from "react-feather";
+import type { NoteItemType } from "../../../types/noteItem";
+import { getArchivedNotes } from "../../../services/note.service";
 
-const ArchivePage = () => {
+const ArchivedNote = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [notes, setNotes] = useState<NoteItemType[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const searchText = searchParams.get("search");
+  const searchText = searchParams.get("search") || "";
 
   const handleSearch = (value: string) => {
-    setSearchParams({ search: value });
+    setSearchParams(value ? { search: value } : {});
   };
 
-  const notes = getArchivedNotes().filter((note) =>
-    note.title.toLowerCase().includes((searchText || "").toLowerCase())
-  );
+  const filteredNotes = useMemo(() => {
+    if (!searchText) return notes;
+
+    return notes.filter((note) =>
+      note.title.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }, [notes, searchText]);
+
+  useEffect(() => {
+    const fetchActiveNotes = async () => {
+      try {
+        const response = await getArchivedNotes();
+        if (!response.error) {
+          setNotes(response.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch notes:", err);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1500);
+      }
+    };
+
+    fetchActiveNotes();
+  }, []);
 
   return (
-    <Fragment>
-      <FormSearch searchText={searchText || ""} handleSearch={handleSearch} />
-      <NoteCategory icon={Archive} title="Archive Notes">
-        <NoteList notes={notes} />
+    <>
+      <FormSearch searchText={searchText} handleSearch={handleSearch} />
+      <NoteCategory icon={FileText} title="Archive Notes">
+        {loading ? <NoteListSkeleton /> : <NoteList notes={filteredNotes} />}
       </NoteCategory>
-    </Fragment>
+    </>
   );
 };
 
-export default ArchivePage;
+export default ArchivedNote;
