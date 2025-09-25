@@ -11,8 +11,11 @@ import NoteListSkeleton from "../../components/skeleton/NoteListSkeleton";
 import { FileText } from "react-feather";
 import { getActiveNotes } from "../../services/note.service";
 import type { NoteItemType } from "../../types/noteItem";
+import { useTranslate } from "../../utils/hooks/useTranslate";
 
 const AppPage = () => {
+  const t = useTranslate();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [notes, setNotes] = useState<NoteItemType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,12 +41,12 @@ const AppPage = () => {
         if (!response.error) {
           setNotes(response.data);
         }
-      } catch (err) {
-        console.error("Failed to fetch notes:", err);
+      } catch (error) {
+        console.error(`Error: ${error}`);
       } finally {
         setTimeout(() => {
           setLoading(false);
-        }, 1500);
+        }, 1000);
       }
     };
 
@@ -53,7 +56,7 @@ const AppPage = () => {
   return (
     <>
       <FormSearch searchText={searchText} handleSearch={handleSearch} />
-      <NoteCategory icon={FileText} title="Active Notes">
+      <NoteCategory icon={FileText} title={t("active_notes")}>
         {loading ? <NoteListSkeleton /> : <NoteList notes={filteredNotes} />}
       </NoteCategory>
     </>

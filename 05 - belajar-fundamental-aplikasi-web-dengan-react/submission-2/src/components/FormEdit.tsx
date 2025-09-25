@@ -8,6 +8,7 @@ import {
   deleteNote,
   unarchiveNote,
 } from "../services/note.service";
+import { useTranslate } from "../utils/hooks/useTranslate";
 
 const MAX_LENGTH_TITLE = 50;
 
@@ -25,6 +26,7 @@ const FormEdit = ({
   archived,
 }: FormEditProps) => {
   const navigate = useNavigate();
+  const t = useTranslate();
 
   const [title, setTitle] = useState(defaultTitle);
   const [body, setBody] = useState(defaultBody);
@@ -32,7 +34,7 @@ const FormEdit = ({
   const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    toast.success("Successfuly edit a note");
+    toast.success(t("success_edit_note"));
     setTitle("");
     setBody("");
 
@@ -50,13 +52,13 @@ const FormEdit = ({
       const response = await deleteNote(noteId);
 
       if (response.error) {
-        throw new Error("Failed!");
+        throw new Error(t("failed"));
       }
 
       navigate("/app");
     } catch (error) {
       console.error(`Error: ${error}`);
-      toast.error("Failed!");
+      toast.error(t("failed"));
     }
   };
 
@@ -65,13 +67,13 @@ const FormEdit = ({
       const response = await archiveNote(noteId);
 
       if (response.error) {
-        throw new Error("Failed!");
+        throw new Error(t("failed"));
       }
 
       navigate("/app/archives");
     } catch (error) {
       console.error(`Error: ${error}`);
-      toast.error("Failed!");
+      toast.error(t("failed"));
     }
   };
 
@@ -80,37 +82,42 @@ const FormEdit = ({
       const response = await unarchiveNote(noteId);
 
       if (response.error) {
-        throw new Error("Failed!");
+        throw new Error(t("failed"));
       }
 
       navigate("/app");
     } catch (error) {
       console.error(`Error: ${error}`);
-      toast.error("Failed!");
+      toast.error(t("failed"));
     }
   };
 
   return (
     <section className="rounded-2xl shadow bg-secondary px-9 py-10">
       <section className="flex justify-between mb-2">
-        <h1 className="font-semibold text-3xl text-primary">Edit a Note</h1>
+        <h1 className="font-semibold text-3xl text-primary">
+          {t("edit_a_note")}
+        </h1>
         <div className="flex gap-2">
           {archived ? (
             <ButtonAction
-              title="Activate"
+              title={t("activate")}
               onClick={() => handleUnarchive(noteId)}
             >
               <FileText size={24} className="text-secondary" />
             </ButtonAction>
           ) : (
             <ButtonAction
-              title="Archived"
+              title={t("archived")}
               onClick={() => handleArchive(noteId)}
             >
               <Archive size={24} className="text-secondary" />
             </ButtonAction>
           )}
-          <ButtonAction title="Delete" onClick={() => handleDelete(noteId)}>
+          <ButtonAction
+            title={t("delete")}
+            onClick={() => handleDelete(noteId)}
+          >
             <Trash2 size={24} className="text-secondary" />
           </ButtonAction>
         </div>
@@ -123,11 +130,11 @@ const FormEdit = ({
             id="title"
             value={title}
             onChange={(e) => onChangeTitle(e.target.value)}
-            placeholder="Title"
+            placeholder={t("title")}
             className="text-2xl text-primary border-none outline-none w-full"
           />
           <p className="text-xs text-primary">
-            Remaining Characters: {MAX_LENGTH_TITLE - title.length}
+            {t("remaining_characters")}: {MAX_LENGTH_TITLE - title.length}
           </p>
         </div>
         <textarea
@@ -137,7 +144,7 @@ const FormEdit = ({
           rows={3}
           value={body}
           onChange={(e) => setBody(e.target.value)}
-          placeholder="Take a note..."
+          placeholder={`${t("take_a_note")}...`}
           className="text-xl text-primary border-none outline-none"
         ></textarea>
       </form>

@@ -11,8 +11,11 @@ import NoteListSkeleton from "../../../components/skeleton/NoteListSkeleton";
 import { FileText } from "react-feather";
 import type { NoteItemType } from "../../../types/noteItem";
 import { getArchivedNotes } from "../../../services/note.service";
+import { useTranslate } from "../../../utils/hooks/useTranslate";
 
 const ArchivedNote = () => {
+  const t = useTranslate();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [notes, setNotes] = useState<NoteItemType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,8 +41,8 @@ const ArchivedNote = () => {
         if (!response.error) {
           setNotes(response.data);
         }
-      } catch (err) {
-        console.error("Failed to fetch notes:", err);
+      } catch (error) {
+        console.error(`Error: ${error}`);
       } finally {
         setTimeout(() => {
           setLoading(false);
@@ -53,7 +56,7 @@ const ArchivedNote = () => {
   return (
     <>
       <FormSearch searchText={searchText} handleSearch={handleSearch} />
-      <NoteCategory icon={FileText} title="Archive Notes">
+      <NoteCategory icon={FileText} title={t("archive_notes")}>
         {loading ? <NoteListSkeleton /> : <NoteList notes={filteredNotes} />}
       </NoteCategory>
     </>

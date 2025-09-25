@@ -2,11 +2,13 @@ import { useState, type FormEventHandler } from "react";
 import { useNavigate } from "react-router";
 import { addNote } from "../services/note.service";
 import toast from "react-hot-toast";
+import { useTranslate } from "../utils/hooks/useTranslate";
 
 const MAX_LENGTH_TITLE = 50;
 
 const FormCreate = () => {
   const navigate = useNavigate();
+  const t = useTranslate();
 
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -23,14 +25,14 @@ const FormCreate = () => {
         throw new Error("Failed!");
       }
 
-      toast.success("Successfuly add a new note");
+      toast.success(t("success_create_note"));
       setTitle("");
       setBody("");
 
       navigate("/");
     } catch (error) {
       console.error(`Error: ${error}`);
-      toast.error("Failed");
+      toast.error(t("failed"));
     } finally {
       setLoading(false);
     }
@@ -44,7 +46,9 @@ const FormCreate = () => {
 
   return (
     <section className="rounded-2xl shadow bg-secondary px-9 py-10">
-      <h1 className="font-semibold text-3xl text-primary mb-2">Add a Note</h1>
+      <h1 className="font-semibold text-3xl text-primary mb-2">
+        {t("add_a_note")}
+      </h1>
       <form className="flex flex-col" onSubmit={onSubmit}>
         <div className="mb-4">
           <input
@@ -52,11 +56,11 @@ const FormCreate = () => {
             id="title"
             value={title}
             onChange={(e) => onChangeTitle(e.target.value)}
-            placeholder="Title"
+            placeholder={t("title")}
             className="text-2xl text-primary border-none outline-none w-full"
           />
           <p className="text-xs text-primary">
-            Remaining Characters: {MAX_LENGTH_TITLE - title.length}
+            {t("remaining_characters")}: {MAX_LENGTH_TITLE - title.length}
           </p>
         </div>
         <textarea
@@ -65,7 +69,7 @@ const FormCreate = () => {
           rows={3}
           value={body}
           onChange={(e) => setBody(e.target.value)}
-          placeholder="Take a note..."
+          placeholder={`${t("take_a_note")}...`}
           className="text-xl text-primary border-none outline-none"
         ></textarea>
         <div className="flex justify-end mt-5">
@@ -74,7 +78,7 @@ const FormCreate = () => {
             type="submit"
             className="px-8 py-2 outline-none bg-primary text-white rounded-sm cursor-pointer mt-4 hover:bg-blue-900"
           >
-            Save
+            {t("save")}
           </button>
         </div>
       </form>

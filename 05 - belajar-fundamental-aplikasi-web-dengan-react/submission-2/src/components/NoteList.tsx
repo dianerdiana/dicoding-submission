@@ -1,11 +1,14 @@
 import NoteItem from "./NoteItem";
 import type { NoteItemType } from "../types/noteItem";
+import { useTranslate } from "../utils/hooks/useTranslate";
 
 type NoteListType = {
   notes: NoteItemType[] | [];
 };
 
 const NoteList = ({ notes }: NoteListType) => {
+  const t = useTranslate();
+
   return (
     <ul className="flex flex-wrap gap-4">
       {notes.length > 0 ? (
@@ -21,7 +24,9 @@ const NoteList = ({ notes }: NoteListType) => {
         ))
       ) : (
         <li className="bg-secondary rounded-2xl px-4 py-4 w-full">
-          <p className="text-center font-semibold text-primary">Note Empty</p>
+          <p className="text-center font-semibold text-primary">
+            {t("note_empty")}
+          </p>
         </li>
       )}
     </ul>
