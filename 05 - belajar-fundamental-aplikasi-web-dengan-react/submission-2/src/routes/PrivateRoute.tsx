@@ -1,8 +1,13 @@
-import { Navigate, Outlet } from "react-router";
-import { isUserLoggedIn } from "../utils";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../utils/hooks/useAuth";
+import FallbackSpinner from "../components/FallbackSpinner";
 
 const PrivateRoute = () => {
-  const isAuthenticated = isUserLoggedIn();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <FallbackSpinner />;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

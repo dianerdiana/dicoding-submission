@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useParams } from "react-router-dom";
 import FormEdit from "../../../../components/FormEdit";
 import { getNote } from "../../../../services/note.service";
 import type { NoteItemType } from "../../../../types/noteItem";

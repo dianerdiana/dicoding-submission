@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import type { NoteItemType } from "../types/noteItem";
 import { showFormattedDate } from "../utils";
 

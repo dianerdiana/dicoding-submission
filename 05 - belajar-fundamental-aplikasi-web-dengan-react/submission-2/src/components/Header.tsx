@@ -1,16 +1,17 @@
 import { useContext } from "react";
 import { Archive, LogOut, Moon, Sun } from "react-feather";
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router-dom";
 import { LanguageContext } from "../utils/context/LanguangeContext";
 import { useTranslate } from "../utils/hooks/useTranslate";
 import { useTheme } from "../utils/hooks/useTheme";
-import { logout } from "../services/note.service";
+import { useAuth } from "../utils/hooks/useAuth";
 
 const Header = () => {
   const { lang, toggleChangeLang } = useContext(LanguageContext);
   const { theme, toggleChangeTheme } = useTheme();
   const t = useTranslate();
   const navigate = useNavigate();
+  const { handleLogout: logout } = useAuth();
 
   const handleLogout = () => {
     logout();

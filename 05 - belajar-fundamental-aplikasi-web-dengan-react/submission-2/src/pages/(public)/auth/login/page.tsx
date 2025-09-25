@@ -1,26 +1,20 @@
 import type { FormEventHandler } from "react";
 import useInput from "../../../../utils/hooks/useInput";
-import { login, putAccessToken } from "../../../../services/note.service";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useAuth } from "../../../../utils/hooks/useAuth";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [email, onChangeEmail] = useInput("");
   const [password, onChangePassword] = useInput("");
+  const { handleLogin } = useAuth();
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await login({ email, password });
-
-      if (response.error) {
-        return toast.error("Login Failed!");
-      }
-
-      toast.success("Login Success!");
-      putAccessToken(response.data.accessToken);
+      await handleLogin({ email, password });
       navigate("/app");
     } catch (error) {
       console.error(error);

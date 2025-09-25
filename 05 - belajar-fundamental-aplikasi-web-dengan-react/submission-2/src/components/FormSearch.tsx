@@ -1,5 +1,5 @@
 import { Plus } from "react-feather";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { useTranslate } from "../utils/hooks/useTranslate";
 
 const FormSearch = ({

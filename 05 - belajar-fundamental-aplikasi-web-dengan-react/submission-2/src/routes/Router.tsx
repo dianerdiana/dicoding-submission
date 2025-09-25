@@ -1,5 +1,5 @@
 // Router
-import { createBrowserRouter, Navigate } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 // Layout
 import Layout from "../layout/Layout";

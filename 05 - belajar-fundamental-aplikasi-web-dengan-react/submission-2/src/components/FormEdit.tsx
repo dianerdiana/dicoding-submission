@@ -1,5 +1,5 @@
 import { useState, type FormEventHandler } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Archive, FileText, Trash2 } from "react-feather";
 import ButtonAction from "./ButtonAction";

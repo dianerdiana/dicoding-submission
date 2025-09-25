@@ -1,7 +1,7 @@
 import type { FormEventHandler } from "react";
 import useInput from "../../../../utils/hooks/useInput";
 import { register } from "../../../../services/note.service";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const RegisterPage = () => {
