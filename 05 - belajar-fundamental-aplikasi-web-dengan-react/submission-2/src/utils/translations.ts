@@ -28,6 +28,9 @@ export const translations: Record<string, Record<string, string>> = {
     is_not_found: "is not found",
     back_to_list: "Back To List",
     registration_success: "Success, please login with registered account",
+    dont_have_account: "Don't have an account?",
+    already_have_account: "Already have an account?",
+    archives: "Archives",
   },
   id: {
     note_app: "Aplikasi Catatan",
@@ -58,5 +61,8 @@ export const translations: Record<string, Record<string, string>> = {
     is_not_found: "tidak ditemukan",
     back_to_list: "Kembali",
     registration_success: "Berhasil, silakan login menggunakan akun terdaftar",
+    dont_have_account: "Belum punya akun?",
+    already_have_account: "Sudah punya akun?",
+    archives: "Arsip",
   },
 };

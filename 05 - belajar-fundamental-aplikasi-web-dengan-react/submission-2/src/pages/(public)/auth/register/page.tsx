@@ -1,7 +1,7 @@
 import type { FormEventHandler } from "react";
 import useInput from "../../../../utils/hooks/useInput";
 import { register } from "../../../../services/note.service";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useTranslate } from "../../../../utils/hooks/useTranslate";
 
@@ -99,6 +99,18 @@ const RegisterPage = () => {
           >
             Register
           </button>
+
+          <p className="mt-4 text-center text-primary dark:text-gray-100">
+            {t("already_have_account")}{" "}
+            <span>
+              <Link
+                to={"/login"}
+                className="underline dark:hover:text-gray-300 hover:text-blue-800"
+              >
+                login
+              </Link>
+            </span>
+          </p>
         </form>
       </section>
     </main>

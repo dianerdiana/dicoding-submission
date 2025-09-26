@@ -1,10 +1,13 @@
 import type { FormEventHandler } from "react";
 import useInput from "../../../../utils/hooks/useInput";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../utils/hooks/useAuth";
+import { useTranslate } from "../../../../utils/hooks/useTranslate";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const t = useTranslate();
+
   const [email, onChangeEmail] = useInput("");
   const [password, onChangePassword] = useInput("");
   const { handleLogin } = useAuth();
@@ -64,6 +67,17 @@ const LoginPage = () => {
           >
             Login
           </button>
+          <p className="mt-4 text-center text-primary dark:text-gray-100">
+            {t("dont_have_account")}{" "}
+            <span>
+              <Link
+                to={"/register"}
+                className="underline dark:hover:text-gray-300 hover:text-blue-800"
+              >
+                register
+              </Link>
+            </span>
+          </p>
         </form>
       </section>
     </main>
