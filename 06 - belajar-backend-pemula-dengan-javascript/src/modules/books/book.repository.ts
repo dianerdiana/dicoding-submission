@@ -7,8 +7,30 @@ export default class BookRepository {
     this.books.push(book);
   }
 
-  async findAll(): Promise<Book[]> {
-    return this.books;
+  async findAll({
+    name,
+    reading,
+    finished,
+  }: {
+    name?: string;
+    reading?: boolean;
+    finished?: boolean;
+  }): Promise<Book[]> {
+    let books = this.books;
+
+    if (name !== undefined) {
+      books = this.books.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()));
+    }
+
+    if (reading !== undefined) {
+      books = this.books.filter((book) => book.reading === reading);
+    }
+
+    if (finished !== undefined) {
+      books = this.books.filter((book) => book.finished === finished);
+    }
+
+    return books;
   }
 
   async findById(id: string): Promise<Book | null> {

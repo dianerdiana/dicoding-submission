@@ -16,8 +16,16 @@ export default class BookService {
     return newBook.id;
   }
 
-  async getAllBooks() {
-    const books = await this.bookRepository.findAll();
+  async getAllBooks({
+    name = undefined,
+    reading = undefined,
+    finished = undefined,
+  }: {
+    name?: string;
+    reading?: boolean;
+    finished?: boolean;
+  }) {
+    const books = await this.bookRepository.findAll({ name, reading, finished });
     return books.map((book) => ({
       id: book.id,
       name: book.name,

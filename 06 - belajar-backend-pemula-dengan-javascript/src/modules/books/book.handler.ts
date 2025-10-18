@@ -36,8 +36,35 @@ export default class BookHandler {
   };
 
   getAllBooks: HapiHandler = async (req, res): Promise<ResponseObject> => {
+    const { name, reading, finished } = req.query;
+
     try {
-      const books = await this.bookService.getAllBooks();
+      const readingBoolean =
+        reading === undefined
+          ? undefined
+          : reading === '1'
+            ? true
+            : reading === '0'
+              ? false
+              : undefined;
+
+      const finishedBoolean =
+        finished === undefined
+          ? undefined
+          : finished === '1'
+            ? true
+            : finished === '0'
+              ? false
+              : undefined;
+
+      const lowCaseName = name ? String(name).toLowerCase() : undefined;
+
+      const books = await this.bookService.getAllBooks({
+        name: lowCaseName,
+        reading: readingBoolean,
+        finished: finishedBoolean,
+      });
+
       return successResponse({ res, data: { books } });
     } catch (error) {
       return handleError({ res, error });
