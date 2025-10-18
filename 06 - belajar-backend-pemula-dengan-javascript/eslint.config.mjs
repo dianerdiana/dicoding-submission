@@ -4,23 +4,22 @@ import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
 
-/**
- * ESLint v9+ Flat Config
- * TypeScript + Node (Hapi.js)
- * Modern setup tanpa tseslint.config() (deprecated)
- */
 export default [
+  {
+    ignores: ['dist', 'node_modules', '.env'],
+  },
   js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked, // gunakan config baru dengan type checking
-  prettier, // matikan aturan yang bentrok dengan Prettier
+  ...tseslint.configs.recommended,
+  prettier,
   {
     files: ['**/*.{ts,js,mjs,cjs}'],
-    ignores: ['dist', 'node_modules', '.env'],
     languageOptions: {
-      parser: tseslint.parser, // gunakan parser TypeScript modern
+      parser: tseslint.parser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
+        // project: ['./tsconfig.json'],
+        // tsconfigRootDir: import.meta.dirname,
         // projectService: true,
       },
       globals: {
@@ -29,7 +28,7 @@ export default [
     },
     plugins: {
       prettier: prettierPlugin,
-      '@typescript-eslint': tseslint.plugin, // tambahkan plugin TS secara eksplisit
+      '@typescript-eslint': tseslint.plugin,
     },
     rules: {
       // --- Custom rules for better DX ---
@@ -39,7 +38,7 @@ export default [
       'no-console': 'off',
 
       // Prettier integration
-      'prettier/prettier': 'off', // ubah ke 'warn' jika mau aktif lint-nya
+      'prettier/prettier': 'off',
     },
   },
 ];
