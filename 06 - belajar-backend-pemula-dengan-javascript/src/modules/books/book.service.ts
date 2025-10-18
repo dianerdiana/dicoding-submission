@@ -1,6 +1,5 @@
-import { z } from 'zod';
 import BookRepository from './book.repository';
-import { CreateBookPayload, createBookSchema, UpdateBookPayload } from './book.schema';
+import { CreateBookPayload, UpdateBookPayload } from './book.schema';
 import { Book } from './book.entity';
 
 export default class BookService {
@@ -11,48 +10,36 @@ export default class BookService {
   }
 
   async createBook(payload: CreateBookPayload) {
-    await createBookSchema.parseAsync(payload);
-
     const newBook = new Book(payload);
     this.bookRepository.create(newBook);
 
-    return { bookId: newBook.id };
+    return newBook.id;
   }
 
   async getAllBooks() {
     const books = await this.bookRepository.findAll();
-    return {
-      books: books.map((book) => ({
-        id: book.id,
-        name: book.name,
-        publisher: book.publisher,
-      })),
-    };
+    return books.map((book) => ({
+      id: book.id,
+      name: book.name,
+      publisher: book.publisher,
+    }));
   }
 
   async getBookById(id: string) {
     const book = await this.bookRepository.findById(id);
 
     if (!book) {
-      throw new Error('Buku tidak ditemukan');
+      return null;
     }
 
-    return { book };
+    return book;
   }
 
-  async updateBook(bookId: string, payload: UpdateBookPayload) {
-    let book = await this.bookRepository.findById(bookId);
+  async updateBook(bookData: Book, payload: UpdateBookPayload) {
+    bookData.update(payload);
+    await this.bookRepository.update(bookData);
 
-    if (!book) {
-      throw new Error('Gagal memperbarui buku. Buku tidak ditemukan');
-    }
-
-    book = new Book(book);
-    book.update(payload);
-
-    this.bookRepository.update(book);
-
-    return true;
+    return bookData;
   }
 
   async deleteBook(bookId: string) {

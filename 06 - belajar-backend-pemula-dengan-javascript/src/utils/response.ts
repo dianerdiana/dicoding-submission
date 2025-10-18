@@ -23,11 +23,11 @@ export const successResponse = ({
 export const errorResponse = ({
   res,
   message,
-  code = 200,
+  code = 404,
 }: {
   res: ResponseToolkit;
   message?: string;
-  code: number;
+  code?: number;
 }): ResponseObject => {
   return res
     .response({
