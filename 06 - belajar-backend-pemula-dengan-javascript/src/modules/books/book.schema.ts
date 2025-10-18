@@ -20,7 +20,9 @@ export const createBookSchema = z
 
 export const updateBookSchema = z
   .object({
-    name: z.string().optional(),
+    name: z
+      .string({ error: 'Gagal memperbarui buku. Mohon isi nama buku' })
+      .min(1, 'Gagal memperbarui buku. Mohon isi nama buku'),
     year: z.number().optional(),
     author: z.string().optional(),
     summary: z.string().optional(),

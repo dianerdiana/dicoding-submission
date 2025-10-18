@@ -11,26 +11,26 @@ export default class BookRoute {
         path: '/books',
         handler: this.handler.createBook,
       },
-      // {
-      //   method: 'GET',
-      //   path: '/books',
-      //   handler: this.handler.getAllBooks,
-      // },
-      // {
-      //   method: 'GET',
-      //   path: '/books/{id}',
-      //   handler: this.handler.getBookById,
-      // },
-      // {
-      //   method: 'PUT',
-      //   path: '/books/{id}',
-      //   handler: this.handler.updateBook,
-      // },
-      // {
-      //   method: 'DELETE',
-      //   path: '/books/{id}',
-      //   handler: this.handler.deleteBook,
-      // },
+      {
+        method: 'GET',
+        path: '/books',
+        handler: this.handler.getAllBooks,
+      },
+      {
+        method: 'GET',
+        path: '/books/{bookId}',
+        handler: this.handler.getBookById,
+      },
+      {
+        method: 'PUT',
+        path: '/books/{bookId}',
+        handler: this.handler.updateBook,
+      },
+      {
+        method: 'DELETE',
+        path: '/books/{bookId}',
+        handler: this.handler.deleteBook,
+      },
     ];
   }
 }
