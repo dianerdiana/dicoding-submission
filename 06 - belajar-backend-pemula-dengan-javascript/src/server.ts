@@ -7,7 +7,6 @@ const init = async () => {
     host: 'localhost',
   });
 
-  // Register routes
   server.route(routes);
 
   await server.start();

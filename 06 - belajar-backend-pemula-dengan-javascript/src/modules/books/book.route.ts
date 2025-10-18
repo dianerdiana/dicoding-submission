@@ -2,7 +2,11 @@ import { ServerRoute } from '@hapi/hapi';
 import BookHandler from './book.handler';
 
 export default class BookRoute {
-  private handler = new BookHandler();
+  private handler: BookHandler;
+
+  constructor(handler: BookHandler) {
+    this.handler = handler;
+  }
 
   public routes(): ServerRoute[] {
     return [

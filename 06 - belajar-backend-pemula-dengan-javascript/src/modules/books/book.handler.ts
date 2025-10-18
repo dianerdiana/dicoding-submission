@@ -12,7 +12,11 @@ import { handleError } from '../../utils/handleError';
 import { NotFoundError } from '../../common/AppError';
 
 export default class BookHandler {
-  private bookService = new BookService();
+  private bookService: BookService;
+
+  constructor(bookService: BookService) {
+    this.bookService = bookService;
+  }
 
   createBook: HapiHandler = async (req, res): Promise<ResponseObject> => {
     try {

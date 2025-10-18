@@ -3,10 +3,10 @@ import { CreateBookPayload, UpdateBookPayload } from './book.schema';
 import { Book } from './book.entity';
 
 export default class BookService {
-  private bookRepository = new BookRepository();
+  private bookRepository: BookRepository;
 
-  constructor() {
-    this.bookRepository = new BookRepository();
+  constructor(bookRepository: BookRepository) {
+    this.bookRepository = bookRepository;
   }
 
   async createBook(payload: CreateBookPayload) {
