@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node dist/server.js",
+    "build": "tsc",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
@@ -12,7 +14,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hapi/hapi": "^21.4.3"
+    "@hapi/hapi": "^21.4.3",
+    "joi": "^18.0.1",
+    "nanoid": "^5.1.6",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
