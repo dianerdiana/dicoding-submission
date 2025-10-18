@@ -1,9 +1,15 @@
 import { ResponseToolkit, ResponseObject } from '@hapi/hapi';
 
-export const successResponse = (res: ResponseToolkit, data: any, code = 200): ResponseObject => {
+export const successResponse = (
+  res: ResponseToolkit,
+  data: any,
+  message: string = 'Success',
+  code = 200,
+): ResponseObject => {
   return res
     .response({
       status: 'success',
+      message,
       data,
     })
     .code(code);
@@ -16,7 +22,7 @@ export const errorResponse = (
 ): ResponseObject => {
   return res
     .response({
-      status: 'error',
+      status: 'fail',
       message,
     })
     .code(code);
