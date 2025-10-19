@@ -1,12 +1,9 @@
 function factorial(n) {
-  let factor = n;
-
-  for (let f = n; f > 1; f--) {
-    const newFactor = factor * (f - 1);
-    factor = newFactor;
+  if (n === 0 || n === 1) {
+    return 1;
   }
 
-  return factor;
+  return n * factorial(n - 1);
 }
 
 // Jangan hapus kode di bawah ini!

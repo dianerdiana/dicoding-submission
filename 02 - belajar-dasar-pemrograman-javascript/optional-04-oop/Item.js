@@ -24,12 +24,7 @@ class Item {
   }
 
   displayDetails() {
-    return {
-      ID: this.id,
-      Name: this.name,
-      Quantity: this.quantity,
-      Price: this.price,
-    };
+    return `ID: ${this.id}, Name: ${this.name}, Quantity: ${this.quantity}, Price: ${this.price}`;
   }
 }
 
