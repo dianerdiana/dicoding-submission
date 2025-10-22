@@ -13,22 +13,22 @@ export class AlbumRoute {
       {
         method: 'POST',
         path: '/albums',
-        handler: this.albumHandler.postAlbums,
+        handler: this.albumHandler.createAlbum,
       },
       {
         method: 'GET',
         path: '/albums/{id}',
-        handler: this.albumHandler.getAlbums,
+        handler: this.albumHandler.getAlbumById,
       },
       {
         method: 'PUT',
         path: '/albums/{id}',
-        handler: this.albumHandler.putAlbums,
+        handler: this.albumHandler.updateAlbum,
       },
       {
         method: 'DELETE',
         path: '/albums/{id}',
-        handler: this.albumHandler.deleteAlbums,
+        handler: this.albumHandler.deleteAlbum,
       },
     ];
   }

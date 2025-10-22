@@ -11,21 +11,21 @@ export class AlbumHandler {
     this.albumService = albumService;
   }
 
-  postAlbums: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  createAlbum: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const payload = await createAlbumSchema.parseAsync(req.payload);
     const albumId = await this.albumService.createAlbum(payload);
 
     return successResponse({ res, data: { albumId }, code: 201 });
   };
 
-  getAlbums: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  getAlbumById: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const { id } = await albumIdParamSchema.parseAsync(req.params);
     const album = await this.albumService.getAlbumById(id);
 
     return successResponse({ res, data: { album }, code: 200 });
   };
 
-  putAlbums: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  updateAlbum: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const { id } = await albumIdParamSchema.parseAsync(req.params);
     const payload = await createAlbumSchema.parseAsync(req.payload);
     const updatedAlbum = await this.albumService.updateAlbum(id, payload);
@@ -38,7 +38,7 @@ export class AlbumHandler {
     });
   };
 
-  deleteAlbums: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  deleteAlbum: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const { id } = await albumIdParamSchema.parseAsync(req.params);
     await this.albumService.deleteAlbum(id);
 

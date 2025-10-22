@@ -9,7 +9,7 @@ const init = async () => {
     host: 'localhost',
   });
 
-  await server.register([albumPlugin, songPlugin]);
+  await server.register([songPlugin, albumPlugin]);
 
   server.ext('onPreResponse', (req, h) => {
     const { response } = req;

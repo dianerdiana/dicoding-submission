@@ -23,7 +23,7 @@ export class SongRoute {
       {
         method: 'GET',
         path: '/songs/{id}',
-        handler: this.songHandler.getSong,
+        handler: this.songHandler.getSongById,
       },
       {
         method: 'PUT',

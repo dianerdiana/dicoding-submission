@@ -28,4 +28,4 @@ class ServiceContainer {
   }
 }
 
-export const container = new ServiceContainer();
+export const serviceContainer = new ServiceContainer();

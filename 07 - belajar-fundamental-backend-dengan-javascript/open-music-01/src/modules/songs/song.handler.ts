@@ -23,7 +23,7 @@ export class SongHandler {
     return successResponse({ res, data: { songs }, code: 200 });
   };
 
-  getSong: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  getSongById: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const { id } = await songIdParamSchema.parseAsync(req.params);
     const song = await this.songService.getSongById(id);
 
