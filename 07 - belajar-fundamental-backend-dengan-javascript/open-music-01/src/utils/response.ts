@@ -5,15 +5,17 @@ export const successResponse = ({
   data,
   message,
   code = 200,
+  status = 'success',
 }: {
   res: ResponseToolkit;
   data?: any;
   message?: string;
   code?: number;
+  status?: string;
 }): ResponseObject => {
   return res
     .response({
-      status: 'success',
+      status,
       message,
       data,
     })
@@ -24,14 +26,16 @@ export const errorResponse = ({
   res,
   message,
   code = 404,
+  status = 'fail',
 }: {
   res: ResponseToolkit;
   message?: string;
   code?: number;
+  status?: string;
 }): ResponseObject => {
   return res
     .response({
-      status: 'fail',
+      status,
       message,
     })
     .code(code);

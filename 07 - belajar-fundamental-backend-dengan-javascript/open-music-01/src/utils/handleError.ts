@@ -41,6 +41,7 @@ export const handleError = ({
       res,
       message: message || output.payload.message || 'Terjadi kesalahan',
       code: output.statusCode,
+      status: 'error',
     });
   }
 
@@ -58,5 +59,6 @@ export const handleError = ({
     res,
     message: 'Server Error',
     code: fallbackCode,
+    status: 'error',
   });
 };
