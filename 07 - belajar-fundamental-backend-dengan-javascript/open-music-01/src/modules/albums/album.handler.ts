@@ -13,9 +13,9 @@ export class AlbumHandler {
 
   postAlbums: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const payload = await createAlbumSchema.parseAsync(req.payload);
-    const newAlbum = await this.albumService.createAlbum(payload);
+    const albumId = await this.albumService.createAlbum(payload);
 
-    return successResponse({ res, data: { albums: newAlbum }, code: 201 });
+    return successResponse({ res, data: { albumId }, code: 201 });
   };
 
   getAlbums: HapiHandler = async (req, res): Promise<ResponseObject> => {

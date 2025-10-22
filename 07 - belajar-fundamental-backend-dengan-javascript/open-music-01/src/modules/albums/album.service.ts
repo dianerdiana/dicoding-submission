@@ -18,26 +18,25 @@ export class AlbumService {
   }
 
   async getAlbumById(id: string) {
-    const existing = await this.albumRepository.findById(id);
-    if (!existing) throw new NotFoundError(`Album with id ${id} not found`);
+    const album = await this.albumRepository.findById(id);
+    if (!album) throw new NotFoundError(`Album with id ${id} not found`);
 
-    return existing;
+    return album;
   }
 
   async updateAlbum(id: string, payload: UpdateAlbumPayload) {
-    const existing = await this.albumRepository.findById(id);
-    if (!existing) throw new NotFoundError(`Album with id ${id} not found`);
+    const album = await this.albumRepository.findById(id);
+    if (!album) throw new NotFoundError(`Album with id ${id} not found`);
 
-    const album = new Album(existing);
     album.update(payload);
 
-    const updatedAlbum = await this.albumRepository.update(album);
-    return updatedAlbum;
+    await this.albumRepository.update(album);
+    return album;
   }
 
   async deleteAlbum(id: string) {
-    const existing = await this.albumRepository.findById(id);
-    if (!existing) throw new NotFoundError(`Album with id ${id} not found`);
+    const album = await this.albumRepository.findById(id);
+    if (!album) throw new NotFoundError(`Album with id ${id} not found`);
 
     await this.albumRepository.delete(id);
 
