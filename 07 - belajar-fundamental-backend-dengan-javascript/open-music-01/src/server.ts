@@ -2,11 +2,12 @@ import Hapi from '@hapi/hapi';
 import { handleError } from './utils/handleError';
 import { albumPlugin } from './modules/albums';
 import { songPlugin } from './modules/songs';
+import { env } from './configs/env';
 
 const init = async () => {
   const server = Hapi.server({
-    port: 5000,
-    host: 'localhost',
+    port: env.app.port,
+    host: env.app.host,
   });
 
   await server.register([songPlugin, albumPlugin]);
