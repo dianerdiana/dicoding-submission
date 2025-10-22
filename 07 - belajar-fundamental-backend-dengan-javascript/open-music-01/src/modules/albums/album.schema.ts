@@ -11,7 +11,7 @@ export const updateAlbumSchema = z.object({
 });
 
 export const albumIdParamSchema = z.object({
-  id: z.uuid({ error: 'Album is not found' }),
+  id: z.string({ error: 'Album is not found' }),
 });
 
 export type CreateAlbumPayload = z.input<typeof createAlbumSchema>;

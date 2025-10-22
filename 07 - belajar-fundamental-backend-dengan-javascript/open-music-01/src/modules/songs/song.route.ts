@@ -11,9 +11,24 @@ export class SongRoute {
   public routes(): ServerRoute[] {
     return [
       {
-        method: 'GET',
+        method: 'POST',
         path: '/songs',
-        handler: (req, res) => res.response({ message: 'Hi' }),
+        handler: this.songHandler.postSongs,
+      },
+      {
+        method: 'GET',
+        path: '/songs/{id}',
+        handler: this.songHandler.getSongs,
+      },
+      {
+        method: 'PUT',
+        path: '/songs/{id}',
+        handler: this.songHandler.putSongs,
+      },
+      {
+        method: 'DELETE',
+        path: '/songs/{id}',
+        handler: this.songHandler.deleteSongs,
       },
     ];
   }

@@ -1,0 +1,26 @@
+import z from 'zod';
+
+export const createSongSchema = z.object({
+  title: z.string(),
+  year: z.number(),
+  performer: z.string(),
+  genre: z.string(),
+  duration: z.number(),
+  albumId: z.string(),
+});
+
+export const updateSongSchema = z.object({
+  title: z.string(),
+  year: z.number(),
+  performer: z.string(),
+  genre: z.string(),
+  duration: z.number(),
+  albumId: z.string(),
+});
+
+export const songIdParamSchema = z.object({
+  id: z.string({ error: 'Song is not found' }),
+});
+
+export type CreateSongPayload = z.input<typeof createSongSchema>;
+export type UpdateSongPayload = z.input<typeof updateSongSchema>;
