@@ -11,21 +11,26 @@ export class SongHandler {
     this.songService = songService;
   }
 
-  postSongs: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  createSong: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const payload = await createSongSchema.parseAsync(req.payload);
-    const newSong = await this.songService.createSong(payload);
+    const songId = await this.songService.createSong(payload);
 
-    return successResponse({ res, data: { songs: newSong }, code: 201 });
+    return successResponse({ res, data: { songId }, code: 201 });
   };
 
-  getSongs: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  getAllSongs: HapiHandler = async (req, res): Promise<ResponseObject> => {
+    const songs = await this.songService.getAllSongs();
+    return successResponse({ res, data: { songs }, code: 200 });
+  };
+
+  getSong: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const { id } = await songIdParamSchema.parseAsync(req.params);
     const song = await this.songService.getSongById(id);
 
     return successResponse({ res, data: { song }, code: 200 });
   };
 
-  putSongs: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  updateSong: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const { id } = await songIdParamSchema.parseAsync(req.params);
     const payload = await createSongSchema.parseAsync(req.payload);
     const updatedSong = await this.songService.updateSong(id, payload);
@@ -38,7 +43,7 @@ export class SongHandler {
     });
   };
 
-  deleteSongs: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  deleteSong: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const { id } = await songIdParamSchema.parseAsync(req.params);
     await this.songService.deleteSong(id);
 

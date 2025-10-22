@@ -6,8 +6,8 @@ export interface SongProps {
   year: number;
   performer: string;
   genre: string;
-  duration: number;
-  albumId: string;
+  duration?: number | null | undefined;
+  albumId?: string | null | undefined;
   createdAt: string;
   updatedAt: string;
 }
@@ -18,8 +18,8 @@ export class Song implements SongProps {
   year: number;
   performer: string;
   genre: string;
-  duration: number;
-  albumId: string;
+  duration?: number;
+  albumId?: string;
   createdAt: string;
   updatedAt: string;
 
@@ -36,8 +36,8 @@ export class Song implements SongProps {
     this.year = year;
     this.performer = performer;
     this.genre = genre;
-    this.duration = duration;
-    this.albumId = albumId;
+    this.duration = duration ? duration : undefined;
+    this.albumId = albumId ? albumId : undefined;
 
     const timestamp = new Date().toISOString();
     this.createdAt = timestamp;
@@ -56,8 +56,8 @@ export class Song implements SongProps {
     if (year !== undefined) this.year = year;
     if (performer !== undefined) this.performer = performer;
     if (genre !== undefined) this.genre = genre;
-    if (duration !== undefined) this.duration = duration;
-    if (albumId !== undefined) this.albumId = albumId;
+    if (duration) this.duration = duration;
+    if (albumId) this.albumId = albumId;
 
     this.updatedAt = new Date().toISOString();
   }

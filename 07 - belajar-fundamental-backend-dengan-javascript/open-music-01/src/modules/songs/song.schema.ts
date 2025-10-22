@@ -5,8 +5,8 @@ export const createSongSchema = z.object({
   year: z.number(),
   performer: z.string(),
   genre: z.string(),
-  duration: z.number(),
-  albumId: z.string(),
+  duration: z.number().optional().nullable(),
+  albumId: z.string().optional().nullable(),
 });
 
 export const updateSongSchema = z.object({
@@ -14,8 +14,8 @@ export const updateSongSchema = z.object({
   year: z.number(),
   performer: z.string(),
   genre: z.string(),
-  duration: z.number(),
-  albumId: z.string(),
+  duration: z.number().optional().nullable(),
+  albumId: z.string().optional().nullable(),
 });
 
 export const songIdParamSchema = z.object({

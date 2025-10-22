@@ -17,18 +17,26 @@ export class SongService {
     return newSong.id;
   }
 
-  async getSongById(id: string) {
-    const existing = await this.songRepository.findById(id);
-    if (!existing) throw new NotFoundError(`Song with id ${id} not found`);
+  async getAllSongs() {
+    const songs = await this.songRepository.findAllSongs();
+    return songs.map((song) => ({
+      id: song.id,
+      title: song.title,
+      performer: song.performer,
+    }));
+  }
 
-    return existing;
+  async getSongById(id: string) {
+    const song = await this.songRepository.findById(id);
+    if (!song) throw new NotFoundError(`Song with id ${id} is not found`);
+
+    return song;
   }
 
   async updateSong(id: string, payload: UpdateSongPayload) {
-    const existing = await this.songRepository.findById(id);
-    if (!existing) throw new NotFoundError(`Song with id ${id} not found`);
+    const song = await this.songRepository.findById(id);
+    if (!song) throw new NotFoundError(`Song with id ${id} is not found`);
 
-    const song = new Song(existing);
     song.update(payload);
 
     const updatedSong = await this.songRepository.update(song);
@@ -36,8 +44,8 @@ export class SongService {
   }
 
   async deleteSong(id: string) {
-    const existing = await this.songRepository.findById(id);
-    if (!existing) throw new NotFoundError(`Song with id ${id} not found`);
+    const song = await this.songRepository.findById(id);
+    if (!song) throw new NotFoundError(`Song with id ${id} is not found`);
 
     await this.songRepository.delete(id);
 

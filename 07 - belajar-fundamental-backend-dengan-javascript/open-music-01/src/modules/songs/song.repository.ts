@@ -7,6 +7,10 @@ export class SongRepository {
     this.albums.push(album);
   }
 
+  async findAllSongs(): Promise<Song[] | []> {
+    return this.albums;
+  }
+
   async findById(id: string): Promise<Song | null> {
     return this.albums.find((b) => b.id === id) ?? null;
   }

@@ -13,22 +13,27 @@ export class SongRoute {
       {
         method: 'POST',
         path: '/songs',
-        handler: this.songHandler.postSongs,
+        handler: this.songHandler.createSong,
+      },
+      {
+        method: 'GET',
+        path: '/songs',
+        handler: this.songHandler.getAllSongs,
       },
       {
         method: 'GET',
         path: '/songs/{id}',
-        handler: this.songHandler.getSongs,
+        handler: this.songHandler.getSong,
       },
       {
         method: 'PUT',
         path: '/songs/{id}',
-        handler: this.songHandler.putSongs,
+        handler: this.songHandler.updateSong,
       },
       {
         method: 'DELETE',
         path: '/songs/{id}',
-        handler: this.songHandler.deleteSongs,
+        handler: this.songHandler.deleteSong,
       },
     ];
   }
