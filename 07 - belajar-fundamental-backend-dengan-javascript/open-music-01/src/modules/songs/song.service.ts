@@ -17,8 +17,16 @@ export class SongService {
     return newSong.id;
   }
 
-  async getAllSongs() {
-    const songs = await this.songRepository.findAllSongs();
+  async getAllSongs({
+    title,
+    performer,
+    albumId,
+  }: {
+    title?: string;
+    performer?: string;
+    albumId?: string;
+  }) {
+    const songs = await this.songRepository.findAllSongs({ title, performer, albumId });
     return songs.map((song) => ({
       id: song.id,
       title: song.title,

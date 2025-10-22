@@ -1,26 +1,48 @@
 import { Song } from './song.entity';
 
 export class SongRepository {
-  private albums: Song[] = [];
+  private songs: Song[] = [];
 
   async create(album: Song): Promise<void> {
-    this.albums.push(album);
+    this.songs.push(album);
   }
 
-  async findAllSongs(): Promise<Song[] | []> {
-    return this.albums;
+  async findAllSongs({
+    title,
+    performer,
+    albumId,
+  }: {
+    title?: string;
+    performer?: string;
+    albumId?: string;
+  }): Promise<Song[]> {
+    let songs = this.songs;
+
+    if (title !== undefined) {
+      songs = this.songs.filter((song) => song.title.toLowerCase().includes(title.toLowerCase()));
+    }
+
+    if (performer !== undefined) {
+      songs = this.songs.filter((song) => song.performer === performer);
+    }
+
+    if (albumId !== undefined) {
+      songs = this.songs.filter((song) => song.albumId === albumId);
+    }
+
+    return songs;
   }
 
   async findById(id: string): Promise<Song | null> {
-    return this.albums.find((b) => b.id === id) ?? null;
+    return this.songs.find((b) => b.id === id) ?? null;
   }
 
   async update(album: Song): Promise<void> {
-    const index = this.albums.findIndex((b) => b.id === album.id);
-    if (index !== -1) this.albums[index] = album;
+    const index = this.songs.findIndex((b) => b.id === album.id);
+    if (index !== -1) this.songs[index] = album;
   }
 
   async delete(id: string): Promise<void> {
-    this.albums = this.albums.filter((b) => b.id !== id);
+    this.songs = this.songs.filter((b) => b.id !== id);
   }
 }
