@@ -1,4 +1,5 @@
 import z from 'zod';
+import Boom from '@hapi/boom';
 import { ResponseToolkit, ResponseObject } from '@hapi/hapi';
 import { errorResponse } from './response';
 import { AppError } from '../common/AppError';
@@ -10,8 +11,8 @@ interface HandleErrorOptions {
 }
 
 /**
- * handleError (advanced)
- * Menangani berbagai jenis error secara konsisten di seluruh aplikasi.
+ * handleError (universal)
+ * Bisa mendeteksi error dari Zod, AppError, Boom, maupun native Error.
  */
 export const handleError = ({
   res,
@@ -24,12 +25,26 @@ export const handleError = ({
     return errorResponse({ res, message, code: 400 });
   }
 
-  // 2️⃣ Custom AppError (termasuk turunannya)
+  // 2️⃣ Custom AppError
   if (error instanceof AppError) {
-    return errorResponse({ res, message: error.message, code: error.statusCode });
+    return errorResponse({
+      res,
+      message: error.message,
+      code: error.statusCode,
+    });
   }
 
-  // 3️⃣ JavaScript native error (default)
+  // 3️⃣ Boom error (bawaan Hapi)
+  if (Boom.isBoom(error)) {
+    const { output, message } = error;
+    return errorResponse({
+      res,
+      message: message || output.payload.message || 'Terjadi kesalahan',
+      code: output.statusCode,
+    });
+  }
+
+  // 4️⃣ Native Error
   if (error instanceof Error) {
     return errorResponse({
       res,
@@ -38,6 +53,10 @@ export const handleError = ({
     });
   }
 
-  // 4️⃣ Fallback error (unknown type)
-  return errorResponse({ res, message: 'Server Error', code: fallbackCode });
+  // 5️⃣ Unknown error
+  return errorResponse({
+    res,
+    message: 'Server Error',
+    code: fallbackCode,
+  });
 };

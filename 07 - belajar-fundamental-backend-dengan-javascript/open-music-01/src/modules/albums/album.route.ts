@@ -11,9 +11,24 @@ export class AlbumRoute {
   public routes(): ServerRoute[] {
     return [
       {
-        method: 'GET',
+        method: 'POST',
         path: '/albums',
-        handler: (req, res) => res.response({ message: 'Hi' }),
+        handler: this.albumHandler.postAlbums,
+      },
+      {
+        method: 'GET',
+        path: '/albums/{id}',
+        handler: this.albumHandler.getAlbums,
+      },
+      {
+        method: 'PUT',
+        path: '/albums/{id}',
+        handler: this.albumHandler.putAlbums,
+      },
+      {
+        method: 'DELETE',
+        path: '/albums/{id}',
+        handler: this.albumHandler.deleteAlbums,
       },
     ];
   }
