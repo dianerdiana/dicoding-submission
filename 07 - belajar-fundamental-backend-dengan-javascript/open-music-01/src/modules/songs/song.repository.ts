@@ -23,7 +23,9 @@ export class SongRepository {
     }
 
     if (performer !== undefined) {
-      songs = this.songs.filter((song) => song.performer === performer);
+      songs = this.songs.filter((song) =>
+        song.performer.toLowerCase().includes(performer.toLowerCase()),
+      );
     }
 
     if (albumId !== undefined) {

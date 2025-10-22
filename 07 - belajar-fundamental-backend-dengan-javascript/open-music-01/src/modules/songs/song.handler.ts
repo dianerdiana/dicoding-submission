@@ -2,7 +2,7 @@ import { ResponseObject } from '@hapi/hapi';
 import { SongService } from './song.service';
 import { HapiHandler } from '../../types/hapi';
 import { successResponse } from '../../utils/response';
-import { songIdParamSchema, createSongSchema } from './song.schema';
+import { songIdParamSchema, createSongSchema, songSearchParamSchema } from './song.schema';
 
 export class SongHandler {
   private songService: SongService;
@@ -19,7 +19,9 @@ export class SongHandler {
   };
 
   getAllSongs: HapiHandler = async (req, res): Promise<ResponseObject> => {
-    const songs = await this.songService.getAllSongs();
+    const { title, performer } = await songSearchParamSchema.parseAsync(req.query);
+    const songs = await this.songService.getAllSongs({ title, performer });
+
     return successResponse({ res, data: { songs }, code: 200 });
   };
 
