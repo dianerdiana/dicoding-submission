@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 
-export interface SongProps {
+export interface SongEntity {
   id: string;
   title: string;
   year: number;
@@ -12,7 +12,7 @@ export interface SongProps {
   updatedAt: string;
 }
 
-export class Song implements SongProps {
+export class Song implements SongEntity {
   id: string;
   title: string;
   year: number;
@@ -30,7 +30,7 @@ export class Song implements SongProps {
     genre,
     duration,
     albumId,
-  }: Omit<SongProps, 'id' | 'createdAt' | 'updatedAt'>) {
+  }: Omit<SongEntity, 'id' | 'createdAt' | 'updatedAt'>) {
     this.id = nanoid(16);
     this.title = title;
     this.year = year;
@@ -51,7 +51,7 @@ export class Song implements SongProps {
     genre,
     duration,
     albumId,
-  }: Partial<Omit<SongProps, 'id' | 'createdAt' | 'updatedAt'>>) {
+  }: Partial<Omit<SongEntity, 'id' | 'createdAt' | 'updatedAt'>>) {
     if (title !== undefined) this.title = title;
     if (year !== undefined) this.year = year;
     if (performer !== undefined) this.performer = performer;
