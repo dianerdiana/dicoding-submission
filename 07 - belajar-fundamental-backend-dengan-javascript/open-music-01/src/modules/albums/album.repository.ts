@@ -1,22 +1,48 @@
-import { Album } from './album.entity';
+import { db } from '../../database';
+import { AlbumEntity } from './album.entity';
+import { mapAlbumRowToEntity } from './album.mapper';
 
 export class AlbumRepository {
-  private albums: Album[] = [];
+  private tableName = 'albums';
 
-  async create(album: Album): Promise<void> {
-    this.albums.push(album);
+  async create(album: AlbumEntity): Promise<AlbumEntity | null> {
+    let newAlbum = null;
+    await db.transaction(async (client) => {
+      const res = await client.query(
+        `INSERT INTO ${this.tableName}(name,year) VALUES ($1,$2) RETURNING *`,
+        [album.name, album.year],
+      );
+
+      newAlbum = res ? res.rows[0] : null;
+    });
+    return newAlbum ? mapAlbumRowToEntity(newAlbum) : null;
   }
 
-  async findById(id: string): Promise<Album | null> {
-    return this.albums.find((b) => b.id === id) ?? null;
+  async findById(id: string): Promise<AlbumEntity | null> {
+    let album = null;
+
+    await db.transaction(async (client) => {
+      const res = await client.query(`SELECT * FROM ${this.tableName} WHERE id=$1`, [id]);
+      album = res ? res.rows[0] : null;
+    });
+    return album ? mapAlbumRowToEntity(album) : null;
   }
 
-  async update(album: Album): Promise<void> {
-    const index = this.albums.findIndex((b) => b.id === album.id);
-    if (index !== -1) this.albums[index] = album;
+  async update(id: string, album: AlbumEntity): Promise<AlbumEntity | null> {
+    let updatedAlbum = null;
+
+    await db.transaction(async (client) => {
+      const res = await client.query(
+        `UPDATE ${this.tableName} SET name=$1,year=$2 WHERE id=$3 RETURNING *`,
+        [album.name, album.year, id],
+      );
+      updatedAlbum = res ? res.rows[0] : null;
+    });
+
+    return updatedAlbum ? mapAlbumRowToEntity(updatedAlbum) : null;
   }
 
   async delete(id: string): Promise<void> {
-    this.albums = this.albums.filter((b) => b.id !== id);
+    await db.query(`DELETE FROM ${this.tableName} WHERE id=$1`, [id]);
   }
 }

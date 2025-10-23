@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 
-export interface AlbumProps {
+export interface AlbumEntity {
   id: string;
   name: string;
   year: number;
@@ -8,14 +8,14 @@ export interface AlbumProps {
   updatedAt: string;
 }
 
-export class Album implements AlbumProps {
+export class Album implements AlbumEntity {
   id: string;
   name: string;
   year: number;
   createdAt: string;
   updatedAt: string;
 
-  constructor({ name, year }: Omit<AlbumProps, 'id' | 'createdAt' | 'updatedAt'>) {
+  constructor({ name, year }: Omit<AlbumEntity, 'id' | 'createdAt' | 'updatedAt'>) {
     this.id = nanoid(16);
     this.name = name;
     this.year = year;
@@ -25,7 +25,7 @@ export class Album implements AlbumProps {
     this.updatedAt = timestamp;
   }
 
-  update({ name, year }: Partial<Omit<AlbumProps, 'id' | 'createdAt' | 'updatedAt'>>) {
+  update({ name, year }: Partial<Omit<AlbumEntity, 'id' | 'createdAt' | 'updatedAt'>>) {
     if (name !== undefined) this.name = name;
     if (year !== undefined) this.year = year;
 

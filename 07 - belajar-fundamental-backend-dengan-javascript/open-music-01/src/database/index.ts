@@ -1,31 +1,66 @@
-import { Pool } from 'pg';
+import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg';
 import { env } from '../configs/env';
-import { camelizeKeys, decamelizeKeys } from './mapper';
 
-export const pool = new Pool({
+export class Database {
+  private pool: Pool;
+
+  constructor({
+    host,
+    port,
+    user,
+    password,
+    database,
+  }: {
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+    database: string;
+  }) {
+    this.pool = new Pool({
+      host,
+      port,
+      user,
+      password,
+      database,
+    });
+  }
+
+  async query<T extends QueryResultRow = any>(
+    text: string,
+    params?: any[],
+  ): Promise<QueryResult<T>> {
+    return this.pool.query<T>(text, params);
+  }
+
+  async getClient(): Promise<PoolClient> {
+    return this.pool.connect();
+  }
+
+  async transaction<T>(callback: (client: PoolClient) => Promise<T>): Promise<T> {
+    const client = await this.pool.connect();
+    try {
+      await client.query('BEGIN');
+      const result = await callback(client);
+      await client.query('COMMIT');
+      return result;
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
+  async close(): Promise<void> {
+    await this.pool.end();
+  }
+}
+
+export const db = new Database({
   host: env.db.host,
   port: env.db.port,
   user: env.db.user,
   password: env.db.password,
   database: env.db.database,
 });
-
-export const query = async <T = any>(
-  text: string,
-  params?: any[],
-  options?: { raw?: boolean },
-): Promise<T[]> => {
-  const res = await pool.query(text, params);
-  return options?.raw ? (res.rows as T[]) : res.rows.map((r) => camelizeKeys<T>(r));
-};
-
-export const insert = async <T = any>(table: string, data: Record<string, any>): Promise<T> => {
-  const snake = decamelizeKeys(data);
-  const keys = Object.keys(snake);
-  const values = Object.values(snake);
-  const placeholders = keys.map((_, i) => `$${i + 1}`).join(', ');
-
-  const q = `INSERT INTO ${table} (${keys.join(', ')}) VALUES (${placeholders}) RETURNING *`;
-  const res = await pool.query(q, values);
-  return camelizeKeys<T>(res.rows[0]);
-};

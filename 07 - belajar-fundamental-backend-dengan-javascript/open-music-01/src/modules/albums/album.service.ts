@@ -1,4 +1,4 @@
-import { NotFoundError } from '../../common/AppError';
+import { NotFoundError, ValidationError } from '../../common/AppError';
 import { serviceContainer } from '../../common/ServiceContainer';
 import { SongService } from '../songs/song.service';
 import { Album } from './album.entity';
@@ -15,8 +15,12 @@ export class AlbumService {
   }
 
   async createAlbum(payload: CreateAlbumPayload) {
-    const newAlbum = new Album(payload);
-    this.albumRepository.create(newAlbum);
+    const album = new Album(payload);
+    const newAlbum = await this.albumRepository.create(album);
+
+    if (!newAlbum) {
+      throw new ValidationError(`Album data is invalid`);
+    }
 
     return newAlbum.id;
   }
@@ -34,13 +38,14 @@ export class AlbumService {
   }
 
   async updateAlbum(id: string, payload: UpdateAlbumPayload) {
-    const album = await this.albumRepository.findById(id);
-    if (!album) throw new NotFoundError(`Album with id ${id} is not found`);
+    const existing = await this.albumRepository.findById(id);
+    if (!existing) throw new NotFoundError(`Album with id ${id} is not found`);
 
+    const album = new Album(existing);
     album.update(payload);
 
-    await this.albumRepository.update(album);
-    return album;
+    const updatedAlbum = await this.albumRepository.update(id, album);
+    return updatedAlbum;
   }
 
   async deleteAlbum(id: string) {
