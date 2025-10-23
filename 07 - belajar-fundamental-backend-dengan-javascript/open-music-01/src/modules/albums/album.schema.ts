@@ -10,7 +10,5 @@ export const updateAlbumSchema = z.object({
   year: z.number(),
 });
 
-export const albumIdParamSchema = z.uuid({ error: 'Album ID is invalid' });
-
 export type CreateAlbumPayload = z.input<typeof createAlbumSchema>;
 export type UpdateAlbumPayload = z.input<typeof updateAlbumSchema>;

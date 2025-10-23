@@ -1,4 +1,4 @@
-import { NotFoundError } from '../../common/AppError';
+import { NotFoundError, ValidationError } from '../../common/AppError';
 import { Song } from './song.entity';
 import { SongRepository } from './song.repository';
 import { CreateSongPayload, UpdateSongPayload } from './song.schema';
@@ -11,8 +11,12 @@ export class SongService {
   }
 
   async createSong(payload: CreateSongPayload) {
-    const newSong = new Song(payload);
-    this.songRepository.create(newSong);
+    const song = new Song(payload);
+    const newSong = await this.songRepository.create(song);
+
+    if (!newSong) {
+      throw new ValidationError('Input is not valid');
+    }
 
     return newSong.id;
   }
@@ -42,12 +46,13 @@ export class SongService {
   }
 
   async updateSong(id: string, payload: UpdateSongPayload) {
-    const song = await this.songRepository.findById(id);
-    if (!song) throw new NotFoundError(`Song with id ${id} is not found`);
+    const existing = await this.songRepository.findById(id);
+    if (!existing) throw new NotFoundError(`Song with id ${id} is not found`);
 
+    const song = new Song(existing);
     song.update(payload);
 
-    const updatedSong = await this.songRepository.update(song);
+    const updatedSong = await this.songRepository.update(id, song);
     return updatedSong;
   }
 

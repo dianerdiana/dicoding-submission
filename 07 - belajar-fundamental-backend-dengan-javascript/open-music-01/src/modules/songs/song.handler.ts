@@ -2,7 +2,8 @@ import { ResponseObject } from '@hapi/hapi';
 import { SongService } from './song.service';
 import { HapiHandler } from '../../types/hapi';
 import { successResponse } from '../../utils/response';
-import { songIdParamSchema, createSongSchema, songSearchParamSchema } from './song.schema';
+import { createSongSchema, songSearchParamSchema, updateSongSchema } from './song.schema';
+import { validateUUID } from '../../utils/validateUUID';
 
 export class SongHandler {
   private songService: SongService;
@@ -26,15 +27,19 @@ export class SongHandler {
   };
 
   getSongById: HapiHandler = async (req, res): Promise<ResponseObject> => {
-    const { id } = await songIdParamSchema.parseAsync(req.params);
+    const { id } = req.params;
+    validateUUID(id);
+
     const song = await this.songService.getSongById(id);
 
     return successResponse({ res, data: { song }, code: 200 });
   };
 
   updateSong: HapiHandler = async (req, res): Promise<ResponseObject> => {
-    const { id } = await songIdParamSchema.parseAsync(req.params);
-    const payload = await createSongSchema.parseAsync(req.payload);
+    const { id } = req.params;
+    validateUUID(id);
+
+    const payload = await updateSongSchema.parseAsync(req.payload);
     const updatedSong = await this.songService.updateSong(id, payload);
 
     return successResponse({
@@ -46,7 +51,9 @@ export class SongHandler {
   };
 
   deleteSong: HapiHandler = async (req, res): Promise<ResponseObject> => {
-    const { id } = await songIdParamSchema.parseAsync(req.params);
+    const { id } = req.params;
+    validateUUID(id);
+
     await this.songService.deleteSong(id);
 
     return successResponse({

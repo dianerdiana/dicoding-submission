@@ -18,10 +18,6 @@ export const updateSongSchema = z.object({
   albumId: z.string().optional().nullable(),
 });
 
-export const songIdParamSchema = z.object({
-  id: z.string({ error: 'Song is not found' }),
-});
-
 export const songSearchParamSchema = z.object({
   title: z.string().optional(),
   performer: z.string().optional(),

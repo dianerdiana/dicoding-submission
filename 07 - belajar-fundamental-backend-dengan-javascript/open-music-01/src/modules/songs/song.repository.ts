@@ -1,10 +1,21 @@
-import { Song } from './song.entity';
+import { db } from '../../database';
+import { SongEntity } from './song.entity';
+import { mapSongRowToEntity, SongRow } from './song.mapper';
 
 export class SongRepository {
-  private songs: Song[] = [];
+  private tableName = 'songs';
 
-  async create(album: Song): Promise<void> {
-    this.songs.push(album);
+  async create(song: SongEntity): Promise<SongEntity | null> {
+    const result = await db.query<SongRow>(
+      `INSERT INTO ${this.tableName}(title,year,genre,performer,duration,album_id) VALUES 
+      ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [song.title, song.year, song.genre, song.performer, song.duration, song.albumId],
+    );
+
+    const newSongRow = result.rows[0];
+    if (!newSongRow) return null;
+
+    return mapSongRowToEntity(newSongRow);
   }
 
   async findAllSongs({
@@ -15,36 +26,54 @@ export class SongRepository {
     title?: string;
     performer?: string;
     albumId?: string;
-  }): Promise<Song[]> {
-    let songs = this.songs;
+  }): Promise<SongEntity[]> {
+    const conditions: string[] = [];
+    const values: any[] = [];
 
-    if (title !== undefined) {
-      songs = this.songs.filter((song) => song.title.toLowerCase().includes(title.toLowerCase()));
+    if (title) {
+      values.push(`%${title.toLowerCase()}%`);
+      conditions.push(`LOWER(title) LIKE $${values.length}`);
     }
 
-    if (performer !== undefined) {
-      songs = this.songs.filter((song) =>
-        song.performer.toLowerCase().includes(performer.toLowerCase()),
-      );
+    if (performer) {
+      values.push(`%${performer.toLowerCase()}%`);
+      conditions.push(`LOWER(performer) LIKE $${values.length}`);
     }
 
-    if (albumId !== undefined) {
-      songs = this.songs.filter((song) => song.albumId === albumId);
+    if (albumId) {
+      values.push(albumId);
+      conditions.push(`album_id = $${values.length}`);
     }
 
-    return songs;
+    const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+    const query = `SELECT * FROM ${this.tableName} ${whereClause} ORDER BY created_at DESC;`;
+
+    const result = await db.query<SongRow>(query, values);
+    return result.rows.map((row) => mapSongRowToEntity(row));
   }
 
-  async findById(id: string): Promise<Song | null> {
-    return this.songs.find((b) => b.id === id) ?? null;
+  async findById(id: string): Promise<SongEntity | null> {
+    const result = await db.query<SongRow>(`SELECT * FROM ${this.tableName} WHERE id=$1`, [id]);
+
+    const existingSong = result.rows[0];
+    if (!existingSong) return null;
+
+    return mapSongRowToEntity(existingSong);
   }
 
-  async update(album: Song): Promise<void> {
-    const index = this.songs.findIndex((b) => b.id === album.id);
-    if (index !== -1) this.songs[index] = album;
+  async update(id: string, song: SongEntity): Promise<SongEntity | null> {
+    const result = await db.query<SongRow>(
+      `UPDATE ${this.tableName} SET title=$1,year=$2,genre=$3,performer=$4,duration=$5,album_id=$6 WHERE id=$7 RETURNING *`,
+      [song.title, song.year, song.genre, song.performer, song.duration, song.albumId, id],
+    );
+
+    const existingSong = result.rows[0];
+    if (!existingSong) return null;
+
+    return mapSongRowToEntity(existingSong);
   }
 
   async delete(id: string): Promise<void> {
-    this.songs = this.songs.filter((b) => b.id !== id);
+    await db.query(`DELETE FROM ${this.tableName} WHERE id=$1`, [id]);
   }
 }
