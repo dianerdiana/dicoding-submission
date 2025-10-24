@@ -1,10 +1,9 @@
-import { UserEntity } from './auth.entity';
+import { AuthEntity } from './auth.entity';
 
-export interface UserRow {
+export interface AuthRow {
   id: string;
-  fullname: string;
-  username: string;
-  password: string;
+  user_id: string;
+  refresh_token: string;
   created_at: string;
   updated_at: string;
 }
@@ -12,11 +11,10 @@ export interface UserRow {
 /**
  * Convert database row (snake_case) → entity (camelCase)
  */
-export const mapUserRowToEntity = (row: UserRow): UserEntity => ({
+export const mapAuthRowToEntity = (row: AuthRow): AuthEntity => ({
   id: row.id,
-  fullname: row.fullname,
-  username: row.username,
-  password: row.password,
+  userId: row.user_id,
+  refreshToken: row.refresh_token,
   createdAt: row.created_at,
   updatedAt: row.updated_at,
 });
@@ -24,11 +22,10 @@ export const mapUserRowToEntity = (row: UserRow): UserEntity => ({
 /**
  * Convert entity (camelCase) → database row (snake_case)
  */
-export const mapUserEntityToRow = (entity: UserEntity): UserRow => ({
+export const mapAuthEntityToRow = (entity: AuthEntity): AuthRow => ({
   id: entity.id,
-  fullname: entity.fullname,
-  username: entity.username,
-  password: entity.password,
+  user_id: entity.userId,
+  refresh_token: entity.refreshToken,
   created_at: entity.createdAt,
   updated_at: entity.updatedAt,
 });

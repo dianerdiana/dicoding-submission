@@ -1,29 +1,29 @@
 import { ServerRoute } from '@hapi/hapi';
-import { UserHandler } from './auth.handler';
+import { AuthHandler } from './auth.handler';
 
-export class UserRoute {
-  private userHandler: UserHandler;
+export class AuthRoute {
+  private authHandler: AuthHandler;
 
-  constructor(userHandler: UserHandler) {
-    this.userHandler = userHandler;
+  constructor(authHandler: AuthHandler) {
+    this.authHandler = authHandler;
   }
 
   public routes(): ServerRoute[] {
     return [
       {
         method: 'POST',
-        path: '/users',
-        handler: this.userHandler.createUser,
+        path: '/authentications',
+        handler: this.authHandler.login,
       },
       {
-        method: 'GET',
-        path: '/users/{id}',
-        handler: this.userHandler.getUserById,
+        method: 'PUT',
+        path: '/authentications',
+        handler: this.authHandler.updateAccessToken,
       },
       {
         method: 'DELETE',
-        path: '/users/{id}',
-        handler: this.userHandler.deleteUser,
+        path: '/authentications',
+        handler: this.authHandler.deleteRefreshToken,
       },
     ];
   }

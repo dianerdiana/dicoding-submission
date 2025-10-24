@@ -1,38 +1,80 @@
-import { NotFoundError, ValidationError } from '../../common/AppError';
-import { User } from './auth.entity';
-import { UserRepository } from './auth.repository';
-import { CreateUserPayload } from './auth.schema';
+import { BadRequestError, UnauthorizedError } from '../../common/AppError';
+import { env } from '../../configs/env';
+import { comparePassword } from '../../utils/passwordHashing';
+import { UserService } from '../users/user.service';
+import { Auth } from './auth.entity';
+import { AuthRepository } from './auth.repository';
+import Jwt from '@hapi/jwt';
+import { LoginPayload, TokenPayload } from './auth.schema';
+import { serviceContainer } from '../../common/ServiceContainer';
 
-export class UserService {
-  private userRepository: UserRepository;
+export class AuthService {
+  private authRepository: AuthRepository;
+  private userService: UserService;
 
-  constructor(userRepository: UserRepository) {
-    this.userRepository = userRepository;
+  constructor(authRepository: AuthRepository) {
+    this.authRepository = authRepository;
+    this.userService = serviceContainer.get<UserService>('UserService');
   }
 
-  async createUser(payload: CreateUserPayload) {
-    const user = new User(payload);
-    const newUser = await this.userRepository.create(user);
+  generateAccessToken(payload: TokenPayload) {
+    return Jwt.token.generate(payload, env.token.accessTokenKey);
+  }
 
-    if (!newUser) {
-      throw new ValidationError('Input is not valid');
+  generateRefreshToken(payload: TokenPayload) {
+    return Jwt.token.generate(payload, env.token.refreshTokenKey);
+  }
+
+  verifyRefreshToken(refreshToken: string): TokenPayload {
+    try {
+      const artifacts = Jwt.token.decode(refreshToken);
+      Jwt.token.verifySignature(artifacts, env.token.refreshTokenKey);
+      const { payload } = artifacts.decoded;
+      return payload;
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestError('Token is not valid');
+    }
+  }
+
+  async login({ username, password }: LoginPayload) {
+    const user = await this.userService.findUserByUsername(username);
+    const match = await comparePassword(password, user.password);
+
+    if (!match) {
+      throw new UnauthorizedError(`Username and password doesn't match`);
     }
 
-    return newUser.id;
+    const accessToken = this.generateAccessToken({ userId: user.id, username: user.username });
+    const refreshToken = this.generateRefreshToken({ userId: user.id, username: user.username });
+
+    const newAuth = new Auth({ userId: user.id, refreshToken });
+    await this.authRepository.create(newAuth);
+
+    return { accessToken, refreshToken };
   }
 
-  async getUserById(id: string) {
-    const user = await this.userRepository.findById(id);
-    if (!user) throw new NotFoundError(`User with id ${id} is not found`);
+  async updateAccessToken(refreshToken: string) {
+    const auth = await this.authRepository.findByRefreshToken(refreshToken);
 
-    return user;
+    if (!auth) {
+      throw new BadRequestError('Token is not valid');
+    }
+
+    const { userId, username } = this.verifyRefreshToken(refreshToken);
+
+    const accessToken = this.generateAccessToken({ userId, username });
+    return accessToken;
   }
 
-  async deleteUser(id: string) {
-    const user = await this.userRepository.findById(id);
-    if (!user) throw new NotFoundError(`User with id ${id} is not found`);
+  async deleteRefreshToken(refreshToken: string) {
+    const auth = await this.authRepository.findByRefreshToken(refreshToken);
 
-    await this.userRepository.delete(id);
+    if (!auth) {
+      throw new BadRequestError('Token is not valid');
+    }
+
+    await this.authRepository.delete(refreshToken);
 
     return true;
   }

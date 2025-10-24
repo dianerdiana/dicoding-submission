@@ -1,31 +1,24 @@
 import { nanoid } from 'nanoid';
 
-export interface UserEntity {
+export interface AuthEntity {
   id: string;
-  fullname: string;
-  username: string;
-  password: string;
+  userId: string;
+  refreshToken: string;
   createdAt: string;
   updatedAt: string;
 }
 
-export class User implements UserEntity {
+export class Auth implements AuthEntity {
   id: string;
-  fullname: string;
-  username: string;
-  password: string;
+  userId: string;
+  refreshToken: string;
   createdAt: string;
   updatedAt: string;
 
-  constructor({
-    fullname,
-    username,
-    password,
-  }: Omit<UserEntity, 'id' | 'createdAt' | 'updatedAt'>) {
+  constructor({ userId, refreshToken }: Omit<AuthEntity, 'id' | 'createdAt' | 'updatedAt'>) {
     this.id = nanoid(16);
-    this.fullname = fullname;
-    this.username = username;
-    this.password = password;
+    this.userId = userId;
+    this.refreshToken = refreshToken;
 
     const timestamp = new Date().toISOString();
     this.createdAt = timestamp;
@@ -33,11 +26,11 @@ export class User implements UserEntity {
   }
 
   update({
-    fullname,
-    username,
-  }: Partial<Omit<UserEntity, 'id' | 'password' | 'createdAt' | 'updatedAt'>>) {
-    if (fullname !== undefined) this.fullname = fullname;
-    if (username !== undefined) this.username = username;
+    userId,
+    refreshToken,
+  }: Partial<Omit<AuthEntity, 'id' | 'password' | 'createdAt' | 'updatedAt'>>) {
+    if (userId !== undefined) this.userId = userId;
+    if (refreshToken !== undefined) this.refreshToken = refreshToken;
 
     this.updatedAt = new Date().toISOString();
   }

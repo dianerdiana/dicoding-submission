@@ -1,33 +1,35 @@
 import { db } from '../../database';
-import { UserEntity } from './auth.entity';
-import { mapUserRowToEntity, UserRow } from './auth.mapper';
+import { AuthEntity } from './auth.entity';
+import { AuthRow, mapAuthRowToEntity } from './auth.mapper';
+export class AuthRepository {
+  private tableName = 'authentications';
 
-export class UserRepository {
-  private tableName = 'songs';
-
-  async create(user: UserEntity): Promise<UserEntity | null> {
-    const result = await db.query<UserRow>(
-      `INSERT INTO ${this.tableName}(fullname, username, password) VALUES 
-      ($1, $2, $3) RETURNING *`,
-      [user.fullname, user.username, user.password],
+  async create(auth: AuthEntity): Promise<AuthEntity | null> {
+    const result = await db.query<AuthRow>(
+      `INSERT INTO ${this.tableName}(user_id, refresh_token) VALUES 
+      ($1, $2) RETURNING *`,
+      [auth.userId, auth.refreshToken],
     );
 
-    const newUserRow = result.rows[0];
-    if (!newUserRow) return null;
+    const newAuthRow = result.rows[0];
+    if (!newAuthRow) return null;
 
-    return mapUserRowToEntity(newUserRow);
+    return mapAuthRowToEntity(newAuthRow);
   }
 
-  async findById(id: string): Promise<UserEntity | null> {
-    const result = await db.query<UserRow>(`SELECT * FROM ${this.tableName} WHERE id=$1`, [id]);
+  async findByRefreshToken(refreshToken: string): Promise<AuthEntity | null> {
+    const result = await db.query<AuthRow>(
+      `SELECT * FROM ${this.tableName} WHERE refresh_token=$1`,
+      [refreshToken],
+    );
 
-    const existingUser = result.rows[0];
-    if (!existingUser) return null;
+    const existingAuth = result.rows[0];
+    if (!existingAuth) return null;
 
-    return mapUserRowToEntity(existingUser);
+    return mapAuthRowToEntity(existingAuth);
   }
 
-  async delete(id: string): Promise<void> {
-    await db.query(`DELETE FROM ${this.tableName} WHERE id=$1`, [id]);
+  async delete(refreshToken: string): Promise<void> {
+    await db.query(`DELETE FROM ${this.tableName} WHERE refresh_token=$1`, [refreshToken]);
   }
 }

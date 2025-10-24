@@ -1,4 +1,5 @@
-import { NotFoundError, BadRequestError } from '../../common/AppError';
+import { NotFoundError, BadRequestError, UnauthorizedError } from '../../common/AppError';
+import { hashPassword } from '../../utils/passwordHashing';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 import { CreateUserPayload } from './user.schema';
@@ -18,13 +19,27 @@ export class UserService {
       throw new BadRequestError(`Username is already used`);
     }
 
-    const newUser = await this.userRepository.create(user);
+    const hashedPassword = await hashPassword(user.password);
+    const newUser = await this.userRepository.create({
+      ...user,
+      password: hashedPassword,
+    });
 
     if (!newUser) {
       throw new BadRequestError('Input is not valid');
     }
 
     return newUser.id;
+  }
+
+  async findUserByUsername(payload: string) {
+    const existing = await this.userRepository.findByUsername(payload);
+
+    if (!existing) {
+      throw new UnauthorizedError('User is not found');
+    }
+
+    return existing;
   }
 
   async getUserById(id: string) {

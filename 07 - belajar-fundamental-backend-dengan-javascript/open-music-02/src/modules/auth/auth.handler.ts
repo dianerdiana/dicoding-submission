@@ -1,44 +1,34 @@
 import { ResponseObject } from '@hapi/hapi';
-import { UserService } from './auth.service';
+import { AuthService } from './auth.service';
 import { HapiHandler } from '../../types/hapi';
 import { successResponse } from '../../utils/response';
-import { createUserSchema } from './auth.schema';
-import { validateUUID } from '../../utils/validateUUID';
+import { loginSchema, refreshTokenSchema } from './auth.schema';
 
-export class UserHandler {
-  private userService: UserService;
+export class AuthHandler {
+  private authService: AuthService;
 
-  constructor(userService: UserService) {
-    this.userService = userService;
+  constructor(authService: AuthService) {
+    this.authService = authService;
   }
 
-  createUser: HapiHandler = async (req, res): Promise<ResponseObject> => {
-    const payload = await createUserSchema.parseAsync(req.payload);
-    const userId = await this.userService.createUser(payload);
+  login: HapiHandler = async (req, res): Promise<ResponseObject> => {
+    const payload = await loginSchema.parseAsync(req.payload);
+    const response = await this.authService.login(payload);
 
-    return successResponse({ res, data: { userId }, code: 201 });
+    return successResponse({ res, data: response, code: 201 });
   };
 
-  getUserById: HapiHandler = async (req, res): Promise<ResponseObject> => {
-    const { id } = req.params;
-    validateUUID(id);
+  updateAccessToken: HapiHandler = async (req, res): Promise<ResponseObject> => {
+    const payload = await refreshTokenSchema.parseAsync(req.payload);
+    const accessToken = await this.authService.updateAccessToken(payload.refreshToken);
 
-    const user = await this.userService.getUserById(id);
-
-    return successResponse({ res, data: { user }, code: 200 });
+    return successResponse({ res, data: { accessToken }, code: 200 });
   };
 
-  deleteUser: HapiHandler = async (req, res): Promise<ResponseObject> => {
-    const { id } = req.params;
-    validateUUID(id);
+  deleteRefreshToken: HapiHandler = async (req, res): Promise<ResponseObject> => {
+    const payload = await refreshTokenSchema.parseAsync(req.payload);
+    await this.authService.deleteRefreshToken(payload.refreshToken);
 
-    await this.userService.deleteUser(id);
-
-    return successResponse({
-      res,
-      message: 'Successfuly deleted users',
-      data: { user: {} },
-      code: 200,
-    });
+    return successResponse({ res, message: 'Successfuly deleted refresh token', code: 200 });
   };
 }
