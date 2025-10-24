@@ -1,5 +1,6 @@
 import Hapi from '@hapi/hapi';
 import { handleError } from './utils/handleError';
+import { userPlugin } from './modules/users';
 import { albumPlugin } from './modules/albums';
 import { songPlugin } from './modules/songs';
 import { env } from './configs/env';
@@ -10,7 +11,7 @@ const init = async () => {
     host: env.app.host,
   });
 
-  await server.register([songPlugin, albumPlugin]);
+  await server.register([userPlugin, songPlugin, albumPlugin]);
 
   server.ext('onPreResponse', (req, h) => {
     const { response } = req;
