@@ -4,7 +4,9 @@ import { userPlugin } from './modules/users';
 import { authPlugin } from './modules/auth';
 import { albumPlugin } from './modules/albums';
 import { songPlugin } from './modules/songs';
+import { playlistPlugin } from './modules/playlists';
 import { env } from './configs/env';
+import Jwt from '@hapi/jwt';
 
 const init = async () => {
   const server = Hapi.server({
@@ -12,7 +14,23 @@ const init = async () => {
     host: env.app.host,
   });
 
-  await server.register([userPlugin, authPlugin, songPlugin, albumPlugin]);
+  await server.register([Jwt]);
+  server.auth.strategy('auth_jwt', 'jwt', {
+    keys: env.token.accessTokenKey,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: {
+        userId: artifacts.decoded.payload.userId,
+      },
+    }),
+  });
+
+  await server.register([userPlugin, authPlugin, songPlugin, albumPlugin, playlistPlugin]);
 
   server.ext('onPreResponse', (req, h) => {
     const { response } = req;
