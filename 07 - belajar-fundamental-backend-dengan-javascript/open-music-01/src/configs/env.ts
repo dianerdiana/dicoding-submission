@@ -2,8 +2,8 @@ import 'dotenv/config';
 
 export const env = {
   app: {
-    port: Number(process.env.APP_PORT) || 4000,
-    host: process.env.APP_HOST || 'localhost',
+    port: Number(process.env.PORT) || 5000,
+    host: process.env.HOST || 'localhost',
   },
   db: {
     host: process.env.PGHOST || 'localhost',
