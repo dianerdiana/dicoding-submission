@@ -12,4 +12,8 @@ export const env = {
     password: process.env.PGPASSWORD || 'postgres',
     database: process.env.PGDATABASE || 'dcd_open_music',
   },
+  token: {
+    accessTokenKey: process.env.ACCESS_TOKEN_KEY || 'ACCESS_TOKEN_KEY',
+    refreshTokenKey: process.env.REFRESH_TOKEN_KEY || 'REFRESH_TOKEN_KEY',
+  },
 };
