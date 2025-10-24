@@ -1,4 +1,4 @@
-import { NotFoundError, ValidationError } from '../../common/AppError';
+import { NotFoundError, BadRequestError } from '../../common/AppError';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 import { CreateUserPayload } from './user.schema';
@@ -12,10 +12,16 @@ export class UserService {
 
   async createUser(payload: CreateUserPayload) {
     const user = new User(payload);
+    const existing = await this.userRepository.findByUsername(payload.username);
+
+    if (existing) {
+      throw new BadRequestError(`Username is already used`);
+    }
+
     const newUser = await this.userRepository.create(user);
 
     if (!newUser) {
-      throw new ValidationError('Input is not valid');
+      throw new BadRequestError('Input is not valid');
     }
 
     return newUser.id;

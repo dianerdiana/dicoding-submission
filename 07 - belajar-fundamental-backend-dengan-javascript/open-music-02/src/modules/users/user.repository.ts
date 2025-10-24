@@ -3,7 +3,7 @@ import { UserEntity } from './user.entity';
 import { mapUserRowToEntity, UserRow } from './user.mapper';
 
 export class UserRepository {
-  private tableName = 'songs';
+  private tableName = 'users';
 
   async create(user: UserEntity): Promise<UserEntity | null> {
     const result = await db.query<UserRow>(
@@ -16,6 +16,17 @@ export class UserRepository {
     if (!newUserRow) return null;
 
     return mapUserRowToEntity(newUserRow);
+  }
+
+  async findByUsername(username: string): Promise<UserEntity | null> {
+    const result = await db.query<UserRow>(`SELECT * FROM ${this.tableName} WHERE username=$1`, [
+      username,
+    ]);
+
+    const existingUser = result.rows[0];
+    if (!existingUser) return null;
+
+    return mapUserRowToEntity(existingUser);
   }
 
   async findById(id: string): Promise<UserEntity | null> {
