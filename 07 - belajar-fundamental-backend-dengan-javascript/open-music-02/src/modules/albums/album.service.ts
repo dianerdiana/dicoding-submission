@@ -36,13 +36,13 @@ export class AlbumService {
     const album = await this.albumRepository.findById(id);
     if (!album) throw new NotFoundError(`Album with id ${id} is not found`);
 
-    const songs = await this.songService.getAllSongs({ albumId: album.id });
+    const response = await this.songService.getAllSongs({ albumId: album.id });
 
     return new ApiResponse({
       data: {
         album: {
           ...album,
-          songs,
+          ...response.data,
         },
       },
     });
