@@ -1,7 +1,5 @@
-import { ResponseObject } from '@hapi/hapi';
 import { AuthService } from './auth.service';
 import { HapiHandler } from '../../types/hapi';
-import { successResponse } from '../../utils/response';
 import { loginSchema, refreshTokenSchema } from './auth.schema';
 
 export class AuthHandler {
@@ -11,24 +9,24 @@ export class AuthHandler {
     this.authService = authService;
   }
 
-  login: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  login: HapiHandler = async (req) => {
     const payload = await loginSchema.parseAsync(req.payload);
     const response = await this.authService.login(payload);
 
-    return successResponse({ res, data: response, code: 201 });
+    return response;
   };
 
-  updateAccessToken: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  updateAccessToken: HapiHandler = async (req) => {
     const payload = await refreshTokenSchema.parseAsync(req.payload);
-    const accessToken = await this.authService.updateAccessToken(payload.refreshToken);
+    const response = await this.authService.updateAccessToken(payload.refreshToken);
 
-    return successResponse({ res, data: { accessToken }, code: 200 });
+    return response;
   };
 
-  deleteRefreshToken: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  deleteRefreshToken: HapiHandler = async (req) => {
     const payload = await refreshTokenSchema.parseAsync(req.payload);
-    await this.authService.deleteRefreshToken(payload.refreshToken);
+    const response = await this.authService.deleteRefreshToken(payload.refreshToken);
 
-    return successResponse({ res, message: 'Successfuly deleted refresh token', code: 200 });
+    return response;
   };
 }

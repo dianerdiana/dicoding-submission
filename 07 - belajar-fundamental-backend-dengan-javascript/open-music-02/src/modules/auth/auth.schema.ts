@@ -13,10 +13,3 @@ export const loginSchema = z.object({
 export const refreshTokenSchema = z.object({
   refreshToken: z.string(),
 });
-
-export type CreateAuthPayload = z.infer<typeof createAuthSchema>;
-export type LoginPayload = z.infer<typeof loginSchema>;
-export type TokenPayload = {
-  userId: string;
-  username: string;
-};
