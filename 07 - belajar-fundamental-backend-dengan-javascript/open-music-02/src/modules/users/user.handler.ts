@@ -1,7 +1,5 @@
-import { ResponseObject } from '@hapi/hapi';
 import { UserService } from './user.service';
 import { HapiHandler } from '../../types/hapi';
-import { successResponse } from '../../utils/response';
 import { createUserSchema } from './user.schema';
 import { validateUUID } from '../../utils/validateUUID';
 
@@ -12,33 +10,25 @@ export class UserHandler {
     this.userService = userService;
   }
 
-  createUser: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  createUser: HapiHandler = async (req) => {
     const payload = await createUserSchema.parseAsync(req.payload);
-    const userId = await this.userService.createUser(payload);
-
-    return successResponse({ res, data: { userId }, code: 201 });
+    const response = await this.userService.createUser(payload);
+    return response;
   };
 
-  getUserById: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  getUserById: HapiHandler = async (req) => {
     const { id } = req.params;
     validateUUID(id);
 
-    const user = await this.userService.getUserById(id);
-
-    return successResponse({ res, data: { user }, code: 200 });
+    const response = await this.userService.getUserById(id);
+    return response;
   };
 
-  deleteUser: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  deleteUser: HapiHandler = async (req) => {
     const { id } = req.params;
     validateUUID(id);
 
-    await this.userService.deleteUser(id);
-
-    return successResponse({
-      res,
-      message: 'Successfuly deleted users',
-      data: { user: {} },
-      code: 200,
-    });
+    const response = await this.userService.deleteUser(id);
+    return response;
   };
 }

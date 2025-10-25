@@ -5,5 +5,3 @@ export const createUserSchema = z.object({
   username: z.string(),
   password: z.string(),
 });
-
-export type CreateUserPayload = z.infer<typeof createUserSchema>;

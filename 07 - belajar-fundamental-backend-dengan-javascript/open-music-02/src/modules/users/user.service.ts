@@ -1,8 +1,9 @@
+import { ApiResponse } from '../../common/ApiResponse';
 import { NotFoundError, BadRequestError, UnauthorizedError } from '../../common/AppError';
 import { hashPassword } from '../../utils/passwordHashing';
+import { CreateUserDTO } from './user.dto';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
-import { CreateUserPayload } from './user.schema';
 
 export class UserService {
   private userRepository: UserRepository;
@@ -11,11 +12,11 @@ export class UserService {
     this.userRepository = userRepository;
   }
 
-  async createUser(payload: CreateUserPayload) {
+  async createUser(payload: CreateUserDTO) {
     const user = new User(payload);
-    const existing = await this.userRepository.findByUsername(payload.username);
+    const existingUser = await this.userRepository.findByUsername(payload.username);
 
-    if (existing) {
+    if (existingUser) {
       throw new BadRequestError(`Username is already used`);
     }
 
@@ -29,32 +30,48 @@ export class UserService {
       throw new BadRequestError('Input is not valid');
     }
 
-    return newUser.id;
+    return new ApiResponse({ data: { userId: newUser.id }, code: 201 });
   }
 
   async getUserByUsername(payload: string) {
-    const existing = await this.userRepository.findByUsername(payload);
+    const existingUser = await this.userRepository.findByUsername(payload);
 
-    if (!existing) {
+    if (!existingUser) {
       throw new UnauthorizedError('User is not found');
     }
 
-    return existing;
+    const sanitizedUser = {
+      id: existingUser.id,
+      fullname: existingUser.fullname,
+      username: existingUser.username,
+      createdAt: existingUser.createdAt,
+      updatedAt: existingUser.updatedAt,
+    };
+
+    return new ApiResponse({ data: { user: sanitizedUser } });
   }
 
   async getUserById(id: string) {
-    const user = await this.userRepository.findById(id);
-    if (!user) throw new NotFoundError(`User with id ${id} is not found`);
+    const existingUser = await this.userRepository.findById(id);
+    if (!existingUser) throw new NotFoundError(`User with id ${id} is not found`);
 
-    return user;
+    const sanitizedUser = {
+      id: existingUser.id,
+      fullname: existingUser.fullname,
+      username: existingUser.username,
+      createdAt: existingUser.createdAt,
+      updatedAt: existingUser.updatedAt,
+    };
+
+    return new ApiResponse({ data: { user: sanitizedUser } });
   }
 
   async deleteUser(id: string) {
     const user = await this.userRepository.findById(id);
+
     if (!user) throw new NotFoundError(`User with id ${id} is not found`);
 
     await this.userRepository.delete(id);
-
-    return true;
+    return new ApiResponse({ message: 'Successfuly deleted user' });
   }
 }
