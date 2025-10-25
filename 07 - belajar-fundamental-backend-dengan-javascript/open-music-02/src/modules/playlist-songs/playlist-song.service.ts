@@ -4,7 +4,7 @@ import { PlaylistService } from '../playlists/playlist.service';
 import { SongService } from '../songs/song.service';
 import { PlaylistSong } from './playlist-song.entity';
 import { PlaylistSongRepository } from './playlist-song.repository';
-import { AddSongToPlaylistPayload } from './playlist-song.schema.entity';
+import { AddSongToPlaylistPayload } from './playlist-song.schema';
 
 export class PlaylistSongService {
   private playlistSongRepository: PlaylistSongRepository;
