@@ -3,6 +3,7 @@ import { PlaylistService } from './playlist.service';
 import { HapiHandler } from '../../types/hapi';
 import { successResponse } from '../../utils/response';
 import {
+  validateSongIdSchema,
   createPlaylistSchema,
   playlistSearchParamSchema,
   updatePlaylistSchema,
@@ -19,10 +20,10 @@ export class PlaylistHandler {
 
   createPlaylist: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const payload = await createPlaylistSchema.parseAsync(req.payload);
-    const { userId } = req.auth.credentials as AuthCredential;
+    const { userId: owner } = req.auth.credentials as AuthCredential;
     const playlistId = await this.playlistService.createPlaylist({
       ...payload,
-      owner: userId,
+      owner,
     });
 
     return successResponse({ res, data: { playlistId }, code: 201 });
@@ -30,8 +31,8 @@ export class PlaylistHandler {
 
   getAllPlaylists: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const { name } = await playlistSearchParamSchema.parseAsync(req.query);
-    const { userId } = req.auth.credentials as AuthCredential;
-    const playlists = await this.playlistService.getAllPlaylists({ name, owner: userId });
+    const { userId: owner } = req.auth.credentials as AuthCredential;
+    const playlists = await this.playlistService.getAllPlaylists({ name, owner });
 
     return successResponse({ res, data: { playlists }, code: 200 });
   };
@@ -66,14 +67,58 @@ export class PlaylistHandler {
 
   deletePlaylist: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const { id } = req.params;
+    const { userId: owner } = req.auth.credentials as AuthCredential;
     validateUUID(id);
 
+    await this.playlistService.getPlaylistById({ id, owner });
     await this.playlistService.deletePlaylist(id);
 
     return successResponse({
       res,
       message: 'Successfuly deleted playlists',
-      data: { playlist: {} },
+      code: 200,
+    });
+  };
+
+  addSongToPlaylist: HapiHandler = async (req, res): Promise<ResponseObject> => {
+    const { id } = req.params;
+    const { songId } = await validateSongIdSchema.parseAsync(req.payload);
+    const { userId: owner } = req.auth.credentials as AuthCredential;
+    validateUUID(id);
+    validateUUID(songId);
+    await this.playlistService.addSongToPlaylist({ id, songId, owner });
+
+    return successResponse({
+      res,
+      message: 'Successfuly add song to playlist',
+      code: 201,
+    });
+  };
+
+  getPlaylistWithAllSongs: HapiHandler = async (req, res): Promise<ResponseObject> => {
+    const { id } = req.params;
+    const { userId: owner } = req.auth.credentials as AuthCredential;
+    validateUUID(id);
+
+    const playlistWithAllSongs = await this.playlistService.getPlaylistWithAllSongsById({
+      id,
+      owner,
+    });
+
+    return successResponse({ res, data: { playlist: playlistWithAllSongs } });
+  };
+
+  deleteSongFromPlaylistById: HapiHandler = async (req, res): Promise<ResponseObject> => {
+    const { id } = req.params;
+    const { userId: owner } = req.auth.credentials as AuthCredential;
+    const { songId } = await validateSongIdSchema.parseAsync(req.payload);
+    validateUUID(id);
+
+    await this.playlistService.deleteSongFromPlaylistByIdAndSongId({ id, songId, owner });
+
+    return successResponse({
+      res,
+      message: 'Successfuly deleted playlist song',
       code: 200,
     });
   };

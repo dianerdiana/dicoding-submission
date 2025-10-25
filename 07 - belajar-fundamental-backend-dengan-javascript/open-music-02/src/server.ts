@@ -2,8 +2,9 @@ import Hapi from '@hapi/hapi';
 import { handleError } from './utils/handleError';
 import { userPlugin } from './modules/users';
 import { authPlugin } from './modules/auth';
-import { albumPlugin } from './modules/albums';
+import { playlistSongPlugin } from './modules/playlist-songs';
 import { songPlugin } from './modules/songs';
+import { albumPlugin } from './modules/albums';
 import { playlistPlugin } from './modules/playlists';
 import { env } from './configs/env';
 import Jwt from '@hapi/jwt';
@@ -30,7 +31,14 @@ const init = async () => {
     }),
   });
 
-  await server.register([userPlugin, authPlugin, songPlugin, albumPlugin, playlistPlugin]);
+  await server.register([
+    userPlugin,
+    authPlugin,
+    playlistSongPlugin,
+    songPlugin,
+    albumPlugin,
+    playlistPlugin,
+  ]);
 
   server.ext('onPreResponse', (req, h) => {
     const { response } = req;
