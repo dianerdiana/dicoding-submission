@@ -1,6 +1,6 @@
 import { ApiResponse } from '../../common/ApiResponse';
-import { NotFoundError, ValidationError } from '../../common/AppError';
-import { CreateSongDTO, UpdateSongDTO } from './song.dto';
+import { BadRequestError, NotFoundError, ValidationError } from '../../common/AppError';
+import { CreateSongDTO, SongResponseDTO, UpdateSongDTO } from './song.dto';
 import { Song } from './song.entity';
 import { SongRepository } from './song.repository';
 
@@ -42,21 +42,25 @@ export class SongService {
   }
 
   async getSongById(id: string) {
-    const song = await this.songRepository.findById(id);
-    if (!song) throw new NotFoundError(`Song with id ${id} is not found`);
+    const existingSong = await this.songRepository.findById(id);
+    if (!existingSong) throw new NotFoundError(`Song with id ${id} is not found`);
 
-    return new ApiResponse({ data: { song } });
+    const songResponse: SongResponseDTO = { song: existingSong };
+    return new ApiResponse({ data: songResponse });
   }
 
   async updateSong(id: string, payload: UpdateSongDTO) {
-    const existing = await this.songRepository.findById(id);
-    if (!existing) throw new NotFoundError(`Song with id ${id} is not found`);
+    const existingSong = await this.songRepository.findById(id);
+    if (!existingSong) throw new NotFoundError(`Song with id ${id} is not found`);
 
-    const song = new Song(existing);
+    const song = new Song(existingSong);
     song.update(payload);
 
     const updatedSong = await this.songRepository.update(id, song);
-    return new ApiResponse({ data: { song: updatedSong }, message: 'Successfuly updated song' });
+    if (!updatedSong) throw new BadRequestError('Failed update song');
+
+    const songResponse: SongResponseDTO = { song: updatedSong };
+    return new ApiResponse({ data: songResponse, message: 'Successfuly updated song' });
   }
 
   async deleteSong(id: string) {

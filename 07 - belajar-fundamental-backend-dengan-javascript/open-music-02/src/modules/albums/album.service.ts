@@ -1,6 +1,7 @@
 import { ApiResponse } from '../../common/ApiResponse';
 import { NotFoundError, ValidationError } from '../../common/AppError';
 import { serviceContainer } from '../../common/ServiceContainer';
+import { AllSongsResponseDTO } from '../songs/song.dto';
 import { SongService } from '../songs/song.service';
 import { CreateAlbumDTO, UpdateAlbumDTO } from './album.dto';
 import { Album } from './album.entity';
@@ -8,11 +9,13 @@ import { AlbumRepository } from './album.repository';
 
 export class AlbumService {
   private albumRepository: AlbumRepository;
-  private songService: SongService;
 
   constructor(albumRepository: AlbumRepository) {
     this.albumRepository = albumRepository;
-    this.songService = serviceContainer.get<SongService>('SongService');
+  }
+
+  get getSongService(): SongService {
+    return serviceContainer.get<SongService>('SongService');
   }
 
   async createAlbum(payload: CreateAlbumDTO) {
@@ -33,26 +36,28 @@ export class AlbumService {
   }
 
   async getAlbumById(id: string) {
+    const songService = this.getSongService;
     const album = await this.albumRepository.findById(id);
     if (!album) throw new NotFoundError(`Album with id ${id} is not found`);
 
-    const response = await this.songService.getAllSongs({ albumId: album.id });
+    const response = await songService.getAllSongs({ albumId: album.id });
+    const { songs } = response.data as AllSongsResponseDTO;
 
     return new ApiResponse({
       data: {
         album: {
           ...album,
-          ...response.data,
+          songs,
         },
       },
     });
   }
 
   async updateAlbum(id: string, payload: UpdateAlbumDTO) {
-    const existing = await this.albumRepository.findById(id);
-    if (!existing) throw new NotFoundError(`Album with id ${id} is not found`);
+    const existingAlbum = await this.albumRepository.findById(id);
+    if (!existingAlbum) throw new NotFoundError(`Album with id ${id} is not found`);
 
-    const album = new Album(existing);
+    const album = new Album(existingAlbum);
     album.update(payload);
 
     const updatedAlbum = await this.albumRepository.update(id, album);
@@ -70,7 +75,6 @@ export class AlbumService {
     if (!album) throw new NotFoundError(`Album with id ${id} is not found`);
 
     await this.albumRepository.delete(id);
-
     return new ApiResponse({ message: 'Successfuly deleted album' });
   }
 }
