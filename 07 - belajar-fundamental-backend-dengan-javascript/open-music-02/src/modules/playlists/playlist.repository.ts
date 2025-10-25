@@ -20,13 +20,13 @@ export class PlaylistRepository {
 
   async findAllPlaylists({
     name,
-    owner,
+    userId,
   }: {
     name?: string;
-    owner: string;
+    userId: string;
     username?: string;
   }): Promise<PlaylistEntity[]> {
-    const conditions: string[] = [`owner='${owner}'`];
+    const conditions: string[] = [`owner='${userId}'`];
     const values: any[] = [];
 
     if (name) {

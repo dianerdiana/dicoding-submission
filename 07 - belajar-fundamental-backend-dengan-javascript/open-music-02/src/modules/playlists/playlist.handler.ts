@@ -1,8 +1,6 @@
 import { PlaylistService } from './playlist.service';
 import { HapiHandler } from '../../types/hapi';
-import { successResponse } from '../../utils/response';
 import {
-  validateSongIdSchema,
   createPlaylistSchema,
   playlistSearchParamSchema,
   updatePlaylistSchema,
@@ -19,10 +17,10 @@ export class PlaylistHandler {
 
   createPlaylist: HapiHandler = async (req) => {
     const payload = await createPlaylistSchema.parseAsync(req.payload);
-    const { userId: owner } = req.auth.credentials as AuthCredential;
+    const { userId } = req.auth.credentials as AuthCredential;
     const response = await this.playlistService.createPlaylist({
       ...payload,
-      owner,
+      userId,
     });
 
     return response;
@@ -30,9 +28,9 @@ export class PlaylistHandler {
 
   getAllPlaylists: HapiHandler = async (req) => {
     const { name } = await playlistSearchParamSchema.parseAsync(req.query);
-    const { userId: owner } = req.auth.credentials as AuthCredential;
+    const { userId } = req.auth.credentials as AuthCredential;
 
-    const response = await this.playlistService.getAllPlaylists({ name, owner });
+    const response = await this.playlistService.getAllPlaylists({ name, userId });
     return response;
   };
 
@@ -52,7 +50,7 @@ export class PlaylistHandler {
     const payload = await updatePlaylistSchema.parseAsync(req.payload);
     const response = await this.playlistService.updatePlaylist(id, {
       ...payload,
-      owner: userId,
+      userId,
     });
 
     return response;
@@ -60,55 +58,12 @@ export class PlaylistHandler {
 
   deletePlaylist: HapiHandler = async (req) => {
     const { id } = req.params;
-    const { userId: owner } = req.auth.credentials as AuthCredential;
+    const { userId } = req.auth.credentials as AuthCredential;
     validateUUID(id);
 
-    await this.playlistService.getPlaylistById({ id, owner });
+    await this.playlistService.getPlaylistById({ playlistId: id, userId });
     const response = await this.playlistService.deletePlaylist(id);
 
     return response;
-  };
-
-  addSongToPlaylist: HapiHandler = async (req, res) => {
-    const { id } = req.params;
-    const { songId } = await validateSongIdSchema.parseAsync(req.payload);
-    const { userId: owner } = req.auth.credentials as AuthCredential;
-    validateUUID(id);
-    validateUUID(songId);
-    await this.playlistService.addSongToPlaylist({ id, songId, owner });
-
-    return successResponse({
-      res,
-      message: 'Successfuly add song to playlist',
-      code: 201,
-    });
-  };
-
-  getPlaylistWithAllSongs: HapiHandler = async (req, res) => {
-    const { id } = req.params;
-    const { userId: owner } = req.auth.credentials as AuthCredential;
-    validateUUID(id);
-
-    const playlistWithAllSongs = await this.playlistService.getPlaylistWithAllSongsById({
-      id,
-      owner,
-    });
-
-    return successResponse({ res, data: { playlist: playlistWithAllSongs } });
-  };
-
-  deleteSongFromPlaylistById: HapiHandler = async (req, res) => {
-    const { id } = req.params;
-    const { userId: owner } = req.auth.credentials as AuthCredential;
-    const { songId } = await validateSongIdSchema.parseAsync(req.payload);
-    validateUUID(id);
-
-    await this.playlistService.deleteSongFromPlaylistByIdAndSongId({ id, songId, owner });
-
-    return successResponse({
-      res,
-      message: 'Successfuly deleted playlist song',
-      code: 200,
-    });
   };
 }

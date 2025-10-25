@@ -11,6 +11,14 @@ export class SongService {
     this.songRepository = songRepository;
   }
 
+  async validateSongById(id: string) {
+    const existingSong = await this.songRepository.findById(id);
+    if (!existingSong) throw new NotFoundError(`Song with id ${id} is not found`);
+
+    const songResponse: SongResponseDto = { song: existingSong };
+    return new ApiResponse({ data: songResponse });
+  }
+
   async createSong(payload: CreateSongDto) {
     const song = new Song(payload);
     const newSong = await this.songRepository.create(song);
@@ -42,16 +50,15 @@ export class SongService {
   }
 
   async getSongById(id: string) {
-    const existingSong = await this.songRepository.findById(id);
-    if (!existingSong) throw new NotFoundError(`Song with id ${id} is not found`);
+    const validateResponse = await this.validateSongById(id);
+    const responseData = validateResponse.data as SongResponseDto;
 
-    const songResponse: SongResponseDto = { song: existingSong };
-    return new ApiResponse({ data: songResponse });
+    return new ApiResponse({ data: responseData });
   }
 
   async updateSong(id: string, payload: UpdateSongDto) {
-    const existingSong = await this.songRepository.findById(id);
-    if (!existingSong) throw new NotFoundError(`Song with id ${id} is not found`);
+    const validateResponse = await this.validateSongById(id);
+    const { song: existingSong } = validateResponse.data as SongResponseDto;
 
     const song = new Song(existingSong);
     song.update(payload);
@@ -64,9 +71,7 @@ export class SongService {
   }
 
   async deleteSong(id: string) {
-    const song = await this.songRepository.findById(id);
-    if (!song) throw new NotFoundError(`Song with id ${id} is not found`);
-
+    await this.validateSongById(id);
     await this.songRepository.delete(id);
 
     return new ApiResponse({ message: 'Successfuly deleted song' });

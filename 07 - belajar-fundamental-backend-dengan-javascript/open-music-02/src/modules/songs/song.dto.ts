@@ -4,6 +4,9 @@ import { SongEntity } from './song.entity';
 
 export type CreateSongDto = z.input<typeof createSongSchema>;
 export type UpdateSongDto = z.input<typeof updateSongSchema>;
+
+// Response Dto
+export type SongDto = SongEntity;
 export type SongResponseDto = {
   song: SongEntity;
 };

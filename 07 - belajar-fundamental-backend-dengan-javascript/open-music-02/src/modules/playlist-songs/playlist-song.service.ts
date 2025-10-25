@@ -1,9 +1,14 @@
 import { ApiResponse } from '../../common/ApiResponse';
 import { ValidationError } from '../../common/AppError';
 import { serviceContainer } from '../../common/ServiceContainer';
+import { SanitizedPlaylistResponseDto, ValidatePlaylistOwnerDto } from '../playlists/playlist.dto';
 import { PlaylistService } from '../playlists/playlist.service';
 import { SongService } from '../songs/song.service';
-import { AddSongToPlaylistDto, NewPlaylistSongResponseDto } from './playlist-song.dto';
+import {
+  AddSongToPlaylistDto,
+  NewPlaylistSongResponseDto,
+  PlaylistWithAllSongsDto,
+} from './playlist-song.dto';
 import { PlaylistSong } from './playlist-song.entity';
 import { PlaylistSongRepository } from './playlist-song.repository';
 
@@ -22,12 +27,12 @@ export class PlaylistSongService {
     return serviceContainer.get<SongService>('SongService');
   }
 
-  async createPlaylistSong({ playlistId, songId, owner }: AddSongToPlaylistDto) {
+  async createPlaylistSong({ playlistId, songId, userId }: AddSongToPlaylistDto) {
     const playlistService = this.getPlaylistService();
     const songService = this.getSongService();
 
-    await songService.getSongById(songId);
-    await playlistService.getPlaylistById({ id: playlistId, owner });
+    await songService.validateSongById(songId);
+    await playlistService.validatePlaylistOwner({ playlistId, userId });
 
     const playlistSong = new PlaylistSong({ id: '', playlistId, songId });
     const newPlaylistSong = await this.playlistSongRepository.create(playlistSong);
@@ -36,38 +41,47 @@ export class PlaylistSongService {
     const newPlaylistSongResponse: NewPlaylistSongResponseDto = {
       playlistSongId: newPlaylistSong.id,
     };
-    return new ApiResponse({ data: newPlaylistSongResponse });
+    return new ApiResponse({
+      message: 'Successfuly add song to playlist',
+      data: newPlaylistSongResponse,
+      code: 201,
+    });
   }
 
-  async getAllSongsByPlaylistId({ playlistId, owner }: { playlistId: string; owner: string }) {
+  async getAllSongsByPlaylistId({ playlistId, userId }: ValidatePlaylistOwnerDto) {
     const playlistService = this.getPlaylistService();
-    const playlist = await playlistService.getPlaylistById({ id: playlistId, owner });
+    const playlistResponse = await playlistService.validatePlaylistOwner({ playlistId, userId });
+    const { playlist } = playlistResponse.data as SanitizedPlaylistResponseDto;
 
-    const playlistWithSongs =
-      await this.playlistSongRepository.findAllSongsByPlaylistId(playlistId);
-    return {
-      ...playlist,
-      songs: playlistWithSongs,
+    const songsResponse = await this.playlistSongRepository.findAllSongsByPlaylistId(playlistId);
+    const responseData: PlaylistWithAllSongsDto = {
+      playlist: {
+        id: playlist.id,
+        name: playlist.name,
+        username: playlist.username,
+        songs: songsResponse,
+      },
     };
+    return new ApiResponse({ data: responseData });
   }
 
   async deleteSongInPlaylistByPlaylistIdAndSongId({
     playlistId,
     songId,
-    owner,
+    userId,
   }: {
     playlistId: string;
     songId: string;
-    owner: string;
+    userId: string;
   }) {
     const playlistService = serviceContainer.get<PlaylistService>('PlaylistService');
     const songService = serviceContainer.get<SongService>('SongService');
 
-    await songService.getSongById(songId);
-    await playlistService.getPlaylistById({ id: playlistId, owner });
+    await songService.validateSongById(songId);
+    await playlistService.validatePlaylistOwner({ playlistId, userId });
 
     await this.playlistSongRepository.delete({ playlistId, songId });
 
-    return true;
+    return new ApiResponse({ message: 'Successfuly deleted song' });
   }
 }

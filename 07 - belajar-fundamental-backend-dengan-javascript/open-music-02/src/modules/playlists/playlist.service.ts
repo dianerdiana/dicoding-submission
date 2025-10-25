@@ -7,13 +7,13 @@ import { UserService } from '../users/user.service';
 import { Playlist } from './playlist.entity';
 import { PlaylistRepository } from './playlist.repository';
 import {
-  AddSongToPlaylistDto,
   SanitizedAllPlaylistsResponseDto,
   CreatePlaylistDto,
   SanitizedPlaylistResponseDto,
   PlaylistSearchParamDto,
   UpdatePlaylistDto,
   PlaylistResponseDto,
+  ValidatePlaylistOwnerDto,
 } from './playlist.dto';
 
 export class PlaylistService {
@@ -39,27 +39,44 @@ export class PlaylistService {
     return new ApiResponse({ data: responseData });
   }
 
+  async validatePlaylistOwner({ playlistId, userId }: ValidatePlaylistOwnerDto) {
+    const userService = this.getUserService();
+    const playlistResponse = await this.validatePlaylistId(playlistId);
+    const userResponse = await userService.getUserById(userId);
+    const { playlist } = playlistResponse.data as PlaylistResponseDto;
+    const { user } = userResponse.data as SanitizedUserResponseDto;
+
+    if (playlist.owner !== userId) throw new ForbiddenError('Forbidden request');
+
+    const responseData: SanitizedPlaylistResponseDto = {
+      playlist: {
+        id: playlist.id,
+        name: playlist.name,
+        username: user.username,
+      },
+    };
+    return new ApiResponse({ data: responseData });
+  }
+
   async createPlaylist(payload: CreatePlaylistDto) {
-    const playlist = new Playlist({ id: '', ...payload });
+    const playlist = new Playlist({ id: '', ...payload, owner: payload.userId });
     const newPlaylist = await this.playlistRepository.create(playlist);
     if (!newPlaylist) throw new BadRequestError('Input is not valid');
 
     return new ApiResponse({ data: { playlistId: newPlaylist.id }, code: 201 });
   }
 
-  async getAllPlaylists({ name, owner }: PlaylistSearchParamDto) {
+  async getAllPlaylists({ name, userId }: PlaylistSearchParamDto) {
     const userService = this.getUserService();
 
-    const playlists = await this.playlistRepository.findAllPlaylists({ name, owner });
-    const userResponse = await userService.getUserById(owner);
+    const playlists = await this.playlistRepository.findAllPlaylists({ name, userId });
+    const userResponse = await userService.getUserById(userId);
     const { user } = userResponse.data as SanitizedUserResponseDto;
 
     const sanitizedPlaylist = playlists.map((playlist) => ({
       id: playlist.id,
       name: playlist.name,
       username: user.username,
-      createdAt: playlist.createdAt,
-      updatedAt: playlist.updatedAt,
     }));
     const responseData: SanitizedAllPlaylistsResponseDto = {
       playlists: sanitizedPlaylist,
@@ -68,23 +85,14 @@ export class PlaylistService {
     return new ApiResponse({ data: responseData });
   }
 
-  async getPlaylistById({ id, owner }: { id: string; owner: string }) {
-    const userService = this.getUserService();
-    const existingPlaylist = await this.playlistRepository.findById(id);
-
-    if (!existingPlaylist) throw new NotFoundError(`Playlist with id ${id} is not found`);
-    if (existingPlaylist.owner !== owner)
-      throw new ForbiddenError('You are not allowed to see the playlist');
-
-    const userResponse = await userService.getUserById(owner);
-    const { user } = userResponse.data as SanitizedUserResponseDto;
+  async getPlaylistById({ playlistId, userId }: ValidatePlaylistOwnerDto) {
+    const playlistResponse = await this.validatePlaylistOwner({ playlistId, userId });
+    const { playlist } = playlistResponse.data as SanitizedPlaylistResponseDto;
     const responseData: SanitizedPlaylistResponseDto = {
       playlist: {
-        id: existingPlaylist.id,
-        name: existingPlaylist.name,
-        username: user.username,
-        createdAt: existingPlaylist.createdAt,
-        updatedAt: existingPlaylist.updatedAt,
+        id: playlist.id,
+        name: playlist.name,
+        username: playlist.username,
       },
     };
 
@@ -93,10 +101,10 @@ export class PlaylistService {
 
   async updatePlaylist(id: string, payload: UpdatePlaylistDto) {
     const userService = this.getUserService();
-    const existingPlaylist = await this.playlistRepository.findById(id);
-    if (!existingPlaylist) throw new NotFoundError(`Playlist with id ${id} is not found`);
+    const playlistResponse = await this.validatePlaylistId(id);
+    const { playlist: existingPlaylist } = playlistResponse.data as PlaylistResponseDto;
 
-    const userResponse = await userService.getUserById(payload.owner);
+    const userResponse = await userService.getUserById(payload.userId);
     const { user } = userResponse.data as SanitizedUserResponseDto;
 
     const playlist = new Playlist(existingPlaylist);
@@ -110,8 +118,6 @@ export class PlaylistService {
         id: updatedPlaylist.id,
         name: updatedPlaylist.name,
         username: user.username,
-        createdAt: updatedPlaylist.createdAt,
-        updatedAt: updatedPlaylist.updatedAt,
       },
     };
 
@@ -122,45 +128,5 @@ export class PlaylistService {
     await this.playlistRepository.delete(id);
 
     return new ApiResponse({ message: 'Successfuly deleted playlist' });
-  }
-
-  async addSongToPlaylist({ id, songId, owner }: AddSongToPlaylistDto) {
-    const playlistSongService = this.getPlaylistSongService();
-    const playlistSongId = await playlistSongService.createPlaylistSong({
-      playlistId: id,
-      songId,
-      owner,
-    });
-
-    return playlistSongId;
-  }
-
-  async getPlaylistWithAllSongsById({ id, owner }: { id: string; owner: string }) {
-    const playlistSongService = this.getPlaylistSongService();
-    const playlistWithSongs = await playlistSongService.getAllSongsByPlaylistId({
-      playlistId: id,
-      owner,
-    });
-
-    return playlistWithSongs;
-  }
-
-  async deleteSongFromPlaylistByIdAndSongId({
-    id,
-    songId,
-    owner,
-  }: {
-    id: string;
-    songId: string;
-    owner: string;
-  }) {
-    const playlistSongService = this.getPlaylistSongService();
-    await playlistSongService.deleteSongInPlaylistByPlaylistIdAndSongId({
-      playlistId: id,
-      songId,
-      owner,
-    });
-
-    return true;
   }
 }

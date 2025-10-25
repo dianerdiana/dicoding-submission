@@ -42,30 +42,6 @@ export class PlaylistRoute {
           auth: 'auth_jwt',
         },
       },
-      {
-        method: 'POST',
-        path: '/playlists/{id}/songs',
-        handler: this.playlistHandler.addSongToPlaylist,
-        options: {
-          auth: 'auth_jwt',
-        },
-      },
-      {
-        method: 'GET',
-        path: '/playlists/{id}/songs',
-        handler: this.playlistHandler.getPlaylistWithAllSongs,
-        options: {
-          auth: 'auth_jwt',
-        },
-      },
-      {
-        method: 'DELETE',
-        path: '/playlists/{id}/songs',
-        handler: this.playlistHandler.deleteSongFromPlaylistById,
-        options: {
-          auth: 'auth_jwt',
-        },
-      },
     ];
   }
 }

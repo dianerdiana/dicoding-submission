@@ -8,21 +8,31 @@ import { PlaylistEntity } from './playlist.entity';
 
 // Payload Dto
 export type CreatePlaylistDto = z.infer<typeof createPlaylistSchema> & {
-  owner: string;
+  userId: string;
 };
 
 export type UpdatePlaylistDto = z.infer<typeof updatePlaylistSchema> & {
-  owner: string;
+  userId: string;
 };
 
 export type PlaylistSearchParamDto = z.infer<typeof playlistSearchParamSchema> & {
-  owner: string;
+  userId: string;
+};
+
+export type ValidatePlaylistOwnerDto = {
+  playlistId: string;
+  userId: string;
+};
+
+export type GetAllSongsDto = {
+  id: string;
 };
 
 // Response Dto
 export type PlaylistDto = PlaylistEntity;
-export type SanitizedPlaylist = Omit<PlaylistEntity, 'owner'> & { username: string };
+export type SanitizedPlaylist = Omit<PlaylistEntity, 'owner' | 'createdAt' | 'updatedAt'> & {
+  username: string;
+};
 export type PlaylistResponseDto = { playlist: PlaylistDto };
 export type SanitizedPlaylistResponseDto = { playlist: SanitizedPlaylist };
 export type SanitizedAllPlaylistsResponseDto = { playlists: SanitizedPlaylist[] };
-export type AddSongToPlaylistDto = { id: string; songId: string; owner: string };
