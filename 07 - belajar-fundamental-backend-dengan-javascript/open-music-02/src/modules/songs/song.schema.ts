@@ -23,6 +23,3 @@ export const songSearchParamSchema = z.object({
   performer: z.string().optional(),
   albumId: z.string().optional(),
 });
-
-export type CreateSongPayload = z.input<typeof createSongSchema>;
-export type UpdateSongPayload = z.input<typeof updateSongSchema>;

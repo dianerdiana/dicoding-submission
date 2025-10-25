@@ -1,7 +1,5 @@
-import { ResponseObject } from '@hapi/hapi';
 import { SongService } from './song.service';
 import { HapiHandler } from '../../types/hapi';
-import { successResponse } from '../../utils/response';
 import { createSongSchema, songSearchParamSchema, updateSongSchema } from './song.schema';
 import { validateUUID } from '../../utils/validateUUID';
 
@@ -12,55 +10,41 @@ export class SongHandler {
     this.songService = songService;
   }
 
-  createSong: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  createSong: HapiHandler = async (req) => {
     const payload = await createSongSchema.parseAsync(req.payload);
-    const songId = await this.songService.createSong(payload);
-
-    return successResponse({ res, data: { songId }, code: 201 });
+    const response = await this.songService.createSong(payload);
+    return response;
   };
 
-  getAllSongs: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  getAllSongs: HapiHandler = async (req) => {
     const { title, performer } = await songSearchParamSchema.parseAsync(req.query);
-    const songs = await this.songService.getAllSongs({ title, performer });
+    const response = await this.songService.getAllSongs({ title, performer });
 
-    return successResponse({ res, data: { songs }, code: 200 });
+    return response;
   };
 
-  getSongById: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  getSongById: HapiHandler = async (req) => {
     const { id } = req.params;
     validateUUID(id);
 
-    const song = await this.songService.getSongById(id);
-
-    return successResponse({ res, data: { song }, code: 200 });
+    const response = await this.songService.getSongById(id);
+    return response;
   };
 
-  updateSong: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  updateSong: HapiHandler = async (req) => {
     const { id } = req.params;
     validateUUID(id);
 
     const payload = await updateSongSchema.parseAsync(req.payload);
-    const updatedSong = await this.songService.updateSong(id, payload);
-
-    return successResponse({
-      res,
-      message: 'Successfuly updated songs',
-      data: { song: updatedSong },
-      code: 200,
-    });
+    const response = await this.songService.updateSong(id, payload);
+    return response;
   };
 
-  deleteSong: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  deleteSong: HapiHandler = async (req) => {
     const { id } = req.params;
     validateUUID(id);
 
-    await this.songService.deleteSong(id);
-
-    return successResponse({
-      res,
-      message: 'Successfuly deleted songs',
-      data: { song: {} },
-      code: 200,
-    });
+    const response = await this.songService.deleteSong(id);
+    return response;
   };
 }

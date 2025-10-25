@@ -1,7 +1,8 @@
+import { ApiResponse } from '../../common/ApiResponse';
 import { NotFoundError, ValidationError } from '../../common/AppError';
+import { CreateSongDTO, UpdateSongDTO } from './song.dto';
 import { Song } from './song.entity';
 import { SongRepository } from './song.repository';
-import { CreateSongPayload, UpdateSongPayload } from './song.schema';
 
 export class SongService {
   private songRepository: SongRepository;
@@ -10,7 +11,7 @@ export class SongService {
     this.songRepository = songRepository;
   }
 
-  async createSong(payload: CreateSongPayload) {
+  async createSong(payload: CreateSongDTO) {
     const song = new Song(payload);
     const newSong = await this.songRepository.create(song);
 
@@ -18,7 +19,7 @@ export class SongService {
       throw new ValidationError('Input is not valid');
     }
 
-    return newSong.id;
+    return new ApiResponse({ data: { songId: newSong.id }, code: 201 });
   }
 
   async getAllSongs({
@@ -31,21 +32,23 @@ export class SongService {
     albumId?: string;
   }) {
     const songs = await this.songRepository.findAllSongs({ title, performer, albumId });
-    return songs.map((song) => ({
+    const sanitizedSongs = songs.map((song) => ({
       id: song.id,
       title: song.title,
       performer: song.performer,
     }));
+
+    return new ApiResponse({ data: { songs: sanitizedSongs } });
   }
 
   async getSongById(id: string) {
     const song = await this.songRepository.findById(id);
     if (!song) throw new NotFoundError(`Song with id ${id} is not found`);
 
-    return song;
+    return new ApiResponse({ data: { song } });
   }
 
-  async updateSong(id: string, payload: UpdateSongPayload) {
+  async updateSong(id: string, payload: UpdateSongDTO) {
     const existing = await this.songRepository.findById(id);
     if (!existing) throw new NotFoundError(`Song with id ${id} is not found`);
 
@@ -53,7 +56,7 @@ export class SongService {
     song.update(payload);
 
     const updatedSong = await this.songRepository.update(id, song);
-    return updatedSong;
+    return new ApiResponse({ data: { song: updatedSong }, message: 'Successfuly updated song' });
   }
 
   async deleteSong(id: string) {
@@ -62,6 +65,6 @@ export class SongService {
 
     await this.songRepository.delete(id);
 
-    return true;
+    return new ApiResponse({ message: 'Successfuly deleted song' });
   }
 }
