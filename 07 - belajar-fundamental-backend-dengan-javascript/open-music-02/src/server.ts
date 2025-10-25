@@ -1,6 +1,7 @@
 import Hapi from '@hapi/hapi';
 import { handleError } from './utils/handleError';
 import { playlistSongPlugin } from './modules/playlist-songs';
+import { collaborationPlugin } from './modules/collaborations';
 import { userPlugin } from './modules/users';
 import { authPlugin } from './modules/auth';
 import { songPlugin } from './modules/songs';
@@ -33,6 +34,7 @@ const init = async () => {
 
   await server.register([
     playlistSongPlugin,
+    collaborationPlugin,
     userPlugin,
     authPlugin,
     songPlugin,
