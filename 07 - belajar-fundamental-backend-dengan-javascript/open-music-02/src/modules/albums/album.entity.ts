@@ -15,8 +15,8 @@ export class Album implements AlbumEntity {
   createdAt: string;
   updatedAt: string;
 
-  constructor({ name, year }: Omit<AlbumEntity, 'id' | 'createdAt' | 'updatedAt'>) {
-    this.id = nanoid(16);
+  constructor({ id = '', name, year }: Omit<AlbumEntity, 'createdAt' | 'updatedAt'>) {
+    this.id = id ? id : nanoid(16);
     this.name = name;
     this.year = year;
 

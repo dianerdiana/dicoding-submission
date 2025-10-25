@@ -1,7 +1,5 @@
-import { ResponseObject } from '@hapi/hapi';
 import { AlbumService } from './album.service';
 import { HapiHandler } from '../../types/hapi';
-import { successResponse } from '../../utils/response';
 import { createAlbumSchema, updateAlbumSchema } from './album.schema';
 import { validateUUID } from '../../utils/validateUUID';
 export class AlbumHandler {
@@ -11,48 +9,38 @@ export class AlbumHandler {
     this.albumService = albumService;
   }
 
-  createAlbum: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  createAlbum: HapiHandler = async (req) => {
     const payload = await createAlbumSchema.parseAsync(req.payload);
-    const albumId = await this.albumService.createAlbum(payload);
+    const response = await this.albumService.createAlbum(payload);
 
-    return successResponse({ res, data: { albumId }, code: 201 });
+    return response;
   };
 
-  getAlbumById: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  getAlbumById: HapiHandler = async (req) => {
     const { id } = req.params;
     validateUUID(id);
 
-    const album = await this.albumService.getAlbumById(id);
+    const response = await this.albumService.getAlbumById(id);
 
-    return successResponse({ res, data: { album }, code: 200 });
+    return response;
   };
 
-  updateAlbum: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  updateAlbum: HapiHandler = async (req) => {
     const { id } = req.params;
     validateUUID(id);
 
     const payload = await updateAlbumSchema.parseAsync(req.payload);
-    const updatedAlbum = await this.albumService.updateAlbum(id, payload);
+    const response = await this.albumService.updateAlbum(id, payload);
 
-    return successResponse({
-      res,
-      message: 'Successfuly updated albums',
-      data: { album: updatedAlbum },
-      code: 200,
-    });
+    return response;
   };
 
-  deleteAlbum: HapiHandler = async (req, res): Promise<ResponseObject> => {
+  deleteAlbum: HapiHandler = async (req) => {
     const { id } = req.params;
     validateUUID(id);
 
-    await this.albumService.deleteAlbum(id);
+    const response = await this.albumService.deleteAlbum(id);
 
-    return successResponse({
-      res,
-      message: 'Successfuly deleted albums',
-      data: { album: {} },
-      code: 200,
-    });
+    return response;
   };
 }
