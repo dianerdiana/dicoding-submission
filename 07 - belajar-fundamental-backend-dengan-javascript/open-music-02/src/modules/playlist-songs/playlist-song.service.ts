@@ -3,7 +3,7 @@ import { ValidationError } from '../../common/AppError';
 import { serviceContainer } from '../../common/ServiceContainer';
 import { PlaylistService } from '../playlists/playlist.service';
 import { SongService } from '../songs/song.service';
-import { AddSongToPlaylistDTO, NewPlaylistSongResponseDTO } from './playlist-song.dto';
+import { AddSongToPlaylistDto, NewPlaylistSongResponseDto } from './playlist-song.dto';
 import { PlaylistSong } from './playlist-song.entity';
 import { PlaylistSongRepository } from './playlist-song.repository';
 
@@ -22,7 +22,7 @@ export class PlaylistSongService {
     return serviceContainer.get<SongService>('SongService');
   }
 
-  async createPlaylistSong({ playlistId, songId, owner }: AddSongToPlaylistDTO) {
+  async createPlaylistSong({ playlistId, songId, owner }: AddSongToPlaylistDto) {
     const playlistService = this.getPlaylistService();
     const songService = this.getSongService();
 
@@ -33,7 +33,7 @@ export class PlaylistSongService {
     const newPlaylistSong = await this.playlistSongRepository.create(playlistSong);
     if (!newPlaylistSong) throw new ValidationError('Input is not valid');
 
-    const newPlaylistSongResponse: NewPlaylistSongResponseDTO = {
+    const newPlaylistSongResponse: NewPlaylistSongResponseDto = {
       playlistSongId: newPlaylistSong.id,
     };
     return new ApiResponse({ data: newPlaylistSongResponse });

@@ -1,9 +1,9 @@
 import { ApiResponse } from '../../common/ApiResponse';
 import { NotFoundError, ValidationError } from '../../common/AppError';
 import { serviceContainer } from '../../common/ServiceContainer';
-import { AllSongsResponseDTO } from '../songs/song.dto';
+import { AllSongsResponseDto } from '../songs/song.dto';
 import { SongService } from '../songs/song.service';
-import { CreateAlbumDTO, UpdateAlbumDTO } from './album.dto';
+import { CreateAlbumDto, UpdateAlbumDto } from './album.dto';
 import { Album } from './album.entity';
 import { AlbumRepository } from './album.repository';
 
@@ -18,7 +18,7 @@ export class AlbumService {
     return serviceContainer.get<SongService>('SongService');
   }
 
-  async createAlbum(payload: CreateAlbumDTO) {
+  async createAlbum(payload: CreateAlbumDto) {
     const album = new Album({ id: '', ...payload });
     const newAlbum = await this.albumRepository.create(album);
 
@@ -41,7 +41,7 @@ export class AlbumService {
     if (!album) throw new NotFoundError(`Album with id ${id} is not found`);
 
     const response = await songService.getAllSongs({ albumId: album.id });
-    const { songs } = response.data as AllSongsResponseDTO;
+    const { songs } = response.data as AllSongsResponseDto;
 
     return new ApiResponse({
       data: {
@@ -53,7 +53,7 @@ export class AlbumService {
     });
   }
 
-  async updateAlbum(id: string, payload: UpdateAlbumDTO) {
+  async updateAlbum(id: string, payload: UpdateAlbumDto) {
     const existingAlbum = await this.albumRepository.findById(id);
     if (!existingAlbum) throw new NotFoundError(`Album with id ${id} is not found`);
 

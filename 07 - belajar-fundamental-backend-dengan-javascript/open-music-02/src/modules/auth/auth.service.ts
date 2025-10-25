@@ -5,8 +5,8 @@ import { Auth } from './auth.entity';
 import { AuthRepository } from './auth.repository';
 import Jwt from '@hapi/jwt';
 import { serviceContainer } from '../../common/ServiceContainer';
-import { LoginDTO, TokenDTO } from './auth.dto';
-import { SanitizedUserResponseDTO } from '../users/user.dto';
+import { LoginDto, TokenDto } from './auth.dto';
+import { SanitizedUserResponseDto } from '../users/user.dto';
 import { ApiResponse } from '../../common/ApiResponse';
 
 export class AuthService {
@@ -20,15 +20,15 @@ export class AuthService {
     return serviceContainer.get<UserService>('UserService');
   }
 
-  generateAccessToken(payload: TokenDTO) {
+  generateAccessToken(payload: TokenDto) {
     return Jwt.token.generate(payload, env.token.accessTokenKey);
   }
 
-  generateRefreshToken(payload: TokenDTO) {
+  generateRefreshToken(payload: TokenDto) {
     return Jwt.token.generate(payload, env.token.refreshTokenKey);
   }
 
-  verifyRefreshToken(refreshToken: string): TokenDTO {
+  verifyRefreshToken(refreshToken: string): TokenDto {
     try {
       const artifacts = Jwt.token.decode(refreshToken);
       Jwt.token.verifySignature(artifacts, env.token.refreshTokenKey);
@@ -40,12 +40,12 @@ export class AuthService {
     }
   }
 
-  async login({ username, password }: LoginDTO) {
+  async login({ username, password }: LoginDto) {
     const userService = this.getUserService();
 
     await userService.validateUserPasswordByUsername({ username, password });
     const userResponse = await userService.getUserByUsername(username);
-    const { user } = userResponse.data as SanitizedUserResponseDTO;
+    const { user } = userResponse.data as SanitizedUserResponseDto;
 
     const accessToken = this.generateAccessToken({ userId: user.id, username: user.username });
     const refreshToken = this.generateRefreshToken({ userId: user.id, username: user.username });

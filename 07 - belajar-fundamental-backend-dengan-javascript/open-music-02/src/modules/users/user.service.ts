@@ -2,8 +2,8 @@ import { ApiResponse } from '../../common/ApiResponse';
 import { NotFoundError, BadRequestError, UnauthorizedError } from '../../common/AppError';
 import { comparePassword, hashPassword } from '../../utils/passwordHashing';
 import {
-  CreateUserDTO,
-  SanitizedUserResponseDTO,
+  CreateUserDto,
+  SanitizedUserResponseDto,
   ValidateUserPasswordByUsername,
 } from './user.dto';
 import { User } from './user.entity';
@@ -16,7 +16,7 @@ export class UserService {
     this.userRepository = userRepository;
   }
 
-  async createUser(payload: CreateUserDTO) {
+  async createUser(payload: CreateUserDto) {
     const user = new User(payload);
     const existingUser = await this.userRepository.findByUsername(payload.username);
     if (existingUser) throw new BadRequestError(`Username is already used`);
@@ -36,7 +36,7 @@ export class UserService {
     const existingUser = await this.userRepository.findByUsername(payload);
     if (!existingUser) throw new UnauthorizedError('User is not found');
 
-    const sanitizedUser: SanitizedUserResponseDTO = {
+    const sanitizedUser: SanitizedUserResponseDto = {
       user: {
         id: existingUser.id,
         fullname: existingUser.fullname,
@@ -53,7 +53,7 @@ export class UserService {
     const existingUser = await this.userRepository.findById(id);
     if (!existingUser) throw new NotFoundError(`User with id ${id} is not found`);
 
-    const sanitizedUser: SanitizedUserResponseDTO = {
+    const sanitizedUser: SanitizedUserResponseDto = {
       user: {
         id: existingUser.id,
         fullname: existingUser.fullname,

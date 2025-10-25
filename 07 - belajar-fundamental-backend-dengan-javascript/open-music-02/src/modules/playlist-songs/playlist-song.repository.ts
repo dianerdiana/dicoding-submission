@@ -1,7 +1,7 @@
 import { db } from '../../database';
 import { mapPlaylistSongRowToEntity, PlaylistSongRow } from './playlist-song.mapper';
 import { PlaylistSongEntity } from './playlist-song.entity';
-import { PlaylistWithSongsDTO } from './playlist-song.dto';
+import { PlaylistWithSongsDto } from './playlist-song.dto';
 
 export class PlaylistSongRepository {
   private tableName = 'playlist_songs';
@@ -24,7 +24,7 @@ export class PlaylistSongRepository {
   }
 
   async findAllSongsByPlaylistId(playlistId: string) {
-    const result = await db.query<PlaylistWithSongsDTO>(
+    const result = await db.query<PlaylistWithSongsDto>(
       `SELECT 
           s.id as "id",
           s.title,

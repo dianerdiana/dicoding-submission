@@ -6,23 +6,23 @@ import {
 } from './playlist.schema';
 import { PlaylistEntity } from './playlist.entity';
 
-// Payload DTO
-export type CreatePlaylistDTO = z.infer<typeof createPlaylistSchema> & {
+// Payload Dto
+export type CreatePlaylistDto = z.infer<typeof createPlaylistSchema> & {
   owner: string;
 };
 
-export type UpdatePlaylistDTO = z.infer<typeof updatePlaylistSchema> & {
+export type UpdatePlaylistDto = z.infer<typeof updatePlaylistSchema> & {
   owner: string;
 };
 
-export type PlaylistSearchParamDTO = z.infer<typeof playlistSearchParamSchema> & {
+export type PlaylistSearchParamDto = z.infer<typeof playlistSearchParamSchema> & {
   owner: string;
 };
 
-// Response DTO
-export type PlaylistDTO = PlaylistEntity;
+// Response Dto
+export type PlaylistDto = PlaylistEntity;
 export type SanitizedPlaylist = Omit<PlaylistEntity, 'owner'> & { username: string };
-export type PlaylistResponseDTO = { playlist: PlaylistDTO };
-export type SanitizedPlaylistResponseDTO = { playlist: SanitizedPlaylist };
-export type SanitizedAllPlaylistsResponseDTO = { playlists: SanitizedPlaylist[] };
-export type AddSongToPlaylistDTO = { id: string; songId: string; owner: string };
+export type PlaylistResponseDto = { playlist: PlaylistDto };
+export type SanitizedPlaylistResponseDto = { playlist: SanitizedPlaylist };
+export type SanitizedAllPlaylistsResponseDto = { playlists: SanitizedPlaylist[] };
+export type AddSongToPlaylistDto = { id: string; songId: string; owner: string };

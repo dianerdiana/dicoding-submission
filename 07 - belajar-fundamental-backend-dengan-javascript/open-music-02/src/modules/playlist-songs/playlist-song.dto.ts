@@ -1,15 +1,15 @@
-export type PlaylistWithSongsDTO = {
+export type PlaylistWithSongsDto = {
   id: string;
   title: string;
   performer: string;
 };
 
-export type AddSongToPlaylistDTO = {
+export type AddSongToPlaylistDto = {
   playlistId: string;
   songId: string;
   owner: string;
 };
 
-export type NewPlaylistSongResponseDTO = {
+export type NewPlaylistSongResponseDto = {
   playlistSongId: string;
 };
