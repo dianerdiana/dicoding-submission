@@ -1,13 +1,21 @@
 import { NotFoundError, ValidationError } from '../../common/AppError';
+import { serviceContainer } from '../../common/ServiceContainer';
+import { UserService } from '../users/user.service';
 import { Playlist } from './playlist.entity';
 import { PlaylistRepository } from './playlist.repository';
-import { CreatePlaylistPayload, UpdatePlaylistPayload } from './playlist.schema';
+import {
+  CreatePlaylistPayload,
+  PlaylistSearchParamPayload,
+  UpdatePlaylistPayload,
+} from './playlist.schema';
 
 export class PlaylistService {
   private playlistRepository: PlaylistRepository;
+  private userService: UserService;
 
   constructor(playlistRepository: PlaylistRepository) {
     this.playlistRepository = playlistRepository;
+    this.userService = serviceContainer.get<UserService>('UserService');
   }
 
   async createPlaylist(payload: CreatePlaylistPayload) {
@@ -21,12 +29,14 @@ export class PlaylistService {
     return newPlaylist.id;
   }
 
-  async getAllPlaylists({ name }: { name?: string }) {
-    const playlists = await this.playlistRepository.findAllPlaylists({ name });
+  async getAllPlaylists({ name, owner }: PlaylistSearchParamPayload) {
+    const playlists = await this.playlistRepository.findAllPlaylists({ name, owner });
+    const user = await this.userService.getUserById(owner);
+
     return playlists.map((playlist) => ({
       id: playlist.id,
       name: playlist.name,
-      owner: playlist.owner,
+      username: user.username,
     }));
   }
 

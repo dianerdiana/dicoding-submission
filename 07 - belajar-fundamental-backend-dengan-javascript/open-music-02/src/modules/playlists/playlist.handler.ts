@@ -8,6 +8,7 @@ import {
   updatePlaylistSchema,
 } from './playlist.schema';
 import { validateUUID } from '../../utils/validateUUID';
+import { AuthCredential } from '../../types/AuthCredential';
 
 export class PlaylistHandler {
   private playlistService: PlaylistService;
@@ -18,14 +19,19 @@ export class PlaylistHandler {
 
   createPlaylist: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const payload = await createPlaylistSchema.parseAsync(req.payload);
-    const playlistId = await this.playlistService.createPlaylist(payload);
+    const { userId } = req.auth.credentials as AuthCredential;
+    const playlistId = await this.playlistService.createPlaylist({
+      ...payload,
+      owner: userId,
+    });
 
     return successResponse({ res, data: { playlistId }, code: 201 });
   };
 
   getAllPlaylists: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const { name } = await playlistSearchParamSchema.parseAsync(req.query);
-    const playlists = await this.playlistService.getAllPlaylists({ name });
+    const { userId } = req.auth.credentials as AuthCredential;
+    const playlists = await this.playlistService.getAllPlaylists({ name, owner: userId });
 
     return successResponse({ res, data: { playlists }, code: 200 });
   };
@@ -41,10 +47,14 @@ export class PlaylistHandler {
 
   updatePlaylist: HapiHandler = async (req, res): Promise<ResponseObject> => {
     const { id } = req.params;
+    const { userId } = req.auth.credentials as AuthCredential;
     validateUUID(id);
 
     const payload = await updatePlaylistSchema.parseAsync(req.payload);
-    const updatedPlaylist = await this.playlistService.updatePlaylist(id, payload);
+    const updatedPlaylist = await this.playlistService.updatePlaylist(id, {
+      ...payload,
+      owner: userId,
+    });
 
     return successResponse({
       res,

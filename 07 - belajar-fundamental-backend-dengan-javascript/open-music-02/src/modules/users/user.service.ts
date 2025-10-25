@@ -32,7 +32,7 @@ export class UserService {
     return newUser.id;
   }
 
-  async findUserByUsername(payload: string) {
+  async getUserByUsername(payload: string) {
     const existing = await this.userRepository.findByUsername(payload);
 
     if (!existing) {

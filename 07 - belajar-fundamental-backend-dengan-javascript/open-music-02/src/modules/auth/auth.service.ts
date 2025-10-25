@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   async login({ username, password }: LoginPayload) {
-    const user = await this.userService.findUserByUsername(username);
+    const user = await this.userService.getUserByUsername(username);
     const match = await comparePassword(password, user.password);
 
     if (!match) {

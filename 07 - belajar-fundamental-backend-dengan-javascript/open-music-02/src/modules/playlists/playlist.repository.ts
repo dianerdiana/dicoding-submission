@@ -20,29 +20,18 @@ export class PlaylistRepository {
 
   async findAllPlaylists({
     name,
-    performer,
-    albumId,
+    owner,
   }: {
     name?: string;
-    performer?: string;
-    albumId?: string;
+    owner: string;
+    username?: string;
   }): Promise<PlaylistEntity[]> {
-    const conditions: string[] = [];
+    const conditions: string[] = [`owner='${owner}'`];
     const values: any[] = [];
 
     if (name) {
       values.push(`%${name.toLowerCase()}%`);
       conditions.push(`LOWER(name) LIKE $${values.length}`);
-    }
-
-    if (performer) {
-      values.push(`%${performer.toLowerCase()}%`);
-      conditions.push(`LOWER(performer) LIKE $${values.length}`);
-    }
-
-    if (albumId) {
-      values.push(albumId);
-      conditions.push(`album_id = $${values.length}`);
     }
 
     const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
