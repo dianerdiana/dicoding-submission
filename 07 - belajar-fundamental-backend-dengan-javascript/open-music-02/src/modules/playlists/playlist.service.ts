@@ -1,83 +1,132 @@
-import { ForbiddenError, NotFoundError, ValidationError } from '../../common/AppError';
+import { ApiResponse } from '../../common/ApiResponse';
+import { BadRequestError, ForbiddenError, NotFoundError } from '../../common/AppError';
 import { serviceContainer } from '../../common/ServiceContainer';
 import { PlaylistSongService } from '../playlist-songs/playlist-song.service';
+import { SanitizedUserResponseDTO } from '../users/user.dto';
 import { UserService } from '../users/user.service';
 import { Playlist } from './playlist.entity';
 import { PlaylistRepository } from './playlist.repository';
 import {
-  CreatePlaylistPayload,
-  PlaylistSearchParamPayload,
-  UpdatePlaylistPayload,
-} from './playlist.schema';
+  AddSongToPlaylistDTO,
+  SanitizedAllPlaylistsResponseDTO,
+  CreatePlaylistDTO,
+  SanitizedPlaylistResponseDTO,
+  PlaylistSearchParamDTO,
+  UpdatePlaylistDTO,
+  PlaylistResponseDTO,
+} from './playlist.dto';
 
 export class PlaylistService {
   private playlistRepository: PlaylistRepository;
-  private userService: UserService;
-  private playlistSongService: PlaylistSongService;
 
   constructor(playlistRepository: PlaylistRepository) {
     this.playlistRepository = playlistRepository;
-    this.userService = serviceContainer.get<UserService>('UserService');
-    this.playlistSongService = serviceContainer.get<PlaylistSongService>('PlaylistSongService');
   }
 
-  async createPlaylist(payload: CreatePlaylistPayload) {
+  getUserService(): UserService {
+    return serviceContainer.get<UserService>('UserService');
+  }
+
+  getPlaylistSongService(): PlaylistSongService {
+    return serviceContainer.get<PlaylistSongService>('PlaylistSongService');
+  }
+
+  async validatePlaylistId(id: string) {
+    const playlist = await this.playlistRepository.findById(id);
+    if (!playlist) throw new NotFoundError('Playlist is not found');
+
+    const responseData: PlaylistResponseDTO = { playlist };
+    return new ApiResponse({ data: responseData });
+  }
+
+  async createPlaylist(payload: CreatePlaylistDTO) {
     const playlist = new Playlist({ id: '', ...payload });
     const newPlaylist = await this.playlistRepository.create(playlist);
+    if (!newPlaylist) throw new BadRequestError('Input is not valid');
 
-    if (!newPlaylist) {
-      throw new ValidationError('Input is not valid');
-    }
-
-    return newPlaylist.id;
+    return new ApiResponse({ data: { playlistId: newPlaylist.id }, code: 201 });
   }
 
-  async getAllPlaylists({ name, owner }: PlaylistSearchParamPayload) {
-    const playlists = await this.playlistRepository.findAllPlaylists({ name, owner });
-    const user = await this.userService.getUserById(owner);
+  async getAllPlaylists({ name, owner }: PlaylistSearchParamDTO) {
+    const userService = this.getUserService();
 
-    return playlists.map((playlist) => ({
+    const playlists = await this.playlistRepository.findAllPlaylists({ name, owner });
+    const userResponse = await userService.getUserById(owner);
+    const { user } = userResponse.data as SanitizedUserResponseDTO;
+
+    const sanitizedPlaylist = playlists.map((playlist) => ({
       id: playlist.id,
       name: playlist.name,
       username: user.username,
+      createdAt: playlist.createdAt,
+      updatedAt: playlist.updatedAt,
     }));
+    const responseData: SanitizedAllPlaylistsResponseDTO = {
+      playlists: sanitizedPlaylist,
+    };
+
+    return new ApiResponse({ data: responseData });
   }
 
   async getPlaylistById({ id, owner }: { id: string; owner: string }) {
-    const playlist = await this.playlistRepository.findById(id);
+    const userService = this.getUserService();
+    const existingPlaylist = await this.playlistRepository.findById(id);
 
-    if (!playlist) throw new NotFoundError(`Playlist with id ${id} is not found`);
-    if (playlist.owner !== owner)
+    if (!existingPlaylist) throw new NotFoundError(`Playlist with id ${id} is not found`);
+    if (existingPlaylist.owner !== owner)
       throw new ForbiddenError('You are not allowed to see the playlist');
 
-    const user = await this.userService.getUserById(owner);
-
-    return {
-      id: playlist.id,
-      name: playlist.name,
-      username: user.username,
+    const userResponse = await userService.getUserById(owner);
+    const { user } = userResponse.data as SanitizedUserResponseDTO;
+    const responseData: SanitizedPlaylistResponseDTO = {
+      playlist: {
+        id: existingPlaylist.id,
+        name: existingPlaylist.name,
+        username: user.username,
+        createdAt: existingPlaylist.createdAt,
+        updatedAt: existingPlaylist.updatedAt,
+      },
     };
+
+    return new ApiResponse({ data: responseData });
   }
 
-  async updatePlaylist(id: string, payload: UpdatePlaylistPayload) {
-    const existing = await this.playlistRepository.findById(id);
-    if (!existing) throw new NotFoundError(`Playlist with id ${id} is not found`);
+  async updatePlaylist(id: string, payload: UpdatePlaylistDTO) {
+    const userService = this.getUserService();
+    const existingPlaylist = await this.playlistRepository.findById(id);
+    if (!existingPlaylist) throw new NotFoundError(`Playlist with id ${id} is not found`);
 
-    const playlist = new Playlist(existing);
+    const userResponse = await userService.getUserById(payload.owner);
+    const { user } = userResponse.data as SanitizedUserResponseDTO;
+
+    const playlist = new Playlist(existingPlaylist);
     playlist.update(payload);
 
     const updatedPlaylist = await this.playlistRepository.update(id, playlist);
-    return updatedPlaylist;
+    if (!updatedPlaylist) throw new BadRequestError('Failed update playlist');
+
+    const responseData: SanitizedPlaylistResponseDTO = {
+      playlist: {
+        id: updatedPlaylist.id,
+        name: updatedPlaylist.name,
+        username: user.username,
+        createdAt: updatedPlaylist.createdAt,
+        updatedAt: updatedPlaylist.updatedAt,
+      },
+    };
+
+    return new ApiResponse({ data: responseData });
   }
 
   async deletePlaylist(id: string) {
     await this.playlistRepository.delete(id);
 
-    return true;
+    return new ApiResponse({ message: 'Successfuly deleted playlist' });
   }
 
-  async addSongToPlaylist({ id, songId, owner }: { id: string; songId: string; owner: string }) {
-    const playlistSongId = await this.playlistSongService.createPlaylistSong({
+  async addSongToPlaylist({ id, songId, owner }: AddSongToPlaylistDTO) {
+    const playlistSongService = this.getPlaylistSongService();
+    const playlistSongId = await playlistSongService.createPlaylistSong({
       playlistId: id,
       songId,
       owner,
@@ -87,7 +136,8 @@ export class PlaylistService {
   }
 
   async getPlaylistWithAllSongsById({ id, owner }: { id: string; owner: string }) {
-    const playlistWithSongs = await this.playlistSongService.getAllSongsByPlaylistId({
+    const playlistSongService = this.getPlaylistSongService();
+    const playlistWithSongs = await playlistSongService.getAllSongsByPlaylistId({
       playlistId: id,
       owner,
     });
@@ -104,7 +154,8 @@ export class PlaylistService {
     songId: string;
     owner: string;
   }) {
-    await this.playlistSongService.deleteSongInPlaylistByPlaylistIdAndSongId({
+    const playlistSongService = this.getPlaylistSongService();
+    await playlistSongService.deleteSongInPlaylistByPlaylistIdAndSongId({
       playlistId: id,
       songId,
       owner,
