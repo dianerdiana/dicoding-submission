@@ -20,7 +20,6 @@ export class PlaylistSongActivityRepository {
       [playlistId, songId, userId, action],
     );
 
-    console.log(result.rows);
     const activityRow = result.rows[0];
     if (!activityRow) return null;
 

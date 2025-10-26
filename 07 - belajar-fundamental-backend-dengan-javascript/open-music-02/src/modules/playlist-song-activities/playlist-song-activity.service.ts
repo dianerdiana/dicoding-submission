@@ -33,7 +33,6 @@ export class PlaylistSongActivityService {
 
   async createActivity(payload: CreatePlaylistSongActivityDto) {
     const activity = new PlaylistSongActivity({ id: '', ...payload });
-    console.log(activity);
     const newActivityId = await this.activityRepository.create(activity);
     if (!newActivityId) throw new BadRequestError('Failed create activity');
 
