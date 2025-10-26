@@ -42,6 +42,15 @@ export class PlaylistHandler {
     return response;
   };
 
+  getOwnPlaylistById: HapiHandler = async (req) => {
+    const { id: playlistId } = req.params;
+    const { userId } = req.auth.credentials as AuthCredential;
+    validateUUID(playlistId);
+
+    const response = await this.playlistService.getOwnPlaylistById({ playlistId, userId });
+    return response;
+  };
+
   updatePlaylist: HapiHandler = async (req) => {
     const { id } = req.params;
     const { userId } = req.auth.credentials as AuthCredential;
@@ -61,7 +70,7 @@ export class PlaylistHandler {
     const { userId } = req.auth.credentials as AuthCredential;
     validateUUID(id);
 
-    await this.playlistService.getPlaylistById({ playlistId: id, userId });
+    await this.playlistService.getOwnPlaylistById({ playlistId: id, userId });
     const response = await this.playlistService.deletePlaylist(id);
 
     return response;

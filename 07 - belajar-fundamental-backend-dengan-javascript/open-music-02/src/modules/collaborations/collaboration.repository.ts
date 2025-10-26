@@ -4,7 +4,6 @@ import { CollaborationEntity } from './collaboration.entity';
 
 export class CollaborationRepository {
   private tableName = 'collaborations';
-  private playlistTableName = 'playlists';
 
   async create(
     playlistSong: Omit<CollaborationEntity, 'id' | 'createdAt' | 'updatedAt'>,

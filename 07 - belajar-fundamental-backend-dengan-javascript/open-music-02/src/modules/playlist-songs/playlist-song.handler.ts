@@ -18,7 +18,7 @@ export class PlaylistSongHandler {
     validateUUID(playlistId);
     validateUUID(songId);
 
-    const response = await this.playlistSongService.createPlaylistSong({
+    const response = await this.playlistSongService.addSongToPlaylistSong({
       playlistId,
       songId,
       userId,

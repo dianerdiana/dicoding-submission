@@ -61,6 +61,28 @@ export class SongRepository {
     return mapSongRowToEntity(existingSong);
   }
 
+  async findByIds(ids: string[]): Promise<Omit<SongEntity, 'createdAt' | 'updatedAt'>[]> {
+    const result = await db.query<SongRow>(
+      `SELECT * FROM ${this.tableName}
+        WHERE id IN ($1)
+        `,
+      [ids],
+    );
+    return result.rows.map((r) => {
+      const songRow = mapSongRowToEntity(r);
+
+      return {
+        id: songRow.id,
+        title: songRow.id,
+        genre: songRow.genre,
+        performer: songRow.performer,
+        year: songRow.year,
+        albumId: songRow.albumId,
+        duration: songRow.duration,
+      };
+    });
+  }
+
   async update(id: string, song: SongEntity): Promise<SongEntity | null> {
     const result = await db.query<SongRow>(
       `UPDATE ${this.tableName} SET title=$1,year=$2,genre=$3,performer=$4,duration=$5,album_id=$6 WHERE id=$7 RETURNING *`,

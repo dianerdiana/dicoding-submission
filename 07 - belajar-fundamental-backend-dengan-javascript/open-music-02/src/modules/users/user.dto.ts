@@ -6,12 +6,17 @@ export type ValidateUserPasswordByUsername = {
   username: string;
   password: string;
 };
+export type SanitizedUserDto = {
+  id: string;
+  fullname: string;
+  username: string;
+  createdAt: string;
+  updatedAt: string;
+};
 export type SanitizedUserResponseDto = {
-  user: {
-    id: string;
-    fullname: string;
-    username: string;
-    createdAt: string;
-    updatedAt: string;
-  };
+  user: SanitizedUserDto;
+};
+
+export type SanitizedUsersResponseDto = {
+  users: Omit<SanitizedUserDto, 'createdAt' | 'updatedAt'>[];
 };

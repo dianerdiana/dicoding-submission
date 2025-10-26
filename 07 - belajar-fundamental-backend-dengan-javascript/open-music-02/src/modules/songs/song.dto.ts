@@ -13,3 +13,6 @@ export type SongResponseDto = {
 export type AllSongsResponseDto = {
   songs: SongEntity[];
 };
+export type SanitizedSongsResponseDto = {
+  songs: Omit<SongEntity, 'createdAt' | 'updatedAt'>[];
+};

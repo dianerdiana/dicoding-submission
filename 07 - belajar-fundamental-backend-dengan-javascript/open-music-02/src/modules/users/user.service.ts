@@ -4,6 +4,7 @@ import { comparePassword, hashPassword } from '../../utils/passwordHashing';
 import {
   CreateUserDto,
   SanitizedUserResponseDto,
+  SanitizedUsersResponseDto,
   ValidateUserPasswordByUsername,
 } from './user.dto';
 import { User } from './user.entity';
@@ -64,6 +65,13 @@ export class UserService {
     };
 
     return new ApiResponse({ data: sanitizedUser });
+  }
+
+  async getUserByIds(ids: string[]) {
+    const existingUsers = await this.userRepository.findByIds(ids);
+    const sanitizedUsers: SanitizedUsersResponseDto = { users: existingUsers };
+
+    return new ApiResponse({ data: sanitizedUsers });
   }
 
   async deleteUser(id: string) {

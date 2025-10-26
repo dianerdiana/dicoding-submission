@@ -38,6 +38,26 @@ export class UserRepository {
     return mapUserRowToEntity(existingUser);
   }
 
+  async findByIds(
+    ids: string[],
+  ): Promise<Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>[]> {
+    const result = await db.query<UserRow>(
+      `SELECT id,fullname,username FROM ${this.tableName}
+      WHERE id IN ($1)
+      `,
+      [ids],
+    );
+    return result.rows.map((r) => {
+      const userRow = mapUserRowToEntity(r);
+
+      return {
+        id: userRow.id,
+        fullname: userRow.fullname,
+        username: userRow.username,
+      };
+    });
+  }
+
   async delete(id: string): Promise<void> {
     await db.query(`DELETE FROM ${this.tableName} WHERE id=$1`, [id]);
   }

@@ -1,6 +1,11 @@
 import { ApiResponse } from '../../common/ApiResponse';
 import { BadRequestError, NotFoundError, ValidationError } from '../../common/AppError';
-import { CreateSongDto, SongResponseDto, UpdateSongDto } from './song.dto';
+import {
+  CreateSongDto,
+  SanitizedSongsResponseDto,
+  SongResponseDto,
+  UpdateSongDto,
+} from './song.dto';
 import { Song } from './song.entity';
 import { SongRepository } from './song.repository';
 
@@ -52,6 +57,13 @@ export class SongService {
   async getSongById(id: string) {
     const validateResponse = await this.validateSongById(id);
     const responseData = validateResponse.data as SongResponseDto;
+
+    return new ApiResponse({ data: responseData });
+  }
+
+  async getSongByIds(ids: string[]) {
+    const existingSongs = await this.songRepository.findByIds(ids);
+    const responseData: SanitizedSongsResponseDto = { songs: existingSongs };
 
     return new ApiResponse({ data: responseData });
   }

@@ -14,6 +14,7 @@ import {
   UpdatePlaylistDto,
   PlaylistResponseDto,
   ValidatePlaylistOwnerDto,
+  GetPlaylistByIdResponseDto,
 } from './playlist.dto';
 
 export class PlaylistService {
@@ -36,25 +37,6 @@ export class PlaylistService {
     if (!playlist) throw new NotFoundError('Playlist is not found');
 
     const responseData: PlaylistResponseDto = { playlist };
-    return new ApiResponse({ data: responseData });
-  }
-
-  async validatePlaylistOwner({ playlistId, userId }: ValidatePlaylistOwnerDto) {
-    const userService = this.getUserService();
-    const playlistResponse = await this.validatePlaylistId(playlistId);
-    const userResponse = await userService.getUserById(userId);
-    const { playlist } = playlistResponse.data as PlaylistResponseDto;
-    const { user } = userResponse.data as SanitizedUserResponseDto;
-
-    if (playlist.owner !== userId) throw new ForbiddenError('Forbidden request');
-
-    const responseData: SanitizedPlaylistResponseDto = {
-      playlist: {
-        id: playlist.id,
-        name: playlist.name,
-        username: user.username,
-      },
-    };
     return new ApiResponse({ data: responseData });
   }
 
@@ -85,17 +67,37 @@ export class PlaylistService {
     return new ApiResponse({ data: responseData });
   }
 
-  async getPlaylistById({ playlistId, userId }: ValidatePlaylistOwnerDto) {
-    const playlistResponse = await this.validatePlaylistOwner({ playlistId, userId });
-    const { playlist } = playlistResponse.data as SanitizedPlaylistResponseDto;
+  async getPlaylistById(playlistId: string) {
+    const playlist = await this.playlistRepository.findById(playlistId);
+    if (!playlist) throw new NotFoundError('Playlist is not found');
+
+    const responseData: GetPlaylistByIdResponseDto = {
+      playlist: {
+        id: playlist.id,
+        name: playlist.name,
+        owner: playlist.owner,
+      },
+    };
+
+    return new ApiResponse({ data: responseData });
+  }
+
+  async getOwnPlaylistById({ playlistId, userId }: ValidatePlaylistOwnerDto) {
+    const userService = this.getUserService();
+    const playlistResponse = await this.validatePlaylistId(playlistId);
+    const userResponse = await userService.getUserById(userId);
+    const { playlist } = playlistResponse.data as PlaylistResponseDto;
+    const { user } = userResponse.data as SanitizedUserResponseDto;
+
+    if (playlist.owner !== userId) throw new ForbiddenError('Forbidden request');
+
     const responseData: SanitizedPlaylistResponseDto = {
       playlist: {
         id: playlist.id,
         name: playlist.name,
-        username: playlist.username,
+        username: user.username,
       },
     };
-
     return new ApiResponse({ data: responseData });
   }
 

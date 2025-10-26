@@ -36,3 +36,6 @@ export type SanitizedPlaylist = Omit<PlaylistEntity, 'owner' | 'createdAt' | 'up
 export type PlaylistResponseDto = { playlist: PlaylistDto };
 export type SanitizedPlaylistResponseDto = { playlist: SanitizedPlaylist };
 export type SanitizedAllPlaylistsResponseDto = { playlists: SanitizedPlaylist[] };
+export type GetPlaylistByIdResponseDto = {
+  playlist: Omit<PlaylistEntity, 'createdAt' | 'updatedAt'>;
+};
