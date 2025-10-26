@@ -50,6 +50,19 @@ export class PlaylistRepository {
     return mapPlaylistRowToEntity(existingPlaylist);
   }
 
+  async findByIds(
+    ids: string[],
+  ): Promise<Omit<PlaylistEntity, 'password' | 'createdAt' | 'updatedAt'>[]> {
+    const result = await db.query<PlaylistRow>(
+      `SELECT * FROM ${this.tableName}
+        WHERE id = ANY($1::uuid[])
+        `,
+      [ids],
+    );
+
+    return result.rows.map((r) => mapPlaylistRowToEntity(r));
+  }
+
   async update(id: string, playlist: PlaylistEntity): Promise<PlaylistEntity | null> {
     const result = await db.query<PlaylistRow>(
       `UPDATE ${this.tableName} SET name=$1,owner=$2 WHERE id=$3 RETURNING *`,

@@ -1,5 +1,5 @@
 import { ServerRoute } from '@hapi/hapi';
-import { CollaborationHandler } from './collbaoration.handler';
+import { CollaborationHandler } from './collaboration.handler';
 
 export class CollaborationRoute {
   private collaborationHandler: CollaborationHandler;
@@ -10,8 +10,20 @@ export class CollaborationRoute {
   routes(): ServerRoute[] {
     return [
       {
-        method: 'GET',
+        method: 'POST',
         path: '/collaborations',
+        handler: this.collaborationHandler.createCollaboration,
+        options: {
+          auth: 'auth_jwt',
+        },
+      },
+      {
+        method: 'DELETE',
+        path: '/collaborations',
+        handler: this.collaborationHandler.deleteCollaboration,
+        options: {
+          auth: 'auth_jwt',
+        },
       },
     ];
   }

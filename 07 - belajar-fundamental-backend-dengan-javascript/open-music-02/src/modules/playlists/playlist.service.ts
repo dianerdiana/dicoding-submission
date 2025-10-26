@@ -1,8 +1,7 @@
 import { ApiResponse } from '../../common/ApiResponse';
 import { BadRequestError, ForbiddenError, NotFoundError } from '../../common/AppError';
 import { serviceContainer } from '../../common/ServiceContainer';
-import { PlaylistSongService } from '../playlist-songs/playlist-song.service';
-import { GetUserResponseDto } from '../users/user.dto';
+import { GetAllUserResponseDto, GetUserResponseDto } from '../users/user.dto';
 import { UserService } from '../users/user.service';
 import { Playlist } from './playlist.entity';
 import { PlaylistRepository } from './playlist.repository';
@@ -17,6 +16,7 @@ import {
   GetOwnPlaylistResponseDto,
   UpdatePlaylistResponseDto,
 } from './playlist.dto';
+import { CollaborationService } from '../collaborations/collaboration.service';
 
 export class PlaylistService {
   private playlistRepository: PlaylistRepository;
@@ -29,8 +29,8 @@ export class PlaylistService {
     return serviceContainer.get<UserService>('UserService');
   }
 
-  private getPlaylistSongService(): PlaylistSongService {
-    return serviceContainer.get<PlaylistSongService>('PlaylistSongService');
+  private getCollaborationService(): CollaborationService {
+    return serviceContainer.get<CollaborationService>('CollaborationService');
   }
 
   async createPlaylist(payload: CreatePlaylistPayloadDto) {
@@ -44,16 +44,35 @@ export class PlaylistService {
 
   async getAllPlaylists({ name, authId }: GetAllPlaylistPayloadDto) {
     const userService = this.getUserService();
+    const collaborationService = this.getCollaborationService();
 
-    const playlists = await this.playlistRepository.findAllPlaylists({ name, authId });
-    const userResponse = await userService.getUserById(authId);
-    const { user } = userResponse.data as GetUserResponseDto;
+    let playlists = [];
+
+    const { data: collaborationResponse } = await collaborationService.getAllCollaborations(authId);
+
+    if (
+      collaborationResponse &&
+      collaborationResponse.collaborations &&
+      collaborationResponse.collaborations.length
+    ) {
+      const { collaborations } = collaborationResponse;
+      const playlistIds: string[] = [];
+
+      collaborations.forEach((c) => playlistIds.push(c.playlistId));
+      playlists = await this.playlistRepository.findByIds(playlistIds);
+    } else {
+      playlists = await this.playlistRepository.findAllPlaylists({ name, authId });
+    }
+
+    const userIds = playlists.map((p) => p.owner);
+    const userResponse = await userService.getUserByIds(userIds);
+    const { users } = userResponse.data as GetAllUserResponseDto;
 
     const responseData: GetAllPlaylistResponseDto = {
       playlists: playlists.map((playlist) => ({
         id: playlist.id,
         name: playlist.name,
-        username: user.username,
+        username: users.find((user) => playlist.owner === user.id)?.username || '',
       })),
     };
 

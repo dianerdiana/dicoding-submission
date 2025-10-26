@@ -24,6 +24,15 @@ export class CollaborationRepository {
     return mapCollaborationRowToEntity(newCollaborationRow);
   }
 
+  async findByUserId(userId: string): Promise<CollaborationEntity[]> {
+    const result = await db.query<CollaborationRow>(
+      `SELECT * FROM ${this.tableName} WHERE user_id=$1`,
+      [userId],
+    );
+
+    return result.rows.map((r) => mapCollaborationRowToEntity(r));
+  }
+
   async delete({ playlistId, userId }: { playlistId: string; userId: string }): Promise<void> {
     await db.query(`DELETE FROM ${this.tableName} WHERE playlist_id=$1 AND user_id=$2`, [
       playlistId,

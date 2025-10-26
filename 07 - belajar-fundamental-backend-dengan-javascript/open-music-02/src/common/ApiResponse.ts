@@ -1,18 +1,18 @@
-interface ApiResponseProps {
+interface ApiResponseProps<T = unknown> {
   status?: string;
-  data?: any;
+  data?: T;
   message?: string;
   code?: number;
 }
 
-export class ApiResponse implements ApiResponseProps {
+export class ApiResponse<T = unknown> implements ApiResponseProps<T> {
   public readonly _isApiResponse = true;
   public readonly status?: string;
-  public readonly data?: any;
+  public readonly data?: T;
   public readonly message?: string;
   public readonly code: number;
 
-  constructor(props: ApiResponseProps) {
+  constructor(props: ApiResponseProps<T>) {
     const { message, data, status = 'success', code = 200 } = props;
 
     this.status = status;

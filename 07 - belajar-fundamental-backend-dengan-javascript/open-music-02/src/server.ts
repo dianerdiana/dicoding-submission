@@ -35,13 +35,13 @@ const init = async () => {
 
   await server.register([
     playlistSongPlugin,
-    collaborationPlugin,
     userPlugin,
     authPlugin,
     songPlugin,
     albumPlugin,
     playlistPlugin,
     playlistSongActivityPlugin,
+    collaborationPlugin,
   ]);
 
   server.ext('onPreResponse', (req, h) => {
