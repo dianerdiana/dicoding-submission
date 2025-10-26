@@ -13,7 +13,7 @@ export class PlaylistSongHandler {
   addSongToPlaylistSong: HapiHandler = async (req) => {
     const { id: playlistId } = req.params;
     const { songId } = await validateSongIdSchema.parseAsync(req.payload);
-    const { userId } = req.auth.credentials as AuthCredential;
+    const { authId } = req.auth.credentials as AuthCredential;
 
     validateUUID(playlistId);
     validateUUID(songId);
@@ -21,20 +21,20 @@ export class PlaylistSongHandler {
     const response = await this.playlistSongService.addSongToPlaylistSong({
       playlistId,
       songId,
-      userId,
+      authId,
     });
     return response;
   };
 
   getPlaylistWithAllSongs: HapiHandler = async (req) => {
     const { id: playlistId } = req.params;
-    const { userId } = req.auth.credentials as AuthCredential;
+    const { authId } = req.auth.credentials as AuthCredential;
 
     validateUUID(playlistId);
 
-    const response = await this.playlistSongService.getAllSongsByPlaylistId({
+    const response = await this.playlistSongService.getPlaylistWithAllSongsByPlaylistId({
       playlistId,
-      userId,
+      authId,
     });
 
     return response;
@@ -42,14 +42,14 @@ export class PlaylistSongHandler {
 
   deleteSongFromPlaylistByPlaylistId: HapiHandler = async (req) => {
     const { id: playlistId } = req.params;
-    const { userId } = req.auth.credentials as AuthCredential;
+    const { authId } = req.auth.credentials as AuthCredential;
     const { songId } = await validateSongIdSchema.parseAsync(req.payload);
     validateUUID(playlistId);
 
     const response = await this.playlistSongService.deleteSongInPlaylistByPlaylistIdAndSongId({
       playlistId,
       songId,
-      userId,
+      authId,
     });
 
     return response;

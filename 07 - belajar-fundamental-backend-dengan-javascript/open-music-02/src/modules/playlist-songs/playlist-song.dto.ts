@@ -1,17 +1,28 @@
-import { SanitizedPlaylist } from '../playlists/playlist.dto';
-import { SongDto } from '../songs/song.dto';
+import { GetOwnPlaylistResponseDto } from '../playlists/playlist.dto';
+import { SongEntity } from '../songs/song.entity';
 
-export type AddSongToPlaylistDto = {
+// Payload
+export type AddSongToPlaylistPayloadDto = {
   playlistId: string;
   songId: string;
-  userId: string;
+  authId: string;
+};
+export type DeleteSongInPlaylistPayloadDto = {
+  playlistId: string;
+  songId: string;
+  authId: string;
 };
 
-export type NewPlaylistSongResponseDto = {
-  playlistSongId: string;
-};
-
-// Response Dto
-export type PlaylistWithAllSongsDto = {
-  playlist: SanitizedPlaylist & { songs: SongDto[] };
+// Response
+export type AddSongToPlaylistResponseDto = { playlistSongId: string };
+export type GetPlaylistWithAllSongsResponseDto = GetOwnPlaylistResponseDto & {
+  playlist: {
+    id: string;
+    name: string;
+    username: string;
+    songs: Omit<
+      SongEntity,
+      'genre' | 'year' | 'albumId' | 'duration' | 'createdAt' | 'updatedAt'
+    >[];
+  };
 };

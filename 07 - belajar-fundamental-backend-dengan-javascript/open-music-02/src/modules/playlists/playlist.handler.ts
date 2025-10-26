@@ -17,10 +17,10 @@ export class PlaylistHandler {
 
   createPlaylist: HapiHandler = async (req) => {
     const payload = await createPlaylistSchema.parseAsync(req.payload);
-    const { userId } = req.auth.credentials as AuthCredential;
+    const { authId } = req.auth.credentials as AuthCredential;
     const response = await this.playlistService.createPlaylist({
       ...payload,
-      userId,
+      authId,
     });
 
     return response;
@@ -28,9 +28,9 @@ export class PlaylistHandler {
 
   getAllPlaylists: HapiHandler = async (req) => {
     const { name } = await playlistSearchParamSchema.parseAsync(req.query);
-    const { userId } = req.auth.credentials as AuthCredential;
+    const { authId } = req.auth.credentials as AuthCredential;
 
-    const response = await this.playlistService.getAllPlaylists({ name, userId });
+    const response = await this.playlistService.getAllPlaylists({ name, authId });
     return response;
   };
 
@@ -44,22 +44,22 @@ export class PlaylistHandler {
 
   getOwnPlaylistById: HapiHandler = async (req) => {
     const { id: playlistId } = req.params;
-    const { userId } = req.auth.credentials as AuthCredential;
+    const { authId } = req.auth.credentials as AuthCredential;
     validateUUID(playlistId);
 
-    const response = await this.playlistService.getOwnPlaylistById({ playlistId, userId });
+    const response = await this.playlistService.getOwnPlaylistById({ playlistId, authId });
     return response;
   };
 
   updatePlaylist: HapiHandler = async (req) => {
     const { id } = req.params;
-    const { userId } = req.auth.credentials as AuthCredential;
+    const { authId } = req.auth.credentials as AuthCredential;
     validateUUID(id);
 
     const payload = await updatePlaylistSchema.parseAsync(req.payload);
     const response = await this.playlistService.updatePlaylist(id, {
       ...payload,
-      userId,
+      authId,
     });
 
     return response;
@@ -67,10 +67,10 @@ export class PlaylistHandler {
 
   deletePlaylist: HapiHandler = async (req) => {
     const { id } = req.params;
-    const { userId } = req.auth.credentials as AuthCredential;
+    const { authId } = req.auth.credentials as AuthCredential;
     validateUUID(id);
 
-    await this.playlistService.getOwnPlaylistById({ playlistId: id, userId });
+    await this.playlistService.getOwnPlaylistById({ playlistId: id, authId });
     const response = await this.playlistService.deletePlaylist(id);
 
     return response;

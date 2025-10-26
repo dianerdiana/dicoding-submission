@@ -1,11 +1,9 @@
 import { db } from '../../database';
 import { mapPlaylistSongRowToEntity, PlaylistSongRow } from './playlist-song.mapper';
 import { PlaylistSongEntity } from './playlist-song.entity';
-import { SongDto } from '../songs/song.dto';
 
 export class PlaylistSongRepository {
   private tableName = 'playlist_songs';
-  private songTableName = 'songs';
 
   async create(
     playlistSong: Omit<PlaylistSongEntity, 'id' | 'createdAt' | 'updatedAt'>,
@@ -22,20 +20,13 @@ export class PlaylistSongRepository {
     return mapPlaylistSongRowToEntity(newPlaylistSongRow);
   }
 
-  async findAllSongsByPlaylistId(playlistId: string) {
-    const result = await db.query<SongDto>(
-      `SELECT 
-          s.id as "id",
-          s.title,
-          s.performer
-        FROM ${this.songTableName} as s
-          LEFT JOIN ${this.tableName} as ps ON ps.song_id=s.id
-        WHERE ps.playlist_id=$1;
-      `,
+  async findAllByPlaylistId(playlistId: string) {
+    const result = await db.query<PlaylistSongRow>(
+      `SELECT * FROM ${this.tableName} WHERE playlist_id=$1`,
       [playlistId],
     );
 
-    return result.rows;
+    return result.rows.map((r) => mapPlaylistSongRowToEntity(r));
   }
 
   async delete({ playlistId, songId }: { playlistId: string; songId: string }): Promise<void> {

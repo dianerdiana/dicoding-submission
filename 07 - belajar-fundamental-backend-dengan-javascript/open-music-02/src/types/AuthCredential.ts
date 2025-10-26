@@ -1,4 +1,4 @@
 export type AuthCredential = {
-  userId: string;
+  authId: string;
   username: string;
 };

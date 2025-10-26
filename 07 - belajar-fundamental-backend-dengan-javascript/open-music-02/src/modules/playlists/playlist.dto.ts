@@ -7,35 +7,32 @@ import {
 import { PlaylistEntity } from './playlist.entity';
 
 // Payload Dto
-export type CreatePlaylistDto = z.infer<typeof createPlaylistSchema> & {
-  userId: string;
+export type CreatePlaylistPayloadDto = z.infer<typeof createPlaylistSchema> & {
+  authId: string;
 };
 
-export type UpdatePlaylistDto = z.infer<typeof updatePlaylistSchema> & {
-  userId: string;
+export type UpdatePlaylistPayloadDto = z.infer<typeof updatePlaylistSchema> & {
+  authId: string;
 };
 
-export type PlaylistSearchParamDto = z.infer<typeof playlistSearchParamSchema> & {
-  userId: string;
+export type GetAllPlaylistPayloadDto = z.infer<typeof playlistSearchParamSchema> & {
+  authId: string;
 };
 
-export type ValidatePlaylistOwnerDto = {
+export type GetOwnPlaylistPayloadDto = {
   playlistId: string;
-  userId: string;
+  authId: string;
 };
 
-export type GetAllSongsDto = {
-  id: string;
+// Response
+export type CreatePlaylistResponseDto = { playlistId: string };
+export type UpdatePlaylistResponseDto = {
+  playlist: Omit<PlaylistEntity & { username: string }, 'owner'>;
 };
-
-// Response Dto
-export type PlaylistDto = PlaylistEntity;
-export type SanitizedPlaylist = Omit<PlaylistEntity, 'owner' | 'createdAt' | 'updatedAt'> & {
-  username: string;
+export type GetPlaylistResponseDto = { playlist: PlaylistEntity };
+export type GetAllPlaylistResponseDto = {
+  playlists: Omit<PlaylistEntity & { username: string }, 'owner' | 'createdAt' | 'updatedAt'>[];
 };
-export type PlaylistResponseDto = { playlist: PlaylistDto };
-export type SanitizedPlaylistResponseDto = { playlist: SanitizedPlaylist };
-export type SanitizedAllPlaylistsResponseDto = { playlists: SanitizedPlaylist[] };
-export type GetPlaylistByIdResponseDto = {
-  playlist: Omit<PlaylistEntity, 'createdAt' | 'updatedAt'>;
+export type GetOwnPlaylistResponseDto = {
+  playlist: Omit<PlaylistEntity & { username: string }, 'owner'>;
 };
