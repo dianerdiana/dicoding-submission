@@ -21,5 +21,9 @@ export type CreateCollaborationResponseDto = {
   collaborationId: string;
 };
 export type GetAllCollaborationResponseDto = {
-  collaborations: CollaborationEntity[] | null;
+  collaborations: CollaborationEntity[];
+};
+
+export type GetCollaborationResponseDto = {
+  collaboration: CollaborationEntity & { username: string };
 };

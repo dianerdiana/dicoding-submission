@@ -1,12 +1,14 @@
 import { ApiResponse } from '../../common/ApiResponse';
-import { BadRequestError } from '../../common/AppError';
+import { BadRequestError, ForbiddenError } from '../../common/AppError';
 import { serviceContainer } from '../../common/ServiceContainer';
 import { PlaylistService } from '../playlists/playlist.service';
+import { UserService } from '../users/user.service';
 import {
   CreateCollaborationPayloadDto,
   CreateCollaborationResponseDto,
   DeleteCollaborationPayloadDto,
   GetAllCollaborationResponseDto,
+  GetCollaborationResponseDto,
 } from './collaboration.dto';
 import { Collaboration } from './collaboration.entity';
 import { CollaborationRepository } from './collaboration.repository';
@@ -20,6 +22,10 @@ export class CollaborationService {
 
   private getPlaylistService(): PlaylistService {
     return serviceContainer.get<PlaylistService>('PlaylistService');
+  }
+
+  private getUserService(): UserService {
+    return serviceContainer.get<UserService>('UserService');
   }
 
   async createCollaboration({ playlistId, userId, authId }: CreateCollaborationPayloadDto) {
@@ -43,6 +49,34 @@ export class CollaborationService {
 
     const responseData: GetAllCollaborationResponseDto = { collaborations };
     return new ApiResponse<GetAllCollaborationResponseDto>({ data: responseData });
+  }
+
+  async getCollaboration(userId: string, playlistId: string) {
+    const userService = this.getUserService();
+    const collaboration = await this.collaborationRepository.findByUserIdAndPlaylistId(
+      userId,
+      playlistId,
+    );
+
+    if (!collaboration) {
+      throw new ForbiddenError('Forbidden request');
+    }
+
+    const userResponse = await userService.getUserById(userId);
+
+    if (!(userResponse.data && userResponse.data.user)) {
+      throw new ForbiddenError('Forbidden request');
+    }
+
+    const user = userResponse.data.user;
+
+    const responseData = {
+      collaboration: {
+        ...collaboration,
+        username: user.username,
+      },
+    };
+    return new ApiResponse<GetCollaborationResponseDto>({ data: responseData });
   }
 
   async deleteCollaboration({ playlistId, userId, authId }: DeleteCollaborationPayloadDto) {

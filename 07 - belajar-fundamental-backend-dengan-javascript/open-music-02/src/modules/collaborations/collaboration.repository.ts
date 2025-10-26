@@ -33,6 +33,21 @@ export class CollaborationRepository {
     return result.rows.map((r) => mapCollaborationRowToEntity(r));
   }
 
+  async findByUserIdAndPlaylistId(
+    userId: string,
+    playlistId: string,
+  ): Promise<CollaborationEntity | null> {
+    const result = await db.query<CollaborationRow>(
+      `SELECT * FROM ${this.tableName} WHERE user_id=$1 AND playlist_id=$2`,
+      [userId, playlistId],
+    );
+
+    const collaborationRow = result.rows[0];
+    if (!collaborationRow) return null;
+
+    return mapCollaborationRowToEntity(collaborationRow);
+  }
+
   async delete({ playlistId, userId }: { playlistId: string; userId: string }): Promise<void> {
     await db.query(`DELETE FROM ${this.tableName} WHERE playlist_id=$1 AND user_id=$2`, [
       playlistId,

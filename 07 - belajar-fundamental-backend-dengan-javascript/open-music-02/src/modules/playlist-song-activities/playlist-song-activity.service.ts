@@ -1,9 +1,9 @@
 import { ApiResponse } from '../../common/ApiResponse';
 import { BadRequestError } from '../../common/AppError';
 import { serviceContainer } from '../../common/ServiceContainer';
-import { SanitizedSongsResponseDto } from '../songs/song.dto';
+import { CollaborationService } from '../collaborations/collaboration.service';
+import { PlaylistService } from '../playlists/playlist.service';
 import { SongService } from '../songs/song.service';
-import { SanitizedUsersResponseDto } from '../users/user.dto';
 import { UserService } from '../users/user.service';
 import { CreatePlaylistSongActivityDto } from './playlist-song-activity.dto';
 import { PlaylistSongActivity } from './playlist-song-activity.entity';
@@ -23,6 +23,14 @@ export class PlaylistSongActivityService {
     return serviceContainer.get<UserService>('UserService');
   }
 
+  private getPlaylistService(): PlaylistService {
+    return serviceContainer.get<PlaylistService>('PlaylistService');
+  }
+
+  private getCollaborationService(): CollaborationService {
+    return serviceContainer.get<CollaborationService>('CollaborationService');
+  }
+
   async createActivity(payload: CreatePlaylistSongActivityDto) {
     const activity = new PlaylistSongActivity({ id: '', ...payload });
     console.log(activity);
@@ -32,9 +40,19 @@ export class PlaylistSongActivityService {
     return new ApiResponse({ data: newActivityId, message: 'Successfuly created activity' });
   }
 
-  async getAllActivityByPlaylistId(playlistId: string) {
+  async getAllActivityByPlaylistId(playlistId: string, authId: string) {
     const songService = this.getSongService();
     const userService = this.getUserService();
+    const playlistService = this.getPlaylistService();
+    const collaborationService = this.getCollaborationService();
+
+    const playlistResponse = await playlistService.getPlaylistById(playlistId);
+
+    if (playlistResponse.data && playlistResponse.data.playlist) {
+      if (playlistResponse.data.playlist.owner !== authId) {
+        await collaborationService.getCollaboration(authId, playlistId);
+      }
+    }
 
     const activites = await this.activityRepository.findAllByPlaylistId(playlistId);
 
@@ -49,12 +67,9 @@ export class PlaylistSongActivityService {
     const songResponse = await songService.getSongByIds(songIds);
     const userResponse = await userService.getUserByIds(userIds);
 
-    const { songs } = songResponse.data as SanitizedSongsResponseDto;
-    const { users } = userResponse.data as SanitizedUsersResponseDto;
-
     const responseData = activites.map((activity) => ({
-      username: users.find((user) => user.id === activity.userId)?.username,
-      title: songs.find((song) => song.id === activity.songId)?.title,
+      username: userResponse.data?.users.find((user) => user.id === activity.userId)?.username,
+      title: songResponse.data?.songs.find((song) => song.id === activity.songId)?.title,
       action: activity.action,
       time: activity.time,
     }));

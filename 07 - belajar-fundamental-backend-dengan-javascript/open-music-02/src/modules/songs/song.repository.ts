@@ -73,7 +73,7 @@ export class SongRepository {
 
       return {
         id: songRow.id,
-        title: songRow.id,
+        title: songRow.title,
         genre: songRow.genre,
         performer: songRow.performer,
         year: songRow.year,

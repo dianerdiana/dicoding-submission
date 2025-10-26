@@ -1,11 +1,14 @@
 import { ApiResponse } from '../../common/ApiResponse';
 import { ValidationError } from '../../common/AppError';
 import { serviceContainer } from '../../common/ServiceContainer';
+import { CollaborationService } from '../collaborations/collaboration.service';
 import { PlaylistSongActivityService } from '../playlist-song-activities/playlist-song-activity.service';
-import { GetOwnPlaylistPayloadDto, GetOwnPlaylistResponseDto } from '../playlists/playlist.dto';
+import { GetOwnPlaylistPayloadDto, GetPlaylistResponseDto } from '../playlists/playlist.dto';
 import { PlaylistService } from '../playlists/playlist.service';
 import { GetSongByIdsResponseDto } from '../songs/song.dto';
 import { SongService } from '../songs/song.service';
+import { GetUserResponseDto } from '../users/user.dto';
+import { UserService } from '../users/user.service';
 import {
   AddSongToPlaylistPayloadDto,
   AddSongToPlaylistResponseDto,
@@ -34,13 +37,28 @@ export class PlaylistSongService {
     return serviceContainer.get<PlaylistSongActivityService>('PlaylistSongActivityService');
   }
 
+  private getCollaborationService(): CollaborationService {
+    return serviceContainer.get<CollaborationService>('CollaborationService');
+  }
+
+  private getUserService(): UserService {
+    return serviceContainer.get<UserService>('UserService');
+  }
+
   async addSongToPlaylistSong({ playlistId, songId, authId }: AddSongToPlaylistPayloadDto) {
     const playlistService = this.getPlaylistService();
     const songService = this.getSongService();
     const activityService = this.getPlaylistSongActivityService();
+    const collaborationService = this.getCollaborationService();
 
     await songService.validateSongById(songId);
-    await playlistService.getOwnPlaylistById({ playlistId, authId });
+    const playlistResponse = await playlistService.getPlaylistById(playlistId);
+
+    if (playlistResponse.data && playlistResponse.data.playlist) {
+      if (playlistResponse.data.playlist.owner !== authId) {
+        await collaborationService.getCollaboration(authId, playlistId);
+      }
+    }
 
     const playlistSong = new PlaylistSong({ id: '', playlistId, songId });
     const newPlaylistSong = await this.playlistSongRepository.create(playlistSong);
@@ -61,17 +79,31 @@ export class PlaylistSongService {
   async getPlaylistWithAllSongsByPlaylistId({ playlistId, authId }: GetOwnPlaylistPayloadDto) {
     const playlistService = this.getPlaylistService();
     const songService = this.getSongService();
-    const playlistResponse = await playlistService.getOwnPlaylistById({ playlistId, authId });
-    const playlistSongs = await this.playlistSongRepository.findAllByPlaylistId(playlistId);
+    const collaborationService = this.getCollaborationService();
+    const userService = this.getUserService();
 
+    const playlistResponse = await playlistService.getPlaylistById(playlistId);
+
+    if (playlistResponse.data && playlistResponse.data.playlist) {
+      if (playlistResponse.data.playlist.owner !== authId) {
+        await collaborationService.getCollaboration(authId, playlistId);
+      }
+    }
+
+    const playlistSongs = await this.playlistSongRepository.findAllByPlaylistId(playlistId);
     const songIds = playlistSongs.map((p) => p.songId);
     const songsResponse = await songService.getSongByIds(songIds);
-    const { playlist } = playlistResponse.data as GetOwnPlaylistResponseDto;
+
+    const { playlist } = playlistResponse.data as GetPlaylistResponseDto;
     const { songs } = songsResponse.data as GetSongByIdsResponseDto;
+
+    const userResponse = await userService.getUserById(playlist.owner);
+    const { user } = userResponse.data as GetUserResponseDto;
 
     const responseData: GetPlaylistWithAllSongsResponseDto = {
       playlist: {
         ...playlist,
+        username: user.username,
         songs: songs.map((song) => ({
           id: song.id,
           title: song.title,
@@ -90,9 +122,16 @@ export class PlaylistSongService {
     const playlistService = this.getPlaylistService();
     const songService = this.getSongService();
     const activityService = this.getPlaylistSongActivityService();
+    const collaborationService = this.getCollaborationService();
 
     await songService.validateSongById(songId);
-    await playlistService.getOwnPlaylistById({ playlistId, authId });
+    const playlistResponse = await playlistService.getPlaylistById(playlistId);
+
+    if (playlistResponse.data && playlistResponse.data.playlist) {
+      if (playlistResponse.data.playlist.owner !== authId) {
+        await collaborationService.getCollaboration(authId, playlistId);
+      }
+    }
 
     await this.playlistSongRepository.delete({ playlistId, songId });
     await activityService.createActivity({ playlistId, songId, userId: authId, action: 'delete' });
