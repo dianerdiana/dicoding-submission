@@ -5,13 +5,17 @@ import { CollaborationEntity } from './collaboration.entity';
 export class CollaborationRepository {
   private tableName = 'collaborations';
 
-  async create(
-    playlistSong: Omit<CollaborationEntity, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<CollaborationEntity | null> {
+  async create({
+    playlistId,
+    userId,
+  }: Omit<
+    CollaborationEntity,
+    'id' | 'createdAt' | 'updatedAt'
+  >): Promise<CollaborationEntity | null> {
     const result = await db.query<CollaborationRow>(
       `INSERT INTO ${this.tableName}(playlist_id,user_id) VALUES 
       ($1, $2) RETURNING id`,
-      [playlistSong.playlistId, playlistSong.userId],
+      [playlistId, userId],
     );
 
     const newCollaborationRow = result.rows[0];

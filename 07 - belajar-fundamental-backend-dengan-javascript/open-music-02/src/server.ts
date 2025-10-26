@@ -7,9 +7,9 @@ import { authPlugin } from './modules/auth';
 import { songPlugin } from './modules/songs';
 import { albumPlugin } from './modules/albums';
 import { playlistPlugin } from './modules/playlists';
+import { playlistSongActivityPlugin } from './modules/playlist-song-activities';
 import { env } from './configs/env';
 import Jwt from '@hapi/jwt';
-import { playlistSongActivityPlugin } from './modules/playlist-song-activities';
 
 const init = async () => {
   const server = Hapi.server({
