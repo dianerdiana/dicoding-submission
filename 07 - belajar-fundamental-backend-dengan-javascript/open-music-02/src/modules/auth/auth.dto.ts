@@ -1,9 +1,11 @@
 import z from 'zod';
 import { createAuthSchema, loginSchema } from './auth.schema';
 
-export type CreateAuthDto = z.infer<typeof createAuthSchema>;
-export type LoginDto = z.infer<typeof loginSchema>;
-export type TokenDto = {
-  userId: string;
-  username: string;
-};
+// Payload
+export type CreateAuthPayloadDto = z.infer<typeof createAuthSchema>;
+export type LoginPayloadDto = z.infer<typeof loginSchema>;
+export type TokenPayloadDto = { userId: string; username: string };
+
+// Response
+export type LoginResponseDto = { accessToken: string; refreshToken: string };
+export type UpdateAccessTokenResponseDto = { accessToken: string };

@@ -5,8 +5,13 @@ import { Auth } from './auth.entity';
 import { AuthRepository } from './auth.repository';
 import Jwt from '@hapi/jwt';
 import { serviceContainer } from '../../common/ServiceContainer';
-import { LoginDto, TokenDto } from './auth.dto';
-import { SanitizedUserResponseDto } from '../users/user.dto';
+import {
+  LoginResponseDto,
+  LoginPayloadDto,
+  TokenPayloadDto,
+  UpdateAccessTokenResponseDto,
+} from './auth.dto';
+import { GetUserResponseDto } from '../users/user.dto';
 import { ApiResponse } from '../../common/ApiResponse';
 
 export class AuthService {
@@ -16,19 +21,19 @@ export class AuthService {
     this.authRepository = authRepository;
   }
 
-  getUserService(): UserService {
+  private getUserService(): UserService {
     return serviceContainer.get<UserService>('UserService');
   }
 
-  generateAccessToken(payload: TokenDto) {
+  private generateAccessToken(payload: TokenPayloadDto) {
     return Jwt.token.generate(payload, env.token.accessTokenKey);
   }
 
-  generateRefreshToken(payload: TokenDto) {
+  private generateRefreshToken(payload: TokenPayloadDto) {
     return Jwt.token.generate(payload, env.token.refreshTokenKey);
   }
 
-  verifyRefreshToken(refreshToken: string): TokenDto {
+  verifyRefreshToken(refreshToken: string): TokenPayloadDto {
     try {
       const artifacts = Jwt.token.decode(refreshToken);
       Jwt.token.verifySignature(artifacts, env.token.refreshTokenKey);
@@ -40,19 +45,20 @@ export class AuthService {
     }
   }
 
-  async login({ username, password }: LoginDto) {
+  async login({ username, password }: LoginPayloadDto) {
     const userService = this.getUserService();
 
     await userService.validateUserPasswordByUsername({ username, password });
     const userResponse = await userService.getUserByUsername(username);
-    const { user } = userResponse.data as SanitizedUserResponseDto;
+    const { user } = userResponse.data as GetUserResponseDto;
 
     const accessToken = this.generateAccessToken({ userId: user.id, username: user.username });
     const refreshToken = this.generateRefreshToken({ userId: user.id, username: user.username });
 
     const newAuth = new Auth({ userId: user.id, refreshToken });
     await this.authRepository.create(newAuth);
-    return new ApiResponse({ data: { accessToken, refreshToken }, code: 201 });
+    const responseData: LoginResponseDto = { accessToken, refreshToken };
+    return new ApiResponse({ data: responseData, code: 201 });
   }
 
   async updateAccessToken(refreshToken: string) {
@@ -62,7 +68,8 @@ export class AuthService {
     const { userId, username } = this.verifyRefreshToken(refreshToken);
 
     const accessToken = this.generateAccessToken({ userId, username });
-    return new ApiResponse({ data: { accessToken } });
+    const responseData: UpdateAccessTokenResponseDto = { accessToken };
+    return new ApiResponse({ data: responseData });
   }
 
   async deleteRefreshToken(refreshToken: string) {
