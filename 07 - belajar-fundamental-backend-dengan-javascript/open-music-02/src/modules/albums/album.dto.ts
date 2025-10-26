@@ -21,5 +21,10 @@ export type GetAllAlbumResponseDto = {
 };
 
 export type GetAlbumByIdResponseDto = {
-  album: AlbumEntity & { songs: SongEntity[] };
+  album: AlbumEntity & {
+    songs: Omit<
+      SongEntity,
+      'genre' | 'duration' | 'albumId' | 'year' | 'createdAt' | 'updatedAt'
+    >[];
+  };
 };

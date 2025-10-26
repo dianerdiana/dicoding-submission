@@ -1,10 +1,13 @@
 import { ApiResponse } from '../../common/ApiResponse';
 import { BadRequestError, NotFoundError, ValidationError } from '../../common/AppError';
 import {
-  CreateSongDto,
-  SanitizedSongsResponseDto,
-  SongResponseDto,
-  UpdateSongDto,
+  CreateSongPayloadDto,
+  CreateSongResponseDto,
+  GetAllSongResponseDto,
+  GetSongByIdsResponseDto,
+  GetSongResponseDto,
+  UpdateSongPayloadDto,
+  UpdateSongResponseDto,
 } from './song.dto';
 import { Song } from './song.entity';
 import { SongRepository } from './song.repository';
@@ -20,11 +23,11 @@ export class SongService {
     const existingSong = await this.songRepository.findById(id);
     if (!existingSong) throw new NotFoundError(`Song with id ${id} is not found`);
 
-    const songResponse: SongResponseDto = { song: existingSong };
+    const songResponse: GetSongResponseDto = { song: existingSong };
     return new ApiResponse({ data: songResponse });
   }
 
-  async createSong(payload: CreateSongDto) {
+  async createSong(payload: CreateSongPayloadDto) {
     const song = new Song(payload);
     const newSong = await this.songRepository.create(song);
 
@@ -32,7 +35,8 @@ export class SongService {
       throw new ValidationError('Input is not valid');
     }
 
-    return new ApiResponse({ data: { songId: newSong.id }, code: 201 });
+    const responseData: CreateSongResponseDto = { songId: newSong.id };
+    return new ApiResponse({ data: responseData, code: 201 });
   }
 
   async getAllSongs({
@@ -45,32 +49,33 @@ export class SongService {
     albumId?: string;
   }) {
     const songs = await this.songRepository.findAllSongs({ title, performer, albumId });
-    const sanitizedSongs = songs.map((song) => ({
-      id: song.id,
-      title: song.title,
-      performer: song.performer,
-    }));
-
-    return new ApiResponse({ data: { songs: sanitizedSongs } });
+    const responseData: GetAllSongResponseDto = {
+      songs: songs.map((song) => ({
+        id: song.id,
+        title: song.title,
+        performer: song.performer,
+      })),
+    };
+    return new ApiResponse({ data: responseData });
   }
 
   async getSongById(id: string) {
     const validateResponse = await this.validateSongById(id);
-    const responseData = validateResponse.data as SongResponseDto;
+    const responseData = validateResponse.data as GetSongResponseDto;
 
     return new ApiResponse({ data: responseData });
   }
 
   async getSongByIds(ids: string[]) {
     const existingSongs = await this.songRepository.findByIds(ids);
-    const responseData: SanitizedSongsResponseDto = { songs: existingSongs };
+    const responseData: GetSongByIdsResponseDto = { songs: existingSongs };
 
     return new ApiResponse({ data: responseData });
   }
 
-  async updateSong(id: string, payload: UpdateSongDto) {
+  async updateSong(id: string, payload: UpdateSongPayloadDto) {
     const validateResponse = await this.validateSongById(id);
-    const { song: existingSong } = validateResponse.data as SongResponseDto;
+    const { song: existingSong } = validateResponse.data as GetSongResponseDto;
 
     const song = new Song(existingSong);
     song.update(payload);
@@ -78,7 +83,7 @@ export class SongService {
     const updatedSong = await this.songRepository.update(id, song);
     if (!updatedSong) throw new BadRequestError('Failed update song');
 
-    const songResponse: SongResponseDto = { song: updatedSong };
+    const songResponse: UpdateSongResponseDto = { song: updatedSong };
     return new ApiResponse({ data: songResponse, message: 'Successfuly updated song' });
   }
 

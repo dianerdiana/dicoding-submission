@@ -1,7 +1,7 @@
 import { ApiResponse } from '../../common/ApiResponse';
 import { BadRequestError, NotFoundError, ValidationError } from '../../common/AppError';
 import { serviceContainer } from '../../common/ServiceContainer';
-import { AllSongsResponseDto } from '../songs/song.dto';
+import { GetAllSongResponseDto } from '../songs/song.dto';
 import { SongService } from '../songs/song.service';
 import {
   CreateAlbumPayloadDto,
@@ -47,7 +47,7 @@ export class AlbumService {
     if (!album) throw new NotFoundError(`Album with id ${id} is not found`);
 
     const response = await songService.getAllSongs({ albumId: album.id });
-    const { songs } = response.data as AllSongsResponseDto;
+    const { songs } = response.data as GetAllSongResponseDto;
 
     const responseData: GetAlbumByIdResponseDto = {
       album: {

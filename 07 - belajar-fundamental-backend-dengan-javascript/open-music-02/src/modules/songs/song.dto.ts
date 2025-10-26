@@ -2,17 +2,15 @@ import z from 'zod';
 import { createSongSchema, updateSongSchema } from './song.schema';
 import { SongEntity } from './song.entity';
 
-export type CreateSongDto = z.input<typeof createSongSchema>;
-export type UpdateSongDto = z.input<typeof updateSongSchema>;
+// Payload
+export type CreateSongPayloadDto = z.input<typeof createSongSchema>;
+export type UpdateSongPayloadDto = z.input<typeof updateSongSchema>;
 
 // Response Dto
-export type SongDto = SongEntity;
-export type SongResponseDto = {
-  song: SongEntity;
+export type CreateSongResponseDto = { songId: string };
+export type UpdateSongResponseDto = { song: SongEntity };
+export type GetSongResponseDto = { song: SongEntity };
+export type GetAllSongResponseDto = {
+  songs: Omit<SongEntity, 'genre' | 'duration' | 'albumId' | 'year' | 'createdAt' | 'updatedAt'>[];
 };
-export type AllSongsResponseDto = {
-  songs: SongEntity[];
-};
-export type SanitizedSongsResponseDto = {
-  songs: Omit<SongEntity, 'createdAt' | 'updatedAt'>[];
-};
+export type GetSongByIdsResponseDto = { songs: Omit<SongEntity, 'createdAt' | 'updatedAt'>[] };
