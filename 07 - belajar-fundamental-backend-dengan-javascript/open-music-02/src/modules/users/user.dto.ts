@@ -1,22 +1,17 @@
 import z from 'zod';
 import { createUserSchema } from './user.schema';
+import { UserEntity } from './user.entity';
 
-export type CreateUserDto = z.infer<typeof createUserSchema>;
-export type ValidateUserPasswordByUsername = {
+// Payload
+export type CreateUserPayloadDto = z.infer<typeof createUserSchema>;
+export type ValidateUserPasswordPayloadDto = {
   username: string;
   password: string;
 };
-export type SanitizedUserDto = {
-  id: string;
-  fullname: string;
-  username: string;
-  createdAt: string;
-  updatedAt: string;
-};
-export type SanitizedUserResponseDto = {
-  user: SanitizedUserDto;
-};
 
-export type SanitizedUsersResponseDto = {
-  users: Omit<SanitizedUserDto, 'createdAt' | 'updatedAt'>[];
+// Response
+export type CreateUserResponseDto = { userId: string };
+export type GetUserResponseDto = { user: Omit<UserEntity, 'password'> };
+export type GetAllUserResponseDto = {
+  users: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>[];
 };
