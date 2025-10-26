@@ -9,6 +9,7 @@ import { albumPlugin } from './modules/albums';
 import { playlistPlugin } from './modules/playlists';
 import { env } from './configs/env';
 import Jwt from '@hapi/jwt';
+import { playlistSongActivityPlugin } from './modules/playlist-song-activities';
 
 const init = async () => {
   const server = Hapi.server({
@@ -40,6 +41,7 @@ const init = async () => {
     songPlugin,
     albumPlugin,
     playlistPlugin,
+    playlistSongActivityPlugin,
   ]);
 
   server.ext('onPreResponse', (req, h) => {

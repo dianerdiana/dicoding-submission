@@ -64,7 +64,7 @@ export class SongRepository {
   async findByIds(ids: string[]): Promise<Omit<SongEntity, 'createdAt' | 'updatedAt'>[]> {
     const result = await db.query<SongRow>(
       `SELECT * FROM ${this.tableName}
-        WHERE id IN ($1)
+        WHERE id = ANY($1::uuid[])
         `,
       [ids],
     );

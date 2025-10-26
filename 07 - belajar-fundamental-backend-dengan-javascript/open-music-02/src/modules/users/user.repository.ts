@@ -43,7 +43,7 @@ export class UserRepository {
   ): Promise<Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>[]> {
     const result = await db.query<UserRow>(
       `SELECT id,fullname,username FROM ${this.tableName}
-      WHERE id IN ($1)
+      WHERE id = ANY($1::uuid[])
       `,
       [ids],
     );

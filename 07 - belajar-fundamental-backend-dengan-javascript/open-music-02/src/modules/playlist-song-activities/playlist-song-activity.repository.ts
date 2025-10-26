@@ -20,15 +20,16 @@ export class PlaylistSongActivityRepository {
       [playlistId, songId, userId, action],
     );
 
-    const newActivity = result.rows[0];
-    if (!newActivity) return null;
+    console.log(result.rows);
+    const activityRow = result.rows[0];
+    if (!activityRow) return null;
 
-    return mapPlaylistSongActivityRowToEntity(newActivity);
+    return mapPlaylistSongActivityRowToEntity(activityRow);
   }
 
   async findAllByPlaylistId(playlistId: string): Promise<PlaylistSongActivityEntity[]> {
     const result = await db.query<PlaylistSongActivityRow>(
-      `SELECT * FROM ${this.tableName} WHERE id=$1`,
+      `SELECT * FROM ${this.tableName} WHERE playlist_id=$1`,
       [playlistId],
     );
 

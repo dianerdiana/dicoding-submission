@@ -12,7 +12,7 @@ export class PlaylistSongActivityRoute {
     return [
       {
         method: 'GET',
-        path: '/playlists/{id}/activites',
+        path: '/playlists/{id}/activities',
         handler: this.playlistHandler.getAllActivitesByPlaylistId,
         options: {
           auth: 'auth_jwt',
