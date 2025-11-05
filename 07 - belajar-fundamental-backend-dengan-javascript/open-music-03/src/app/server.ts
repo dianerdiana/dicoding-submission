@@ -3,7 +3,7 @@ import Jwt from '@hapi/jwt';
 import { env } from './configs/env.config';
 import { handleError } from './handlers/handle-error';
 
-const init = async () => {
+export const createServer = async () => {
   const server = Hapi.server({
     port: env.app.port,
     host: env.app.host,
@@ -63,8 +63,5 @@ const init = async () => {
     return h.continue;
   });
 
-  await server.start();
-  console.log(`🚀 Server running at: ${server.info.uri}`);
+  return server;
 };
-
-init();

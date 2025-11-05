@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/app",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "migrate:create": "npx node-pg-migrate -j ts -d src/database/migrations -m src/database/migrations create",
