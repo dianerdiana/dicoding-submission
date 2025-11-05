@@ -1,0 +1,44 @@
+{
+  "name": "open-music",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/server.js",
+    "build": "tsc",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "migrate:create": "npx node-pg-migrate -j ts -d src/database/migrations -m src/database/migrations create",
+    "migrate": "npx node-pg-migrate -d src/database/migrations -m src/database/migrations up",
+    "migrate:down": "npx node-pg-migrate -d src/database/migrations -m src/database/migrations down"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^21.4.3",
+    "@hapi/jwt": "^3.2.1",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "joi": "^18.0.1",
+    "nanoid": "^5.1.6",
+    "node-pg-migrate": "^8.0.3",
+    "pg": "^8.16.3",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "@types/bcrypt": "^6.0.0",
+    "@types/pg": "^8.15.5",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.1"
+  }
+}
