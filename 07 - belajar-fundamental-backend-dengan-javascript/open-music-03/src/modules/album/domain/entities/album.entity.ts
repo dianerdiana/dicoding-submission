@@ -13,7 +13,7 @@ export class Album extends BaseEntity<AlbumId> {
     super(id, createdAt, updatedAt);
   }
 
-  create(name: string, year: number) {
+  static create(name: string, year: number) {
     if (!name || name.trim().length < 2) {
       throw new InvalidAlbumNameError();
     }
