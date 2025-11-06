@@ -7,7 +7,7 @@ export class CreateAlbumUseCase {
 
   async execute(dto: CreateAlbumDto) {
     const album = Album.create(dto.name, dto.year);
-    await this.albumRepository.create(album);
-    return album;
+    await this.albumRepository.save(album);
+    return album.getId().toString();
   }
 }
