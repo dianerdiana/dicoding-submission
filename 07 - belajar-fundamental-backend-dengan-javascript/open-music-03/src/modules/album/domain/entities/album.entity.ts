@@ -51,4 +51,14 @@ export class Album extends BaseEntity<AlbumId> {
     this.year = year;
     this.updatedAt = new Date();
   }
+
+  toPrimitives() {
+    return {
+      id: this.getId().toString(),
+      name: this.getName(),
+      year: this.getYear(),
+      createdAt: this.getCreatedAt(),
+      updatedAt: this.getUpdatedAt(),
+    };
+  }
 }
