@@ -3,12 +3,12 @@ import { MigrationBuilder } from 'node-pg-migrate';
 export async function up(pgm: MigrationBuilder): Promise<void> {
   pgm.createTable('authentications', {
     id: {
-      type: 'uuid',
+      type: 'varchar(21)', // or text, depending on your comfort
       primaryKey: true,
-      default: pgm.func('gen_random_uuid()'),
+      notNull: true,
     },
     user_id: {
-      type: 'uuid',
+      type: 'varchar(21)',
       references: 'users',
       onDelete: 'CASCADE',
     },

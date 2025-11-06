@@ -3,9 +3,9 @@ import { MigrationBuilder } from 'node-pg-migrate';
 export async function up(pgm: MigrationBuilder): Promise<void> {
   pgm.createTable('albums', {
     id: {
-      type: 'uuid',
+      type: 'varchar(21)', // or text, depending on your comfort
       primaryKey: true,
-      default: pgm.func('gen_random_uuid()'),
+      notNull: true,
     },
     name: { type: 'varchar(255)', notNull: true },
     year: { type: 'integer', notNull: true },

@@ -3,17 +3,17 @@ import { MigrationBuilder } from 'node-pg-migrate';
 export async function up(pgm: MigrationBuilder): Promise<void> {
   pgm.createTable('playlist_songs', {
     id: {
-      type: 'uuid',
+      type: 'varchar(21)', // or text, depending on your comfort
       primaryKey: true,
-      default: pgm.func('gen_random_uuid()'),
+      notNull: true,
     },
     playlist_id: {
-      type: 'uuid',
+      type: 'varchar(21)',
       references: 'playlists',
       onDelete: 'CASCADE',
     },
     song_id: {
-      type: 'uuid',
+      type: 'varchar(21)',
       references: 'songs',
       onDelete: 'CASCADE',
     },
