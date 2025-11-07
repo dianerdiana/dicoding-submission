@@ -1,5 +1,6 @@
-import { BaseEntity } from '../../../../shared/domains/base-entity';
-import { InvalidAlbumNameError, InvalidAlbumYearError } from '../errors/album.errors';
+import { BaseEntity } from '../../../../shared/domains/entities/base.entity';
+import { InvalidMinError } from '../../../../shared/domains/errors/invalid-min.error';
+import { InvalidNumberError } from '../../../../shared/domains/errors/invalid-number.error';
 import { AlbumId } from '../value-objects/album-id.vo';
 
 export class Album extends BaseEntity<AlbumId> {
@@ -15,11 +16,11 @@ export class Album extends BaseEntity<AlbumId> {
 
   static create(name: string, year: number) {
     if (!name || name.trim().length < 2) {
-      throw new InvalidAlbumNameError();
+      throw new InvalidMinError('Name', 2);
     }
 
     if (Number.isNaN(year) || year < 1900) {
-      throw new InvalidAlbumYearError();
+      throw new InvalidNumberError('Year');
     }
 
     const now = new Date();
@@ -36,7 +37,7 @@ export class Album extends BaseEntity<AlbumId> {
 
   updateName(name: string) {
     if (!name || name.trim().length < 2) {
-      throw new InvalidAlbumNameError();
+      throw new InvalidMinError('Name', 2);
     }
 
     this.name = name;
@@ -45,7 +46,7 @@ export class Album extends BaseEntity<AlbumId> {
 
   updateYear(year: number) {
     if (Number.isNaN(year) || year < 1900) {
-      throw new InvalidAlbumYearError();
+      throw new InvalidNumberError('Year');
     }
 
     this.year = year;
