@@ -6,6 +6,7 @@ import { HapiHandler } from '../../../../shared/types/hapi-handler.type';
 import { validateCreateSong } from '../validators/create-song.validator';
 import { validateUpdateSong } from '../validators/update-song.validator';
 import { GetAllSongsUseCase } from '../../application/use-case/get-all-songs.use-case';
+import { validateSongSearchParam } from '../validators/song-search-param.validator';
 
 export class SongHandler {
   constructor(
@@ -30,7 +31,8 @@ export class SongHandler {
   };
 
   getAllSongs: HapiHandler = async (req, h) => {
-    const songs = await this.getAllSongsUseCase.execute();
+    const payload = await validateSongSearchParam(req.query);
+    const songs = await this.getAllSongsUseCase.execute(payload);
 
     return h.response({
       status: 'success',

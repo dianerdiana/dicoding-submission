@@ -34,9 +34,42 @@ export class SongRepository {
     );
   }
 
-  async findAll(): Promise<Song[]> {
-    const result = await db.query<SongRow>(`SELECT * FROM songs`);
+  async findAll({
+    title,
+    performer,
+    filters,
+  }: {
+    title?: string;
+    performer?: string;
+    filters?: { field: string; value: string | number }[];
+  }): Promise<Song[]> {
+    const conditions: string[] = [];
+    const values: any[] = [];
 
+    if (title) {
+      values.push(`%${title.toLowerCase()}%`);
+      conditions.push(`LOWER(title) LIKE $${values.length}`);
+    }
+
+    if (performer) {
+      values.push(`%${performer.toLowerCase()}%`);
+      conditions.push(`LOWER(performer) LIKE $${values.length}`);
+    }
+
+    if (filters && filters.length) {
+      const allowedFields = ['album_id'];
+
+      for (const filter of filters) {
+        if (!allowedFields.includes(filter.field)) continue;
+        values.push(filter.value);
+        conditions.push(`${filter.field} = $${values.length}`);
+      }
+    }
+
+    const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+    const query = `SELECT * FROM songs ${whereClause} ORDER BY created_at DESC;`;
+
+    const result = await db.query<SongRow>(query, values);
     return result.rows.map((row) => mapSongRowToEntity(row));
   }
 
