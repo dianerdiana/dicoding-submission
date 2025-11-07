@@ -24,7 +24,6 @@ export const albumPlugin: Plugin<undefined> = {
       updateAlbumUseCase,
       deleteAlbumUseCase,
     );
-    const albumRoute = new AlbumRoute(albumHandler);
-    server.route(albumRoute.routes());
+    server.route(new AlbumRoute(albumHandler).routes());
   },
 };

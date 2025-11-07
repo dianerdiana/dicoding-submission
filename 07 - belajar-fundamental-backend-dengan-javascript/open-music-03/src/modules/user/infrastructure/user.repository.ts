@@ -1,13 +1,13 @@
 import { db } from '../../../shared/libs/db';
 import { User } from '../domain/entities/user.entity';
-import { UserRow } from './user.mapper';
+import { mapUserRowToEntity, UserRow } from './user.mapper';
 
 export class UserRepository {
   async save(song: User): Promise<void> {
     const primitive = song.toPrimitives();
 
     await db.query<UserRow>(
-      `INSERT INTO songs (id, fullname, username, password, created_at, updated_at)
+      `INSERT INTO users (id, fullname, username, password, created_at, updated_at)
          VALUES ($1, $2, $3, $4, $5, $6)
          ON CONFLICT (id) DO UPDATE
          SET
@@ -26,5 +26,14 @@ export class UserRepository {
         primitive.updatedAt,
       ],
     );
+  }
+
+  async findByUsername(username: string): Promise<User | null> {
+    const result = await db.query<UserRow>(`SELECT * FROM users WHERE username=$1`, [username]);
+
+    const userRow = result.rows[0];
+    if (!userRow) return null;
+
+    return mapUserRowToEntity(userRow);
   }
 }

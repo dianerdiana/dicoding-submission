@@ -29,8 +29,7 @@ export const songPlugin: Plugin<undefined> = {
       updateSongUseCase,
       deleteSongUseCase,
     );
-    const songRoute = new SongRoute(songHandler);
     serviceContainer.register(SERVICE_KEYS.GET_ALL_SONGS_USE_CASE, getAllSongsUseCase);
-    server.route(songRoute.routes());
+    server.route(new SongRoute(songHandler).routes());
   },
 };
