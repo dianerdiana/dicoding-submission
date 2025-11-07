@@ -8,6 +8,7 @@ export interface SongRow {
   genre: string;
   performer: string;
   duration?: number;
+  albumId?: string;
   created_at: string;
   updated_at: string;
 }
@@ -16,17 +17,17 @@ export interface SongRow {
  * Convert database row (snake_case) → entity (camelCase)
  */
 export const mapSongRowToEntity = (row: SongRow): Song => {
-  return new Song(
-    new SongId(row.id),
-    row.title,
-    row.year,
-    row.genre,
-    row.performer,
-    new Date(row.created_at),
-    new Date(row.updated_at),
-
-    row.duration,
-  );
+  return new Song({
+    id: new SongId(row.id),
+    title: row.title,
+    year: row.year,
+    genre: row.genre,
+    performer: row.performer,
+    duration: row.duration,
+    albumId: row.albumId,
+    createdAt: new Date(row.created_at),
+    updatedAt: new Date(row.updated_at),
+  });
 };
 
 /**
@@ -39,6 +40,7 @@ export const mapSongEntityToRow = (entity: Song): SongRow => ({
   genre: entity.getGenre(),
   performer: entity.getPerformer(),
   duration: entity.getDuration(),
+  albumId: entity.getAlbumId(),
   created_at: entity.getCreatedAt().toISOString(),
   updated_at: entity.getUpdatedAt().toISOString(),
 });

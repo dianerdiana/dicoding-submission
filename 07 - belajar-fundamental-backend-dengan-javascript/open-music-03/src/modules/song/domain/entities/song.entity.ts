@@ -4,19 +4,36 @@ import { InvalidNumberError } from '../../../../shared/domains/errors/invalid-nu
 import { InvalidRequiredError } from '../../../../shared/domains/errors/invalid-required.error';
 import { SongId } from '../value-objects/song-id.vo';
 
-export class Song extends BaseEntity<SongId> {
-  constructor(
-    id: SongId,
-    private title: string,
-    private year: number,
-    private genre: string,
-    private performer: string,
-    createdAt: Date,
-    updatedAt: Date,
+export interface SongProps {
+  id: SongId;
+  title: string;
+  year: number;
+  genre: string;
+  performer: string;
+  duration?: number;
+  albumId?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-    private duration?: number,
-  ) {
+export class Song extends BaseEntity<SongId> {
+  private title: string;
+  private year: number;
+  private genre: string;
+  private performer: string;
+  private duration?: number;
+  private albumId?: string;
+
+  constructor(props: SongProps) {
+    const { id, title, year, genre, performer, duration, albumId, createdAt, updatedAt } = props;
+
     super(id, createdAt, updatedAt);
+    this.title = title;
+    this.year = year;
+    this.genre = genre;
+    this.performer = performer;
+    this.duration = duration;
+    this.albumId = albumId;
   }
 
   static create({
@@ -53,7 +70,16 @@ export class Song extends BaseEntity<SongId> {
     }
 
     const now = new Date();
-    return new Song(new SongId(), title, year, genre, performer, now, now, duration);
+    return new Song({
+      id: new SongId(),
+      title,
+      year,
+      genre,
+      performer,
+      createdAt: now,
+      updatedAt: now,
+      duration,
+    });
   }
 
   getTitle(): string {
@@ -74,6 +100,10 @@ export class Song extends BaseEntity<SongId> {
 
   getDuration(): number | undefined {
     return this.duration;
+  }
+
+  getAlbumId(): string | undefined {
+    return this.albumId;
   }
 
   updateTitle(title: string) {
@@ -121,6 +151,15 @@ export class Song extends BaseEntity<SongId> {
     this.updatedAt = new Date();
   }
 
+  updateAlbumId(albumId: string | undefined) {
+    if (albumId && albumId.trim().length === 0) {
+      throw new InvalidRequiredError('AlbumId');
+    }
+
+    this.albumId = albumId;
+    this.updatedAt = new Date();
+  }
+
   toPrimitives() {
     return {
       id: this.getId().toString(),
@@ -129,6 +168,7 @@ export class Song extends BaseEntity<SongId> {
       genre: this.getGenre(),
       performer: this.getPerformer(),
       duration: this.getDuration(),
+      albumId: this.getAlbumId(),
       createdAt: this.getCreatedAt(),
       updatedAt: this.getUpdatedAt(),
     };

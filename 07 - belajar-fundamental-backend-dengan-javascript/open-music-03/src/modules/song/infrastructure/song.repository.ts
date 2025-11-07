@@ -1,33 +1,35 @@
 import { db } from '../../../shared/libs/db';
 import { Song } from '../domain/entities/song.entity';
 import { SongId } from '../domain/value-objects/song-id.vo';
-import { mapSongEntityToRow, mapSongRowToEntity, SongRow } from './song.mapper';
+import { mapSongRowToEntity, SongRow } from './song.mapper';
 
 export class SongRepository {
   async save(song: Song): Promise<void> {
-    const mappedSong = mapSongEntityToRow(song);
+    const primitive = song.toPrimitives();
 
     await db.query<SongRow>(
       `INSERT INTO songs (id, title, year, genre, performer, duration, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
          ON CONFLICT (id) DO UPDATE
          SET title = EXCLUDED.title,
           year = EXCLUDED.year,
           genre = EXCLUDED.genre,
           performer = EXCLUDED.performer,
           duration = EXCLUDED.duration,
+          albumId = EXCLUDED.albumId,
           updated_at = EXCLUDED.updated_at
          RETURNING *
          `,
       [
-        mappedSong.id,
-        mappedSong.title,
-        mappedSong.year,
-        mappedSong.genre,
-        mappedSong.performer,
-        mappedSong.duration,
-        mappedSong.created_at,
-        mappedSong.updated_at,
+        primitive.id,
+        primitive.title,
+        primitive.year,
+        primitive.genre,
+        primitive.performer,
+        primitive.duration,
+        primitive.albumId,
+        primitive.createdAt,
+        primitive.updatedAt,
       ],
     );
   }

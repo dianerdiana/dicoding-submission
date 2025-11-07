@@ -1,11 +1,11 @@
 import { db } from '../../../shared/libs/db';
 import { Album } from '../domain/entities/album.entity';
 import { AlbumId } from '../domain/value-objects/album-id.vo';
-import { AlbumRow, mapAlbumEntityToRow, mapAlbumRowToEntity } from './album.mapper';
+import { AlbumRow, mapAlbumRowToEntity } from './album.mapper';
 
 export class AlbumRepository {
   async save(album: Album): Promise<void> {
-    const mappedAlbum = mapAlbumEntityToRow(album);
+    const primitive = album.toPrimitives();
 
     await db.query<AlbumRow>(
       `INSERT INTO albums (id, name, year, created_at, updated_at)
@@ -14,13 +14,7 @@ export class AlbumRepository {
        SET name = EXCLUDED.name, year = EXCLUDED.year, updated_at = EXCLUDED.updated_at
        RETURNING *
        `,
-      [
-        mappedAlbum.id,
-        mappedAlbum.name,
-        mappedAlbum.year,
-        mappedAlbum.created_at,
-        mappedAlbum.updated_at,
-      ],
+      [primitive.id, primitive.name, primitive.year, primitive.createdAt, primitive.updatedAt],
     );
   }
 
