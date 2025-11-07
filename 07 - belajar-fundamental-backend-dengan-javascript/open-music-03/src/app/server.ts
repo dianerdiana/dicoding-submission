@@ -4,6 +4,7 @@ import { env } from './configs/env.config';
 import { handleError } from './handlers/handle-error';
 import { albumPlugin } from '../modules/album/infrastructure/album.plugin';
 import { songPlugin } from '../modules/song/infrastructure/song.plugin';
+import { authPlugin } from '../modules/auth/infrasctructure/auth.plugin';
 
 export const createServer = async () => {
   const server = Hapi.server({
@@ -27,7 +28,7 @@ export const createServer = async () => {
     }),
   });
 
-  await server.register([albumPlugin, songPlugin]);
+  await server.register([albumPlugin, songPlugin, authPlugin]);
 
   server.ext('onPreResponse', (req, h) => {
     const { response } = req;

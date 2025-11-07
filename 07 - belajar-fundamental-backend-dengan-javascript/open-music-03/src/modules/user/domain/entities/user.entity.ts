@@ -61,6 +61,10 @@ export class User extends BaseEntity<UserId> {
     return this.username;
   }
 
+  getPassword(): string {
+    return this.password;
+  }
+
   updateFullname(fullname: string) {
     if (!fullname || fullname.trim().length === 0) {
       throw new InvalidRequiredError('Fullname');
@@ -84,8 +88,9 @@ export class User extends BaseEntity<UserId> {
       id: this.getId().toString(),
       fullname: this.getFullname(),
       username: this.getUsername(),
-      createdAt: this.getCreatedAt(),
-      updatedAt: this.getUpdatedAt(),
+      password: this.getPassword(),
+      createdAt: this.getCreatedAt().toISOString(),
+      updatedAt: this.getUpdatedAt().toISOString(),
     };
   }
 }

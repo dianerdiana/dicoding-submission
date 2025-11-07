@@ -1,1 +1,30 @@
-export class UserRepository {}
+import { db } from '../../../shared/libs/db';
+import { User } from '../domain/entities/user.entity';
+import { UserRow } from './user.mapper';
+
+export class UserRepository {
+  async save(song: User): Promise<void> {
+    const primitive = song.toPrimitives();
+
+    await db.query<UserRow>(
+      `INSERT INTO songs (id, fullname, username, password, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6)
+         ON CONFLICT (id) DO UPDATE
+         SET
+          fullname = EXCLUDED.fullname,
+          username = EXCLUDED.username,
+          password = EXCLUDED.password,
+          updated_at = EXCLUDED.updated_at
+         RETURNING *
+         `,
+      [
+        primitive.id,
+        primitive.fullname,
+        primitive.username,
+        primitive.password,
+        primitive.createdAt,
+        primitive.updatedAt,
+      ],
+    );
+  }
+}
