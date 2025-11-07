@@ -13,6 +13,9 @@ export class SongRepository {
          ON CONFLICT (id) DO UPDATE
          SET title = EXCLUDED.title,
           year = EXCLUDED.year,
+          genre = EXCLUDED.genre,
+          performer = EXCLUDED.performer,
+          duration = EXCLUDED.duration,
           updated_at = EXCLUDED.updated_at
          RETURNING *
          `,
@@ -27,6 +30,12 @@ export class SongRepository {
         mappedSong.updated_at,
       ],
     );
+  }
+
+  async findAll(): Promise<Song[]> {
+    const result = await db.query<SongRow>(`SELECT * FROM songs`);
+
+    return result.rows.map((row) => mapSongRowToEntity(row));
   }
 
   async findById(songId: SongId): Promise<Song | null> {

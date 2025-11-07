@@ -3,6 +3,7 @@ import Jwt from '@hapi/jwt';
 import { env } from './configs/env.config';
 import { handleError } from './handlers/handle-error';
 import { albumPlugin } from '../modules/album/infrastructure/album.plugin';
+import { songPlugin } from '../modules/song/infrastructure/song.plugin';
 
 export const createServer = async () => {
   const server = Hapi.server({
@@ -26,7 +27,7 @@ export const createServer = async () => {
     }),
   });
 
-  await server.register([albumPlugin]);
+  await server.register([albumPlugin, songPlugin]);
 
   server.ext('onPreResponse', (req, h) => {
     const { response } = req;

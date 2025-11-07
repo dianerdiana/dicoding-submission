@@ -9,6 +9,6 @@ export class CreateSongUseCase {
     const { title, genre, performer, year, duration } = payload;
     const song = Song.create({ title, genre, performer, year, duration });
     await this.songRepository.save(song);
-    return song;
+    return song.getId().toString();
   }
 }
