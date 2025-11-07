@@ -2,23 +2,26 @@
 import Jwt from '@hapi/jwt';
 import { env } from '../../../../app/configs/env.config';
 import { BadRequestError } from '../../../../shared/errors/app-error';
+import { AuthCredential } from '../../../../shared/types/auth-credential.type';
 
 export class JwtService {
-  generateAccessToken(payload: object): string {
+  generateAccessToken(payload: AuthCredential): string {
     return Jwt.token.generate(payload, env.token.accessTokenKey);
   }
 
-  generateRefreshToken(payload: object): string {
+  generateRefreshToken(payload: AuthCredential): string {
     return Jwt.token.generate(payload, env.token.refreshTokenKey);
   }
 
-  verify(token: string, type: 'access' | 'refresh'): any {
+  verifyToken(token: string, type: 'access' | 'refresh'): AuthCredential {
     try {
       const secret = type === 'access' ? env.token.accessTokenKey : env.token.refreshTokenKey;
       const artifacts = Jwt.token.decode(token);
+
       Jwt.token.verifySignature(artifacts, secret);
+
       const { payload } = artifacts.decoded;
-      return payload;
+      return payload as AuthCredential;
     } catch (error) {
       console.error(error);
       throw new BadRequestError('Token is not valid');
