@@ -8,7 +8,7 @@ export interface SongRow {
   genre: string;
   performer: string;
   duration?: number;
-  albumId?: string;
+  album_id?: string;
   created_at: string;
   updated_at: string;
 }
@@ -24,7 +24,7 @@ export const mapSongRowToEntity = (row: SongRow): Song => {
     genre: row.genre,
     performer: row.performer,
     duration: row.duration,
-    albumId: row.albumId,
+    albumId: row.album_id,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
   });
@@ -40,7 +40,7 @@ export const mapSongEntityToRow = (entity: Song): SongRow => ({
   genre: entity.getGenre(),
   performer: entity.getPerformer(),
   duration: entity.getDuration(),
-  albumId: entity.getAlbumId(),
+  album_id: entity.getAlbumId(),
   created_at: entity.getCreatedAt().toISOString(),
   updated_at: entity.getUpdatedAt().toISOString(),
 });

@@ -42,12 +42,14 @@ export class Song extends BaseEntity<SongId> {
     genre,
     performer,
     duration,
+    albumId,
   }: {
     title: string;
     year: number;
     genre: string;
     performer: string;
     duration?: number;
+    albumId?: string;
   }) {
     if (!title || title.trim().length < 2) {
       throw new InvalidMinError('Title', 2);
@@ -67,6 +69,10 @@ export class Song extends BaseEntity<SongId> {
 
     if (duration && Number.isNaN(duration)) {
       throw new InvalidNumberError('Duration');
+    }
+
+    if (albumId && albumId.trim().length === 0) {
+      throw new InvalidMinError('AlbumID', 1);
     }
 
     const now = new Date();

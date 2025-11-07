@@ -6,8 +6,8 @@ export class CreateSongUseCase {
   constructor(private readonly songRepository: SongRepository) {}
 
   async execute(payload: CreateSongDto) {
-    const { title, genre, performer, year, duration } = payload;
-    const song = Song.create({ title, genre, performer, year, duration });
+    const { title, genre, performer, year, duration, albumId } = payload;
+    const song = Song.create({ title, genre, performer, year, duration, albumId });
     await this.songRepository.save(song);
     return song.getId().toString();
   }

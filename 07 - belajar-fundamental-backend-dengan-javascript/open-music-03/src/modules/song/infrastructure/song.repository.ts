@@ -8,7 +8,7 @@ export class SongRepository {
     const primitive = song.toPrimitives();
 
     await db.query<SongRow>(
-      `INSERT INTO songs (id, title, year, genre, performer, duration, created_at, updated_at)
+      `INSERT INTO songs (id, title, year, genre, performer, duration, album_id, created_at, updated_at)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
          ON CONFLICT (id) DO UPDATE
          SET title = EXCLUDED.title,
@@ -16,7 +16,7 @@ export class SongRepository {
           genre = EXCLUDED.genre,
           performer = EXCLUDED.performer,
           duration = EXCLUDED.duration,
-          albumId = EXCLUDED.albumId,
+          album_id = EXCLUDED.album_id,
           updated_at = EXCLUDED.updated_at
          RETURNING *
          `,

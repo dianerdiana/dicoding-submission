@@ -6,4 +6,5 @@ export const createSongSchema = z.object({
   genre: z.string(),
   performer: z.string(),
   duration: z.number().optional(),
+  albumId: z.string().optional(),
 });
