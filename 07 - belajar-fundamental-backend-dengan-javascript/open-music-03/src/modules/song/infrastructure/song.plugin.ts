@@ -7,6 +7,8 @@ import { GetSongByIdUseCase } from '../application/use-case/get-song-by-id.use-c
 import { UpdateSongUseCase } from '../application/use-case/update-song.use-case';
 import { DeleteSongUseCase } from '../application/use-case/delete-song.use-case';
 import { GetAllSongsUseCase } from '../application/use-case/get-all-songs.use-case';
+import { serviceContainer } from '../../../shared/utils/service-container';
+import { SERVICE_KEYS } from '../../../shared/constants/service-keys.constant';
 
 export const songPlugin: Plugin<undefined> = {
   name: 'songs',
@@ -28,6 +30,7 @@ export const songPlugin: Plugin<undefined> = {
       deleteSongUseCase,
     );
     const songRoute = new SongRoute(songHandler);
+    serviceContainer.register(SERVICE_KEYS.GET_ALL_SONGS_USE_CASE, getAllSongsUseCase);
     server.route(songRoute.routes());
   },
 };

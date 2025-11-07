@@ -82,9 +82,10 @@ export class Song extends BaseEntity<SongId> {
       year,
       genre,
       performer,
+      duration,
+      albumId,
       createdAt: now,
       updatedAt: now,
-      duration,
     });
   }
 
