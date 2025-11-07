@@ -1,0 +1,46 @@
+import { db } from '../../../shared/libs/db';
+import { Song } from '../domain/entities/song.entity';
+import { SongId } from '../domain/value-objects/song-id.vo';
+import { mapSongEntityToRow, mapSongRowToEntity, SongRow } from './song.mapper';
+
+export class SongRepository {
+  async save(song: Song): Promise<void> {
+    const mappedSong = mapSongEntityToRow(song);
+
+    await db.query<SongRow>(
+      `INSERT INTO songs (id, title, year, genre, performer, duration, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         ON CONFLICT (id) DO UPDATE
+         SET title = EXCLUDED.title,
+          year = EXCLUDED.year,
+          updated_at = EXCLUDED.updated_at
+         RETURNING *
+         `,
+      [
+        mappedSong.id,
+        mappedSong.title,
+        mappedSong.year,
+        mappedSong.genre,
+        mappedSong.performer,
+        mappedSong.duration,
+        mappedSong.created_at,
+        mappedSong.updated_at,
+      ],
+    );
+  }
+
+  async findById(songId: SongId): Promise<Song | null> {
+    const result = await db.query<SongRow>(`SELECT * FROM songs WHERE id=$1`, [songId.toString()]);
+
+    const songRow = result.rows[0];
+    if (!songRow) return null;
+
+    return mapSongRowToEntity(songRow);
+  }
+
+  async delete(song: Song): Promise<boolean> {
+    await db.query(`DELETE FROM songs WHERE id=$1 RETURNING *`, [song.getId().toString()]);
+
+    return true;
+  }
+}
