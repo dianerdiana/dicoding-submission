@@ -3,8 +3,8 @@ import { User } from '../domain/entities/user.entity';
 import { mapUserRowToEntity, UserRow } from './user.mapper';
 
 export class UserRepository {
-  async save(song: User): Promise<void> {
-    const primitive = song.toPrimitives();
+  async save(user: User): Promise<void> {
+    const primitive = user.toPrimitives();
 
     await db.query<UserRow>(
       `INSERT INTO users (id, fullname, username, password, created_at, updated_at)

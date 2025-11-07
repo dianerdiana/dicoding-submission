@@ -93,4 +93,14 @@ export class User extends BaseEntity<UserId> {
       updatedAt: this.getUpdatedAt().toISOString(),
     };
   }
+
+  toSafePrimitives() {
+    return {
+      id: this.getId().toString(),
+      fullname: this.getFullname(),
+      username: this.getUsername(),
+      createdAt: this.getCreatedAt().toISOString(),
+      updatedAt: this.getUpdatedAt().toISOString(),
+    };
+  }
 }
