@@ -20,8 +20,8 @@ export class PlaylistRepository {
     );
   }
 
-  async findAll(): Promise<Playlist[]> {
-    const result = await db.query<PlaylistRow>(`SELECT * FROM playlists`);
+  async findAll(userId: string): Promise<Playlist[]> {
+    const result = await db.query<PlaylistRow>(`SELECT * FROM playlists WHERE owner=$1`, [userId]);
     return result.rows.map((r) => mapPlaylistRowToEntity(r));
   }
 }
