@@ -14,7 +14,6 @@ export class RefreshTokenUseCase {
     const { userId, username } = this.jwtService.verifyToken(refreshToken, 'refresh');
     const auth = await this.authRepository.findByUserId(userId);
 
-    console.log(refreshToken, auth?.getRefreshToken());
     if (!auth || auth.getRefreshToken() !== refreshToken) {
       throw new BadRequestError('Invalid token');
     }
