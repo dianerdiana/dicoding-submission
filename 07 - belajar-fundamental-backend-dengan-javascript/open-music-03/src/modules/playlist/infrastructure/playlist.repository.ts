@@ -24,4 +24,20 @@ export class PlaylistRepository {
     const result = await db.query<PlaylistRow>(`SELECT * FROM playlists WHERE owner=$1`, [userId]);
     return result.rows.map((r) => mapPlaylistRowToEntity(r));
   }
+
+  async findById(playlistId: string): Promise<Playlist | null> {
+    const result = await db.query<PlaylistRow>(`SELECT * FROM playlists WHERE id=$1`, [playlistId]);
+
+    const playlistRow = result.rows[0];
+    if (!playlistRow) return null;
+
+    return mapPlaylistRowToEntity(playlistRow);
+  }
+
+  async delete(playlist: Playlist): Promise<boolean> {
+    const primitive = playlist.toPrimitives();
+    await db.query(`DELETE FROM playlists WHERE id=$1 RETURNING *`, [primitive.id]);
+
+    return true;
+  }
 }

@@ -6,6 +6,7 @@ import { albumPlugin } from '../modules/album/infrastructure/album.plugin';
 import { songPlugin } from '../modules/song/infrastructure/song.plugin';
 import { authPlugin } from '../modules/auth/infrasctructure/auth.plugin';
 import { userPlugin } from '../modules/user/infrastructure/user.plugin';
+import { playlistPlugin } from '../modules/playlist/infrastructure/playlist.plugin';
 
 export const createServer = async () => {
   const server = Hapi.server({
@@ -24,12 +25,13 @@ export const createServer = async () => {
     validate: (artifacts) => ({
       isValid: true,
       credentials: {
-        authId: artifacts.decoded.payload.authId,
+        userId: artifacts.decoded.payload.userId,
+        username: artifacts.decoded.payload.username,
       },
     }),
   });
 
-  await server.register([albumPlugin, songPlugin, authPlugin, userPlugin]);
+  await server.register([albumPlugin, songPlugin, authPlugin, userPlugin, playlistPlugin]);
 
   server.ext('onPreResponse', (req, h) => {
     const { response } = req;

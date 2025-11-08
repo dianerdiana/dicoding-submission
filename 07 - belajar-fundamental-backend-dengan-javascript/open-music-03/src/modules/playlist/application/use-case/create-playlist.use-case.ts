@@ -10,6 +10,6 @@ export class CreatePlaylistUseCase {
     const playlist = Playlist.create({ name, owner: userId });
 
     await this.playlistRepository.save(playlist);
-    return playlist.toPrimitives();
+    return playlist.toPrimitives().id;
   }
 }

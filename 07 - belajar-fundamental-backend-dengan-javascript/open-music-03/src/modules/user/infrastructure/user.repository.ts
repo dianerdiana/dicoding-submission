@@ -36,4 +36,11 @@ export class UserRepository {
 
     return mapUserRowToEntity(userRow);
   }
+
+  async findByIds(userIds: string[]): Promise<User[]> {
+    const result = await db.query<UserRow>(`SELECT * FROM users WHERE id = ANY($1::text[])`, [
+      userIds,
+    ]);
+    return result.rows.map((userRow) => mapUserRowToEntity(userRow));
+  }
 }
