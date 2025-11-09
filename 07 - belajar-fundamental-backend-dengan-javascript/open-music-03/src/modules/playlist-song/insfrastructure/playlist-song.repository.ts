@@ -37,16 +37,12 @@ export class PlaylistSongRepository {
     return mapPlaylistSongRowToEntity(playlistSongRow);
   }
 
-  async findByPlaylistSongname(playlistSongname: string): Promise<PlaylistSong | null> {
+  async findAllByPlaylistId(playlistId: string): Promise<PlaylistSong[]> {
     const result = await db.query<PlaylistSongRow>(
-      `SELECT * FROM playlist_songs WHERE playlistSongname=$1`,
-      [playlistSongname],
+      `SELECT * FROM playlist_songs WHERE playlist_id = $1`,
+      [playlistId],
     );
-
-    const playlistSongRow = result.rows[0];
-    if (!playlistSongRow) return null;
-
-    return mapPlaylistSongRowToEntity(playlistSongRow);
+    return result.rows.map((playlistSongRow) => mapPlaylistSongRowToEntity(playlistSongRow));
   }
 
   async findByIds(playlistSongIds: string[]): Promise<PlaylistSong[]> {
