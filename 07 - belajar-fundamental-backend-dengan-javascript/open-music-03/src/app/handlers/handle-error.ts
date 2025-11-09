@@ -32,7 +32,6 @@ export const handleError = ({
       .response({
         status: error.status,
         message: error.message,
-        code: error.statusCode,
       })
       .code(error.statusCode);
   }

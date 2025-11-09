@@ -6,7 +6,8 @@ import { UserRoute } from '../interface/http/user.route';
 import { SignInUserUseCase } from '../application/use-case/sign-in-user.use-case';
 import { serviceContainer } from '../../../shared/utils/service-container';
 import { SERVICE_KEYS } from '../../../shared/constants/service-keys.constant';
-import { GetUserByIdsUseCase } from '../application/use-case/get-user-by-id.use-case';
+import { GetUserByIdsUseCase } from '../application/use-case/get-user-by-ids.use-case';
+import { GetUserByIdUseCase } from '../application/use-case/get-user-by-id.use-case';
 
 export const userPlugin: Plugin<undefined> = {
   name: 'users',
@@ -16,10 +17,12 @@ export const userPlugin: Plugin<undefined> = {
     const createUserUseCase = new CreateUserUseCase(userRepository);
     const getUserByUsername = new SignInUserUseCase(userRepository);
     const getUserByIdsUseCase = new GetUserByIdsUseCase(userRepository);
+    const getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
     const userHandler = new UserHandler(createUserUseCase);
 
     serviceContainer.register(SERVICE_KEYS.SIGN_IN_USER_USE_CASE, getUserByUsername);
     serviceContainer.register(SERVICE_KEYS.GET_USER_BY_IDS_USE_CASE, getUserByIdsUseCase);
+    serviceContainer.register(SERVICE_KEYS.GET_USER_BY_ID_USE_CASE, getUserByIdUseCase);
     server.route(new UserRoute(userHandler).routes());
   },
 };

@@ -7,6 +7,7 @@ import { songPlugin } from '../modules/song/infrastructure/song.plugin';
 import { authPlugin } from '../modules/auth/infrasctructure/auth.plugin';
 import { userPlugin } from '../modules/user/infrastructure/user.plugin';
 import { playlistPlugin } from '../modules/playlist/infrastructure/playlist.plugin';
+import { playlistSongPlugin } from '../modules/playlist-song/insfrastructure/playlist-song.plugin';
 
 export const createServer = async () => {
   const server = Hapi.server({
@@ -31,7 +32,14 @@ export const createServer = async () => {
     }),
   });
 
-  await server.register([albumPlugin, songPlugin, authPlugin, userPlugin, playlistPlugin]);
+  await server.register([
+    albumPlugin,
+    songPlugin,
+    authPlugin,
+    userPlugin,
+    playlistPlugin,
+    playlistSongPlugin,
+  ]);
 
   server.ext('onPreResponse', (req, h) => {
     const { response } = req;

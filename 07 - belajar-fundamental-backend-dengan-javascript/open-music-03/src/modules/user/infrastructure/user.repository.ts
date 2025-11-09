@@ -28,6 +28,15 @@ export class UserRepository {
     );
   }
 
+  async findById(userId: string): Promise<User | null> {
+    const result = await db.query<UserRow>(`SELECT * FROM users WHERE id=$1`, [userId]);
+
+    const userRow = result.rows[0];
+    if (!userRow) return null;
+
+    return mapUserRowToEntity(userRow);
+  }
+
   async findByUsername(username: string): Promise<User | null> {
     const result = await db.query<UserRow>(`SELECT * FROM users WHERE username=$1`, [username]);
 

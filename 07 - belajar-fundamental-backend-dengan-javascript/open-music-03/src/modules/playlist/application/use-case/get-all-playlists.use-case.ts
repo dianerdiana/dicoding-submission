@@ -1,6 +1,6 @@
 import { SERVICE_KEYS } from '../../../../shared/constants/service-keys.constant';
 import { serviceContainer } from '../../../../shared/utils/service-container';
-import { GetUserByIdsUseCase } from '../../../user/application/use-case/get-user-by-id.use-case';
+import { GetUserByIdsUseCase } from '../../../user/application/use-case/get-user-by-ids.use-case';
 import { PlaylistRepository } from '../../infrastructure/playlist.repository';
 
 export class GetAllPlaylistsUseCase {
@@ -14,8 +14,6 @@ export class GetAllPlaylistsUseCase {
     const playlists = await this.playlistRepository.findAll(userId);
     const userIds = playlists.map((playlist) => playlist.getOwner());
     const users = await getUserByIdsUseCase.execute(userIds);
-
-    console.log(userIds);
 
     return playlists.map((p) => {
       const playlist = p.toPrimitives();

@@ -1,10 +1,16 @@
+import { NotFoundError } from '../../../../shared/errors/app-error';
 import { UserRepository } from '../../infrastructure/user.repository';
 
-export class GetUserByIdsUseCase {
+export class GetUserByIdUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute(userIds: string[]) {
-    const users = await this.userRepository.findByIds(userIds);
-    return users.map((user) => user.toSafePrimitives());
+  async execute(userId: string) {
+    const user = await this.userRepository.findById(userId);
+
+    if (!user) {
+      throw new NotFoundError('User is not found');
+    }
+
+    return user.toSafePrimitives();
   }
 }

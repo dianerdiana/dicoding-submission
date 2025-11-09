@@ -2,10 +2,10 @@ import { ServerRoute } from '@hapi/hapi';
 import { PlaylistHandler } from './playlist.handler';
 
 export class PlaylistRoute {
-  private albumHandler: PlaylistHandler;
+  private playlistHandler: PlaylistHandler;
 
-  constructor(albumHandler: PlaylistHandler) {
-    this.albumHandler = albumHandler;
+  constructor(playlistHandler: PlaylistHandler) {
+    this.playlistHandler = playlistHandler;
   }
 
   public routes(): ServerRoute[] {
@@ -13,7 +13,7 @@ export class PlaylistRoute {
       {
         method: 'POST',
         path: '/playlists',
-        handler: this.albumHandler.createPlaylist,
+        handler: this.playlistHandler.createPlaylist,
         options: {
           auth: 'auth_jwt',
         },
@@ -21,7 +21,7 @@ export class PlaylistRoute {
       {
         method: 'GET',
         path: '/playlists',
-        handler: this.albumHandler.getAllPlaylists,
+        handler: this.playlistHandler.getAllPlaylists,
         options: {
           auth: 'auth_jwt',
         },
@@ -29,7 +29,7 @@ export class PlaylistRoute {
       {
         method: 'DELETE',
         path: '/playlists/{id}',
-        handler: this.albumHandler.deletePlaylist,
+        handler: this.playlistHandler.deletePlaylist,
         options: {
           auth: 'auth_jwt',
         },

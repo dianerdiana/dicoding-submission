@@ -15,7 +15,6 @@ export class PlaylistHandler {
   createPlaylist: HapiHandler = async (req, h) => {
     const { userId } = req.auth.credentials as AuthCredential;
 
-    console.log(userId);
     const payload = await validateCreatePlaylist(req.payload);
     const playlistId = await this.createPlaylistUseCase.execute(userId, payload);
 
