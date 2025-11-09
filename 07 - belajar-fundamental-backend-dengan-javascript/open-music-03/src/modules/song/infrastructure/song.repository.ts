@@ -82,6 +82,14 @@ export class SongRepository {
     return mapSongRowToEntity(songRow);
   }
 
+  async findByIds(songIds: string[]): Promise<Song[]> {
+    console.log(songIds);
+    const result = await db.query<SongRow>(`SELECT * FROM songs WHERE id = ANY($1::text[])`, [
+      songIds,
+    ]);
+    return result.rows.map((songRow) => mapSongRowToEntity(songRow));
+  }
+
   async delete(song: Song): Promise<boolean> {
     await db.query(`DELETE FROM songs WHERE id=$1 RETURNING *`, [song.getId().toString()]);
 

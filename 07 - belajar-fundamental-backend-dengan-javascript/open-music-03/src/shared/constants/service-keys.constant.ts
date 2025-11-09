@@ -4,6 +4,7 @@ export const SERVICE_KEYS = {
   // Song Use Case
   GET_ALL_SONGS_USE_CASE: 'GetAllSongsUseCase',
   GET_SONG_BY_ID_USE_CASE: 'GetSongByIdUseCase',
+  GET_SONGS_BY_IDS_USE_CASE: 'GetSongsByIdsUseCase',
   // User use case
   SIGN_IN_USER_USE_CASE: 'SignInUserUseCase',
   GET_USER_BY_IDS_USE_CASE: 'GetUserByIdsUseCase',
