@@ -37,6 +37,18 @@ export class PlaylistSongRepository {
     return mapPlaylistSongRowToEntity(playlistSongRow);
   }
 
+  async findByPlaylistAndSongId(playlistId: string, songId: string): Promise<PlaylistSong | null> {
+    const result = await db.query<PlaylistSongRow>(
+      `SELECT * FROM playlist_songs WHERE playlist_id=$1 AND song_id=$2`,
+      [playlistId, songId],
+    );
+
+    const playlistSongRow = result.rows[0];
+    if (!playlistSongRow) return null;
+
+    return mapPlaylistSongRowToEntity(playlistSongRow);
+  }
+
   async findAllByPlaylistId(playlistId: string): Promise<PlaylistSong[]> {
     const result = await db.query<PlaylistSongRow>(
       `SELECT * FROM playlist_songs WHERE playlist_id = $1`,
@@ -51,5 +63,14 @@ export class PlaylistSongRepository {
       [playlistSongIds],
     );
     return result.rows.map((playlistSongRow) => mapPlaylistSongRowToEntity(playlistSongRow));
+  }
+
+  async delete(playlistId: string, songId: string): Promise<boolean> {
+    await db.query(`DELETE FROM playlist_songs WHERE playlist_id=$1 AND song_id=$2 RETURNING *`, [
+      playlistId,
+      songId,
+    ]);
+
+    return true;
   }
 }

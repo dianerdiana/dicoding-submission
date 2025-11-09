@@ -26,6 +26,14 @@ export class PlaylistSongRoute {
           auth: 'auth_jwt',
         },
       },
+      {
+        method: 'DELETE',
+        path: '/playlists/{id}/songs',
+        handler: this.playlistSongHandler.deleteSongFromPlaylist,
+        options: {
+          auth: 'auth_jwt',
+        },
+      },
     ];
   }
 }
