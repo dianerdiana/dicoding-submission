@@ -13,7 +13,15 @@ export class PlaylistSongRoute {
       {
         method: 'POST',
         path: '/playlists/{id}/songs',
-        handler: this.playlistSongHandler.createPlaylist,
+        handler: this.playlistSongHandler.addSongToPlaylist,
+        options: {
+          auth: 'auth_jwt',
+        },
+      },
+      {
+        method: 'GET',
+        path: '/playlists/{id}/songs',
+        handler: this.playlistSongHandler.getPlaylistSongs,
         options: {
           auth: 'auth_jwt',
         },

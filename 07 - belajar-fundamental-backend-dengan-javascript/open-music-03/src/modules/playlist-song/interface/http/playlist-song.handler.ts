@@ -2,11 +2,15 @@ import { HapiHandler } from '../../../../shared/types/hapi-handler.type';
 import { AuthCredential } from '../../../../shared/types/auth-credential.type';
 import { AddSongToPlaylistUseCase } from '../../application/use-case/add-song-to-playlist.use-case';
 import { validateAddSongToPlaylist } from '../validators/add-song-to-playlist.validator';
+import { GetPlaylistSongsUseCase } from '../../application/use-case/get-playlist-songs.use-case';
 
 export class PlaylistSongHandler {
-  constructor(private readonly addSongToPlaylistUseCase: AddSongToPlaylistUseCase) {}
+  constructor(
+    private readonly addSongToPlaylistUseCase: AddSongToPlaylistUseCase,
+    private readonly getPlaylistSongsUseCase: GetPlaylistSongsUseCase,
+  ) {}
 
-  createPlaylist: HapiHandler = async (req, h) => {
+  addSongToPlaylist: HapiHandler = async (req, h) => {
     const { userId } = req.auth.credentials as AuthCredential;
 
     const payload = await validateAddSongToPlaylist(req.payload);
@@ -23,5 +27,19 @@ export class PlaylistSongHandler {
         data: { playlistSongId },
       })
       .code(201);
+  };
+
+  getPlaylistSongs: HapiHandler = async (req, h) => {
+    const { userId } = req.auth.credentials as AuthCredential;
+
+    const playlist = await this.getPlaylistSongsUseCase.execute({
+      userId,
+      playlistId: req.params.id,
+    });
+
+    return h.response({
+      status: 'success',
+      data: { playlist },
+    });
   };
 }
