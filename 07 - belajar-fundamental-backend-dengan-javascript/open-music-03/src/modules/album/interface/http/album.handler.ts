@@ -5,6 +5,7 @@ import { DeleteAlbumUseCase } from '../../application/use-case/delete-album.use-
 import { HapiHandler } from '../../../../shared/types/hapi-handler.type';
 import { validateCreateAlbum } from '../validators/create-album.validator';
 import { validateUpdateAlbum } from '../validators/update-album.validator';
+import { ApiResponse } from '../../../../shared/utils/api-response';
 
 export class AlbumHandler {
   constructor(
@@ -14,45 +15,29 @@ export class AlbumHandler {
     private readonly deleteAlbumUseCase: DeleteAlbumUseCase,
   ) {}
 
-  createAlbum: HapiHandler = async (req, h) => {
+  createAlbum: HapiHandler = async (req) => {
     const payload = await validateCreateAlbum(req.payload);
     const albumId = await this.createAlbumUseCase.execute(payload);
 
-    return h
-      .response({
-        status: 'success',
-        message: 'Successfuly created album',
-        data: { albumId },
-      })
-      .code(201);
+    return ApiResponse.created({ data: { albumId }, message: 'Successfuly created album' });
   };
 
-  getAlbumById: HapiHandler = async (req, h) => {
+  getAlbumById: HapiHandler = async (req) => {
     const album = await this.getAlbumByIdUseCase.execute(req.params.id);
 
-    return h.response({
-      status: 'success',
-      data: { album },
-    });
+    return ApiResponse.success({ data: { album } });
   };
 
-  updateAlbum: HapiHandler = async (req, h) => {
+  updateAlbum: HapiHandler = async (req) => {
     const payload = await validateUpdateAlbum(req.payload);
     const album = await this.updateAlbumUseCase.execute(req.params.id, payload);
 
-    return h.response({
-      status: 'success',
-      message: 'Successfuly updated album',
-      data: { album },
-    });
+    return ApiResponse.updated({ message: 'Successfuly updated album', data: { album } });
   };
 
-  deleteAlbum: HapiHandler = async (req, h) => {
+  deleteAlbum: HapiHandler = async (req) => {
     await this.deleteAlbumUseCase.execute(req.params.id);
 
-    return h.response({
-      status: 'success',
-      message: 'Successfuly deleted album',
-    });
+    return ApiResponse.deleted({ message: 'Successfuly deleted album' });
   };
 }
