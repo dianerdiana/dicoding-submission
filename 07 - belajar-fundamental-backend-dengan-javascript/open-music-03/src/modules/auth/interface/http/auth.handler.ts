@@ -1,4 +1,5 @@
 import { HapiHandler } from '../../../../shared/types/hapi-handler.type';
+import { ApiResponse } from '../../../../shared/utils/api-response';
 import { DeleteAuthUseCase } from '../../application/use-case/delete-auth.use-case';
 import { RefreshTokenUseCase } from '../../application/use-case/refresh-token.use-case';
 import { SignInUseCase } from '../../application/use-case/signin.use-case';
@@ -12,37 +13,24 @@ export class AuthHandler {
     private readonly deleteAuthUseCase: DeleteAuthUseCase,
   ) {}
 
-  signIn: HapiHandler = async (req, h) => {
+  signIn: HapiHandler = async (req) => {
     const payload = await validateSignIn(req.payload);
     const tokens = await this.signInUseCase.execute(payload);
 
-    return h
-      .response({
-        status: 'success',
-        message: 'Success',
-        data: tokens,
-      })
-      .code(201);
+    return ApiResponse.created({ data: tokens, message: 'Login success' });
   };
 
-  refreshToken: HapiHandler = async (req, h) => {
+  refreshToken: HapiHandler = async (req) => {
     const payload = await validateRefreshToken(req.payload);
     const accessToken = await this.refreshTokenUseCase.execute(payload);
 
-    return h.response({
-      status: 'success',
-      message: 'Success',
-      data: { accessToken },
-    });
+    return ApiResponse.updated({ data: { accessToken } });
   };
 
-  deleteAuth: HapiHandler = async (req, h) => {
+  deleteAuth: HapiHandler = async (req) => {
     const payload = await validateRefreshToken(req.payload);
     await this.deleteAuthUseCase.execute(payload);
 
-    return h.response({
-      status: 'success',
-      message: 'Success',
-    });
+    return ApiResponse.deleted({ message: 'Successfuly deleted auth' });
   };
 }
