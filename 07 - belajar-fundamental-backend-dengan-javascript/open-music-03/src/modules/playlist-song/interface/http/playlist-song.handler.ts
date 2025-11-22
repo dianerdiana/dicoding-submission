@@ -5,6 +5,7 @@ import { validateAddSongToPlaylist } from '../validators/add-song-to-playlist.va
 import { GetPlaylistSongsUseCase } from '../../application/use-case/get-playlist-songs.use-case';
 import { DeleteSongFromPlaylistUseCase } from '../../application/use-case/delete-song-from-playlist.use-case';
 import { validateDeleteSongFromPlaylist } from '../validators/delete-song-from-playlist.validator';
+import { ApiResponse } from '../../../../shared/utils/api-response';
 
 export class PlaylistSongHandler {
   constructor(
@@ -13,7 +14,7 @@ export class PlaylistSongHandler {
     private readonly deleteSongFromPlaylistUseCase: DeleteSongFromPlaylistUseCase,
   ) {}
 
-  addSongToPlaylist: HapiHandler = async (req, h) => {
+  addSongToPlaylist: HapiHandler = async (req) => {
     const { userId } = req.auth.credentials as AuthCredential;
 
     const payload = await validateAddSongToPlaylist(req.payload);
@@ -23,16 +24,13 @@ export class PlaylistSongHandler {
       playlistId: req.params.id,
     });
 
-    return h
-      .response({
-        status: 'success',
-        message: 'Successfuly added song to playlist',
-        data: { playlistSongId },
-      })
-      .code(201);
+    return ApiResponse.created({
+      message: 'Successfuly added song to playlist',
+      data: { playlistSongId },
+    });
   };
 
-  getPlaylistSongs: HapiHandler = async (req, h) => {
+  getPlaylistSongs: HapiHandler = async (req) => {
     const { userId } = req.auth.credentials as AuthCredential;
 
     const playlist = await this.getPlaylistSongsUseCase.execute({
@@ -40,13 +38,12 @@ export class PlaylistSongHandler {
       playlistId: req.params.id,
     });
 
-    return h.response({
-      status: 'success',
+    return ApiResponse.success({
       data: { playlist },
     });
   };
 
-  deleteSongFromPlaylist: HapiHandler = async (req, h) => {
+  deleteSongFromPlaylist: HapiHandler = async (req) => {
     const { userId } = req.auth.credentials as AuthCredential;
 
     const payload = await validateDeleteSongFromPlaylist(req.payload);
@@ -56,8 +53,7 @@ export class PlaylistSongHandler {
       userId,
     });
 
-    return h.response({
-      status: 'success',
+    return ApiResponse.deleted({
       message: 'Successfuly deleted song from playlist',
       data: deleted,
     });

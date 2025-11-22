@@ -4,6 +4,7 @@ import { HapiHandler } from '../../../../shared/types/hapi-handler.type';
 import { validateCreatePlaylist } from '../validators/create-playlist.validator';
 import { GetAllPlaylistsUseCase } from '../../application/use-case/get-all-playlists.use-case';
 import { AuthCredential } from '../../../../shared/types/auth-credential.type';
+import { ApiResponse } from '../../../../shared/utils/api-response';
 
 export class PlaylistHandler {
   constructor(
@@ -12,38 +13,26 @@ export class PlaylistHandler {
     private readonly deletePlaylistUseCase: DeletePlaylistUseCase,
   ) {}
 
-  createPlaylist: HapiHandler = async (req, h) => {
+  createPlaylist: HapiHandler = async (req) => {
     const { userId } = req.auth.credentials as AuthCredential;
 
     const payload = await validateCreatePlaylist(req.payload);
     const playlistId = await this.createPlaylistUseCase.execute(userId, payload);
 
-    return h
-      .response({
-        status: 'success',
-        message: 'Successfuly created playlist',
-        data: { playlistId },
-      })
-      .code(201);
+    return ApiResponse.created({ message: 'Successfuly created playlist', data: { playlistId } });
   };
 
-  getAllPlaylists: HapiHandler = async (req, h) => {
+  getAllPlaylists: HapiHandler = async (req) => {
     const { userId } = req.auth.credentials as AuthCredential;
     const playlists = await this.getAllPlaylistsUseCase.execute(userId);
 
-    return h.response({
-      status: 'success',
-      data: { playlists },
-    });
+    return ApiResponse.success({ data: { playlists } });
   };
 
-  deletePlaylist: HapiHandler = async (req, h) => {
+  deletePlaylist: HapiHandler = async (req) => {
     const { userId } = req.auth.credentials as AuthCredential;
     await this.deletePlaylistUseCase.execute(userId, req.params.id);
 
-    return h.response({
-      status: 'success',
-      message: 'Successfuly deleted playlist',
-    });
+    return ApiResponse.deleted({ message: 'Successfuly deleted playlist' });
   };
 }

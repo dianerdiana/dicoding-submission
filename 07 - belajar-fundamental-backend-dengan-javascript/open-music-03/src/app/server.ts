@@ -8,6 +8,7 @@ import { authPlugin } from '../modules/auth/infrasctructure/auth.plugin';
 import { userPlugin } from '../modules/user/infrastructure/user.plugin';
 import { playlistPlugin } from '../modules/playlist/infrastructure/playlist.plugin';
 import { playlistSongPlugin } from '../modules/playlist-song/insfrastructure/playlist-song.plugin';
+import { STATUS_RESPONSE } from '../shared/constants/status-responses.constant';
 
 export const createServer = async () => {
   const server = Hapi.server({
@@ -60,7 +61,9 @@ export const createServer = async () => {
       // Cek pengaman tambahan untuk data yang dibutuhkan
       if (typeof responsePayload.code !== 'number') {
         // Ini terjadi jika Service mengembalikan ApiResponse tapi code-nya hilang
-        return h.response({ status: 'error', message: 'Missing HTTP code' }).code(500);
+        return h
+          .response({ status: STATUS_RESPONSE.error, message: 'Missing HTTP code' })
+          .code(500);
       }
 
       const successPayload = {

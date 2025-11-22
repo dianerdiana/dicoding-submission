@@ -1,3 +1,5 @@
+import { STATUS_RESPONSE } from '../constants/status-responses.constant';
+
 interface ApiResponseProps<T = unknown> {
   status?: string;
   data?: T;
@@ -13,7 +15,7 @@ export class ApiResponse<T = unknown> implements ApiResponseProps<T> {
   public readonly code: number;
 
   constructor(props: ApiResponseProps<T>) {
-    const { message, data, status = 'success', code = 200 } = props;
+    const { message, data, status = STATUS_RESPONSE.success, code = 200 } = props;
 
     this.status = status;
     this.data = data;
@@ -22,18 +24,18 @@ export class ApiResponse<T = unknown> implements ApiResponseProps<T> {
   }
 
   public static success<T>({ data, message }: { data?: T; message?: string }) {
-    return new ApiResponse({ data, message, status: 'success', code: 200 });
+    return new ApiResponse({ data, message, status: STATUS_RESPONSE.success, code: 200 });
   }
 
   public static created<T>({ data, message }: { data?: T; message?: string }) {
-    return new ApiResponse({ data, message, status: 'success', code: 201 });
+    return new ApiResponse({ data, message, status: STATUS_RESPONSE.success, code: 201 });
   }
 
   public static updated<T>({ data, message }: { data?: T; message?: string }) {
-    return new ApiResponse({ data, message, status: 'success', code: 200 });
+    return new ApiResponse({ data, message, status: STATUS_RESPONSE.success, code: 200 });
   }
 
   public static deleted<T>({ data, message }: { data?: T; message?: string }) {
-    return new ApiResponse({ data, message, status: 'success', code: 200 });
+    return new ApiResponse({ data, message, status: STATUS_RESPONSE.success, code: 200 });
   }
 }

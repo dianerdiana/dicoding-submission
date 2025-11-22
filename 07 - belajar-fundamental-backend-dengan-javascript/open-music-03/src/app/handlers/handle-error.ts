@@ -2,6 +2,7 @@ import z from 'zod';
 import Boom from '@hapi/boom';
 import { ResponseToolkit, ResponseObject } from '@hapi/hapi';
 import { AppError } from '../../shared/errors/app-error';
+import { STATUS_RESPONSE } from '../../shared/constants/status-responses.constant';
 
 interface HandleErrorOptions {
   res: ResponseToolkit;
@@ -22,7 +23,7 @@ export const handleError = ({
   if (error instanceof z.ZodError) {
     console.error(error);
     const message = error.issues[0]?.message || 'Validasi input gagal';
-    return res.response({ status: 'fail', message }).code(400);
+    return res.response({ status: STATUS_RESPONSE.fail, message }).code(400);
   }
 
   // 2️⃣ Custom AppError
@@ -43,7 +44,7 @@ export const handleError = ({
     return res
       .response({
         message: message || output.payload.message || 'Terjadi kesalahan',
-        status: 'error',
+        status: STATUS_RESPONSE.error,
       })
       .code(output.statusCode);
   }
@@ -65,7 +66,7 @@ export const handleError = ({
     .response({
       res,
       message: 'Server Error',
-      status: 'error',
+      status: STATUS_RESPONSE.error,
     })
     .code(fallbackCode);
 };

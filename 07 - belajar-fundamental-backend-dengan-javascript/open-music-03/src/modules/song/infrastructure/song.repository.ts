@@ -83,7 +83,6 @@ export class SongRepository {
   }
 
   async findByIds(songIds: string[]): Promise<Song[]> {
-    console.log(songIds);
     const result = await db.query<SongRow>(`SELECT * FROM songs WHERE id = ANY($1::text[])`, [
       songIds,
     ]);
