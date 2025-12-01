@@ -23,8 +23,12 @@ export class CollaborationHandler {
   };
 
   deleteCollaboration: HapiHandler = async (req) => {
+    const { userId } = req.auth.credentials as AuthCredential;
     const payload = await validateCreateCollaboration(req.payload);
-    await this.deleteCollaborationUseCase.execute(payload);
+    await this.deleteCollaborationUseCase.execute({
+      ...payload,
+      authId: userId,
+    });
 
     return ApiResponse.deleted({ message: 'Succesfuly deleted collaboration' });
   };
