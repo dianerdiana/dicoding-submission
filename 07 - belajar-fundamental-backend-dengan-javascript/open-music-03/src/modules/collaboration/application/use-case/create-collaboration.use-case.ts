@@ -1,5 +1,4 @@
 import { SERVICE_KEYS } from '../../../../shared/constants/service-keys.constant';
-import { NotFoundError } from '../../../../shared/errors/app-error';
 import { serviceContainer } from '../../../../shared/utils/service-container';
 import { GetPlaylistByIdUseCase } from '../../../playlist/application/use-case/get-playlist-by-id.use-case';
 import { GetUserByIdUseCase } from '../../../user/application/use-case/get-user-by-id.use-case';

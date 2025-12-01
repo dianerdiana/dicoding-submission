@@ -10,7 +10,7 @@ export class GetPlaylistSongsUseCase {
 
   async execute(payload: GetPlaylistSongsDto) {
     const getSongsByIdsUseCase = serviceContainer.get<GetSongsByIdsUseCase>(
-      SERVICE_KEYS.GET_SONGS_BY_IDS_USE_CASE,
+      SERVICE_KEYS.GET_ALL_SONG_BY_IDS_USE_CASE,
     );
     const getPlaylistByIdUseCase = serviceContainer.get<GetPlaylistByIdUseCase>(
       SERVICE_KEYS.GET_PLAYLIST_BY_ID_USE_CASE,

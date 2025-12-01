@@ -33,7 +33,7 @@ export const songPlugin: Plugin<undefined> = {
     );
     serviceContainer.register(SERVICE_KEYS.GET_ALL_SONGS_USE_CASE, getAllSongsUseCase);
     serviceContainer.register(SERVICE_KEYS.GET_SONG_BY_ID_USE_CASE, getSongByIdUseCase);
-    serviceContainer.register(SERVICE_KEYS.GET_SONGS_BY_IDS_USE_CASE, getSongsByIdsUseCase);
+    serviceContainer.register(SERVICE_KEYS.GET_ALL_SONG_BY_IDS_USE_CASE, getSongsByIdsUseCase);
     server.route(new SongRoute(songHandler).routes());
   },
 };

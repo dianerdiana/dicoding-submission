@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 
-export class CollaborationId {
+export class PlaylistSongActivityId {
   private readonly value: string;
 
   constructor(id?: string) {
@@ -11,7 +11,7 @@ export class CollaborationId {
     return this.value;
   }
 
-  equals(other: CollaborationId) {
+  equals(other: PlaylistSongActivityId) {
     return this.value === other.value;
   }
 }
