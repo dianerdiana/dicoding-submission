@@ -1,6 +1,6 @@
 import { SERVICE_KEYS } from '../../../../shared/constants/service-keys.constant';
 import { serviceContainer } from '../../../../shared/utils/service-container';
-import { GetAllCollaborationByUserIdUseCase } from '../../../collaborations/application/use-case/get-all-collaboration-by-user-id.use-case';
+import { GetAllCollaborationByUserIdUseCase } from '../../../collaboration/application/use-case/get-all-collaboration-by-user-id.use-case';
 import { GetUserByIdsUseCase } from '../../../user/application/use-case/get-user-by-ids.use-case';
 import { PlaylistRepository } from '../../infrastructure/playlist.repository';
 

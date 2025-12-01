@@ -1,7 +1,7 @@
 import { SERVICE_KEYS } from '../../../../shared/constants/service-keys.constant';
 import { ForbiddenError } from '../../../../shared/errors/app-error';
 import { serviceContainer } from '../../../../shared/utils/service-container';
-import { GetCollaborationUseCase } from '../../../collaborations/application/use-case/get-collaboration.use-case';
+import { GetCollaborationUseCase } from '../../../collaboration/application/use-case/get-collaboration.use-case';
 import { GetPlaylistByIdUseCase } from '../../../playlist/application/use-case/get-playlist-by-id.use-case';
 import { GetSongByIdUseCase } from '../../../song/application/use-case/get-song-by-id.use-case';
 import { PlaylistSong } from '../../domain/entities/playlist-song.entity';

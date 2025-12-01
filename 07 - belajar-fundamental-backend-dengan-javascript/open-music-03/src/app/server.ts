@@ -9,7 +9,7 @@ import { userPlugin } from '../modules/user/infrastructure/user.plugin';
 import { playlistPlugin } from '../modules/playlist/infrastructure/playlist.plugin';
 import { playlistSongPlugin } from '../modules/playlist-song/insfrastructure/playlist-song.plugin';
 import { STATUS_RESPONSE } from '../shared/constants/status-responses.constant';
-import { collaborationPlugin } from '../modules/collaborations/infrasctructure/collaboration.plugin';
+import { collaborationPlugin } from '../modules/collaboration/infrasctructure/collaboration.plugin';
 
 export const createServer = async () => {
   const server = Hapi.server({
