@@ -1,4 +1,5 @@
 import { rabbitMQConfig } from './configs/rabbitmq.config';
+import { redisConfig } from './configs/redis.config';
 import { sendPlaylistSongEmailConsumer } from './consumers/send-playlist-song-email.consumer';
 import { createServer } from './server';
 
@@ -8,6 +9,7 @@ const startServer = async () => {
     await server.start();
     await rabbitMQConfig.connect();
     await sendPlaylistSongEmailConsumer.execute();
+    await redisConfig.connect();
     console.log(`🚀 Server running at: ${server.info.uri}`);
   } catch (error) {
     console.error('❌ Failed to start server:', error);

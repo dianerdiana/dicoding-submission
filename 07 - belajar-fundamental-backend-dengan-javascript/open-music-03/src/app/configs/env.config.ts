@@ -26,4 +26,7 @@ export const env = {
     host: process.env.SMTP_HOST || '',
     port: Number(process.env.SMTP_PORT) || 587,
   },
+  cache: {
+    host: process.env.REDIS_SERVER || 'redis://localhost:6379',
+  },
 };
