@@ -6,6 +6,8 @@ import { HapiHandler } from '../../../../shared/types/hapi-handler.type';
 import { validateCreateAlbum } from '../validators/create-album.validator';
 import { validateUpdateAlbum } from '../validators/update-album.validator';
 import { ApiResponse } from '../../../../shared/utils/api-response';
+import { validateUploadAlbumCover } from '../validators/upload-album-cover.validator';
+import { UploadAlbumCoverUseCase } from '../../application/use-case/upload-album-cover.use-case';
 
 export class AlbumHandler {
   constructor(
@@ -13,6 +15,7 @@ export class AlbumHandler {
     private readonly getAlbumByIdUseCase: GetAlbumByIdUseCase,
     private readonly updateAlbumUseCase: UpdateAlbumUseCase,
     private readonly deleteAlbumUseCase: DeleteAlbumUseCase,
+    private readonly uploadAlbumCoverUseCase: UploadAlbumCoverUseCase,
   ) {}
 
   createAlbum: HapiHandler = async (req) => {
@@ -39,5 +42,11 @@ export class AlbumHandler {
     await this.deleteAlbumUseCase.execute(req.params.id);
 
     return ApiResponse.deleted({ message: 'Successfuly deleted album' });
+  };
+
+  uploadAlbumCover: HapiHandler = async (req) => {
+    const payload = await validateUploadAlbumCover(req.payload);
+    await this.uploadAlbumCoverUseCase.execute(payload);
+    return ApiResponse.success({ message: 'success' });
   };
 }

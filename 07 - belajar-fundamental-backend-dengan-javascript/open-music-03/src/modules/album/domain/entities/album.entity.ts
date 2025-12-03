@@ -3,15 +3,27 @@ import { InvalidMinError } from '../../../../shared/domains/errors/invalid-min.e
 import { InvalidNumberError } from '../../../../shared/domains/errors/invalid-number.error';
 import { AlbumId } from '../value-objects/album-id.vo';
 
+export interface AlbumProps {
+  id: AlbumId;
+  name: string;
+  year: number;
+  cover?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export class Album extends BaseEntity<AlbumId> {
-  constructor(
-    id: AlbumId,
-    private name: string,
-    private year: number,
-    createdAt: Date,
-    updatedAt: Date,
-  ) {
+  private name: string;
+  private year: number;
+  private cover?: string;
+
+  constructor(props: AlbumProps) {
+    const { id, name, year, cover, createdAt, updatedAt } = props;
     super(id, createdAt, updatedAt);
+
+    this.name = name;
+    this.year = year;
+    this.cover = cover;
   }
 
   static create(name: string, year: number) {
@@ -24,7 +36,13 @@ export class Album extends BaseEntity<AlbumId> {
     }
 
     const now = new Date();
-    return new Album(new AlbumId(), name, year, now, now);
+    return new Album({
+      id: new AlbumId(),
+      name,
+      year,
+      createdAt: now,
+      updatedAt: now,
+    });
   }
 
   getName(): string {
@@ -33,6 +51,10 @@ export class Album extends BaseEntity<AlbumId> {
 
   getYear(): number {
     return this.year;
+  }
+
+  getCover(): string | null {
+    return this.cover ? this.cover : null;
   }
 
   updateName(name: string) {
@@ -58,8 +80,9 @@ export class Album extends BaseEntity<AlbumId> {
       id: this.getId().toString(),
       name: this.getName(),
       year: this.getYear(),
-      createdAt: this.getCreatedAt(),
-      updatedAt: this.getUpdatedAt(),
+      cover: this.getCover(),
+      createdAt: this.getCreatedAt().toISOString(),
+      updatedAt: this.getUpdatedAt().toISOString(),
     };
   }
 }

@@ -1,5 +1,5 @@
 import { Message } from 'amqplib';
-import { QUEUES } from '../../shared/constants/queues';
+import { QUEUES } from '../../shared/constants/queues.constant';
 import { rabbitMQConfig } from '../configs/rabbitmq.config';
 import { emailWorker } from '../workers/email.worker';
 

@@ -6,6 +6,7 @@ import { CreateAlbumUseCase } from '../application/use-case/create-album.use-cas
 import { GetAlbumByIdUseCase } from '../application/use-case/get-album-by-id.use-case';
 import { UpdateAlbumUseCase } from '../application/use-case/update-album.use-case';
 import { DeleteAlbumUseCase } from '../application/use-case/delete-album.use-case';
+import { UploadAlbumCoverUseCase } from '../application/use-case/upload-album-cover.use-case';
 
 export const albumPlugin: Plugin<undefined> = {
   name: 'albums',
@@ -17,12 +18,14 @@ export const albumPlugin: Plugin<undefined> = {
     const getAlbumByIdUseCase = new GetAlbumByIdUseCase(albumRepository);
     const updateAlbumUseCase = new UpdateAlbumUseCase(albumRepository);
     const deleteAlbumUseCase = new DeleteAlbumUseCase(albumRepository);
+    const uploadAlbumCoverUseCase = new UploadAlbumCoverUseCase(albumRepository);
 
     const albumHandler = new AlbumHandler(
       createAlbumUseCase,
       getAlbumByIdUseCase,
       updateAlbumUseCase,
       deleteAlbumUseCase,
+      uploadAlbumCoverUseCase,
     );
     server.route(new AlbumRoute(albumHandler).routes());
   },

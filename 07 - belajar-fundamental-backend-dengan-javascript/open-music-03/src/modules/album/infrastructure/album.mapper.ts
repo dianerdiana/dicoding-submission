@@ -5,6 +5,7 @@ export interface AlbumRow {
   id: string;
   name: string;
   year: number;
+  cover: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -13,22 +14,28 @@ export interface AlbumRow {
  * Convert database row (snake_case) → entity (camelCase)
  */
 export const mapAlbumRowToEntity = (row: AlbumRow): Album => {
-  return new Album(
-    new AlbumId(row.id),
-    row.name,
-    row.year,
-    new Date(row.created_at),
-    new Date(row.updated_at),
-  );
+  return new Album({
+    id: new AlbumId(row.id),
+    name: row.name,
+    year: row.year,
+    cover: row.cover ? row.cover : undefined,
+    createdAt: new Date(row.created_at),
+    updatedAt: new Date(row.updated_at),
+  });
 };
 
 /**
  * Convert entity (camelCase) → database row (snake_case)
  */
-export const mapAlbumEntityToRow = (entity: Album): AlbumRow => ({
-  id: entity.getId().toString(),
-  name: entity.getName(),
-  year: entity.getYear(),
-  created_at: entity.getCreatedAt().toISOString(),
-  updated_at: entity.getUpdatedAt().toISOString(),
-});
+export const mapAlbumEntityToRow = (entity: Album): AlbumRow => {
+  const album = entity.toPrimitives();
+
+  return {
+    id: album.id,
+    name: album.name,
+    year: album.year,
+    cover: album.cover,
+    created_at: album.createdAt,
+    updated_at: album.updatedAt,
+  };
+};
