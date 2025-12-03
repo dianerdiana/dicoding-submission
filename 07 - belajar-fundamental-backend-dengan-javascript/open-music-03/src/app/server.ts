@@ -1,5 +1,6 @@
 import Hapi from '@hapi/hapi';
 import Jwt from '@hapi/jwt';
+import Inert from '@hapi/inert';
 import { env } from './configs/env.config';
 import { handleError } from './handlers/handle-error';
 import { albumPlugin } from '../modules/album/infrastructure/album.plugin';
@@ -12,6 +13,7 @@ import { STATUS_RESPONSE } from '../shared/constants/status-responses.constant';
 import { collaborationPlugin } from '../modules/collaboration/infrasctructure/collaboration.plugin';
 import { playlistSongActivityPlugin } from '../modules/playlist-song-activity/infrasctructure/playlist-song-activity.plugin';
 import { exportPlugin } from '../modules/export/infrastructure/export.plugin';
+import { getUploadDir } from '../shared/utils/get-upload-dir';
 
 export const createServer = async () => {
   const server = Hapi.server({
@@ -19,7 +21,8 @@ export const createServer = async () => {
     host: env.app.host,
   });
 
-  await server.register([Jwt]);
+  await server.register([Jwt, Inert]);
+
   server.auth.strategy('auth_jwt', 'jwt', {
     keys: env.token.accessTokenKey,
     verify: {
@@ -84,6 +87,17 @@ export const createServer = async () => {
 
     // 4. Lanjutkan (jika response adalah ResponseObject Hapi standar, atau data mentah yang tidak ditandai)
     return h.continue;
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/{filename*}',
+    handler: {
+      directory: {
+        path: getUploadDir(),
+        listing: false,
+      },
+    },
   });
 
   return server;
