@@ -16,4 +16,7 @@ export const env = {
     accessTokenKey: process.env.ACCESS_TOKEN_KEY || 'ACCESS_TOKEN_KEY',
     refreshTokenKey: process.env.REFRESH_TOKEN_KEY || 'REFRESH_TOKEN_KEY',
   },
+  rabbitmq: {
+    server: process.env.RABBITMQ_SERVER || 'http://localhost:15672',
+  },
 };

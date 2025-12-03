@@ -11,6 +11,8 @@ export const SERVICE_KEYS = {
   GET_USER_BY_ID_USE_CASE: 'GetUserByIdUseCase',
   // Playlist
   GET_PLAYLIST_BY_ID_USE_CASE: 'GetPlaylistByIdUseCase',
+  // Playlist Song
+  GET_PLAYLIST_SONGS_USE_CASE: 'GetPlaylistSongsUseCase',
   // Collaboration
   GET_ALL_COLLABORATION_BY_USER_ID_USE_CASE: 'GetAllCollaborationByUserIdUseCase',
   GET_COLLABORATION_USE_CASE: 'GetCollaborationUseCase',

@@ -5,6 +5,8 @@ import { PlaylistSongRepository } from './playlist-song.repository';
 import { AddSongToPlaylistUseCase } from '../application/use-case/add-song-to-playlist.use-case';
 import { GetPlaylistSongsUseCase } from '../application/use-case/get-playlist-songs.use-case';
 import { DeleteSongFromPlaylistUseCase } from '../application/use-case/delete-song-from-playlist.use-case';
+import { serviceContainer } from '../../../shared/utils/service-container';
+import { SERVICE_KEYS } from '../../../shared/constants/service-keys.constant';
 
 export const playlistSongPlugin: Plugin<undefined> = {
   name: 'playlistSongs',
@@ -20,6 +22,7 @@ export const playlistSongPlugin: Plugin<undefined> = {
       deleteSongFromPlaylistUseCase,
     );
 
+    serviceContainer.register(SERVICE_KEYS.GET_PLAYLIST_SONGS_USE_CASE, getPlaylistSongsUseCase);
     server.route(new PlaylistSongRoute(playlistSongHandler).routes());
   },
 };

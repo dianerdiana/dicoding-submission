@@ -11,6 +11,7 @@ import { playlistSongPlugin } from '../modules/playlist-song/insfrastructure/pla
 import { STATUS_RESPONSE } from '../shared/constants/status-responses.constant';
 import { collaborationPlugin } from '../modules/collaboration/infrasctructure/collaboration.plugin';
 import { playlistSongActivityPlugin } from '../modules/playlist-song-activity/infrasctructure/playlist-song-activity.plugin';
+import { exportPlugin } from '../modules/export/infrastructure/export.plugin';
 
 export const createServer = async () => {
   const server = Hapi.server({
@@ -44,6 +45,7 @@ export const createServer = async () => {
     playlistSongPlugin,
     collaborationPlugin,
     playlistSongActivityPlugin,
+    exportPlugin,
   ]);
 
   server.ext('onPreResponse', (req, h) => {
