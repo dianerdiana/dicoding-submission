@@ -9,6 +9,7 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
     },
     name: { type: 'varchar(255)', notNull: true },
     year: { type: 'integer', notNull: true },
+    cover: { type: 'varchar(255)' },
     created_at: {
       type: 'timestamp',
       notNull: true,
