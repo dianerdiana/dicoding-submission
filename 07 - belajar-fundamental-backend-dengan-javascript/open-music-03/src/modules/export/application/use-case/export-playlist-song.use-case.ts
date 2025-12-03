@@ -29,7 +29,7 @@ export class ExportPlaylistSongsUseCase {
       userId: user.id,
     });
 
-    await this.playlistSongExportProducer.execute(playlistSongs, targetEmail);
+    await this.playlistSongExportProducer.execute({ playlist: playlistSongs }, targetEmail);
 
     return playlistSongs;
   }

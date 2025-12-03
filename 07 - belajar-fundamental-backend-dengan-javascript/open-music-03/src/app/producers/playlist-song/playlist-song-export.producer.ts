@@ -8,9 +8,11 @@ type Song = {
 };
 
 type PlaylistCreatedDto = {
-  id: string;
-  name: string;
-  songs: Song[];
+  playlist: {
+    id: string;
+    name: string;
+    songs: Song[];
+  };
 };
 
 export class PlaylistSongExportProducer {
@@ -19,13 +21,18 @@ export class PlaylistSongExportProducer {
       const channel = rabbitMQConfig.getProducerChannel();
       await channel.assertQueue(QUEUES.exportPlaylistSong, { durable: true });
 
-      const message = Buffer.from(JSON.stringify(payload));
+      const message = Buffer.from(
+        JSON.stringify({
+          targetEmail,
+          content: payload,
+        }),
+      );
       const success = channel.sendToQueue(QUEUES.exportPlaylistSong, message, {
         persistent: true,
       });
 
       if (success) {
-        console.log(`[Producer] Message sent to ${QUEUES.exportPlaylistSong}: '${message}'`);
+        console.log(`[Producer] Message sent to ${QUEUES.exportPlaylistSong}`);
       } else {
         console.warn(`[Producer] Warning: Message not sent immediately (channel full).`);
       }

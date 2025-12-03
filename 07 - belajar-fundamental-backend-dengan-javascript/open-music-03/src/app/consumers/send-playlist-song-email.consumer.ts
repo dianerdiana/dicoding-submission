@@ -1,8 +1,9 @@
 import { Message } from 'amqplib';
 import { QUEUES } from '../../shared/constants/queues';
 import { rabbitMQConfig } from '../configs/rabbitmq.config';
+import { emailWorker } from '../workers/email.worker';
 
-export class SendPlaylistSongEmailConsumer {
+class SendPlaylistSongEmailConsumer {
   async execute() {
     try {
       await rabbitMQConfig.connect();
@@ -17,12 +18,16 @@ export class SendPlaylistSongEmailConsumer {
         QUEUES.exportPlaylistSong,
         (msg: Message | null) => {
           if (msg) {
-            const content = msg.content.toJSON();
-            console.log(`[Consumer] Received message: '${content}'`);
+            const messageBuffer = msg.content.toString();
+            const message = JSON.parse(messageBuffer);
+
+            const targetEmail = message.targetEmail;
+            const content = message.content;
+
+            emailWorker.sendMail(targetEmail, 'Hello', content);
 
             setTimeout(() => {
               channel.ack(msg);
-              console.log(`[Consumer] Message ACKed: '${content}'`);
             }, 1000);
           }
         },
@@ -35,3 +40,5 @@ export class SendPlaylistSongEmailConsumer {
     }
   }
 }
+
+export const sendPlaylistSongEmailConsumer = new SendPlaylistSongEmailConsumer();
