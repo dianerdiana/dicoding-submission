@@ -34,4 +34,18 @@ export class AlbumRepository {
 
     return true;
   }
+
+  async saveCover(album: Album): Promise<void> {
+    const primitive = album.toPrimitives();
+
+    await db.query<AlbumRow>(
+      `INSERT INTO albums (id, cover, updated_at)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (id) DO UPDATE
+       SET cover = EXCLUDED.cover, updated_at = EXCLUDED.updated_at
+       RETURNING *
+       `,
+      [primitive.id, primitive.coverUrl, primitive.updatedAt],
+    );
+  }
 }

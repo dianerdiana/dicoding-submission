@@ -1,8 +1,10 @@
+import { env } from '../../../../app/configs/env.config';
 import { BaseEntity } from '../../../../shared/domains/entities/base.entity';
 import { InvalidMinError } from '../../../../shared/domains/errors/invalid-min.error';
 import { InvalidNumberError } from '../../../../shared/domains/errors/invalid-number.error';
 import { AlbumId } from '../value-objects/album-id.vo';
 
+const BASE_URL = env.app.baseUrl;
 export interface AlbumProps {
   id: AlbumId;
   name: string;
@@ -57,12 +59,25 @@ export class Album extends BaseEntity<AlbumId> {
     return this.cover ? this.cover : null;
   }
 
+  getCoverUrl(): string | null {
+    return this.cover ? `${BASE_URL}/${this.cover}` : null;
+  }
+
   updateName(name: string) {
     if (!name || name.trim().length < 2) {
       throw new InvalidMinError('Name', 2);
     }
 
     this.name = name;
+    this.updatedAt = new Date();
+  }
+
+  updateCoverUrl(cover: string) {
+    if (!cover || cover.trim().length < 2) {
+      throw new InvalidMinError('Cover URL', 2);
+    }
+
+    this.cover = cover;
     this.updatedAt = new Date();
   }
 
@@ -81,6 +96,7 @@ export class Album extends BaseEntity<AlbumId> {
       name: this.getName(),
       year: this.getYear(),
       cover: this.getCover(),
+      coverUrl: this.getCoverUrl(),
       createdAt: this.getCreatedAt().toISOString(),
       updatedAt: this.getUpdatedAt().toISOString(),
     };

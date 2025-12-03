@@ -46,7 +46,9 @@ export class AlbumHandler {
 
   uploadAlbumCover: HapiHandler = async (req) => {
     const payload = await validateUploadAlbumCover(req.payload);
-    await this.uploadAlbumCoverUseCase.execute(payload);
-    return ApiResponse.success({ message: 'success' });
+
+    const response = await this.uploadAlbumCoverUseCase.execute(payload, req.params.id);
+
+    return ApiResponse.success({ data: response });
   };
 }

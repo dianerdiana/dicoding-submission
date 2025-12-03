@@ -4,6 +4,7 @@ export const env = {
   app: {
     port: Number(process.env.PORT) || 5000,
     host: process.env.HOST || 'localhost',
+    baseUrl: process.env.BASE_URL || 'http://localhost:5000',
   },
   db: {
     host: process.env.PGHOST || 'localhost',

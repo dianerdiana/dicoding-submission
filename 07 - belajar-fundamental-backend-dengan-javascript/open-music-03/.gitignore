@@ -28,4 +28,4 @@ starter
 notes.md
 
 .env
-/uploads
+src/uploads
