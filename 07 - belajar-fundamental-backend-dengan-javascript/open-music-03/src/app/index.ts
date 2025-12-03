@@ -1,10 +1,11 @@
-// src/app/index.ts
+import { rabbitMQConfig } from './configs/rabbitmq.config';
 import { createServer } from './server';
 
 const startServer = async () => {
   try {
     const server = await createServer();
     await server.start();
+    await rabbitMQConfig.connect();
     console.log(`🚀 Server running at: ${server.info.uri}`);
   } catch (error) {
     console.error('❌ Failed to start server:', error);
