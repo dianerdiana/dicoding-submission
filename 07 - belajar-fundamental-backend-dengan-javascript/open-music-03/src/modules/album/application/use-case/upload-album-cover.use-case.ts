@@ -31,6 +31,7 @@ export class UploadAlbumCoverUseCase {
     });
 
     album.updateCoverUrl(filename);
+    await this.albumRepository.save(album);
 
     return album.toPrimitives();
   }

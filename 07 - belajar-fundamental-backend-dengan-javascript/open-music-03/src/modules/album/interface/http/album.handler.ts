@@ -49,6 +49,6 @@ export class AlbumHandler {
 
     const response = await this.uploadAlbumCoverUseCase.execute(payload, req.params.id);
 
-    return ApiResponse.success({ data: response });
+    return ApiResponse.created({ data: response, message: 'success' });
   };
 }
