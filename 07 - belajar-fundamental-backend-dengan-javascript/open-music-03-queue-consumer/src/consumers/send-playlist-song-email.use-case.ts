@@ -22,9 +22,9 @@ class SendPlaylistSongEmailConsumer {
             const message = JSON.parse(messageBuffer);
 
             const targetEmail = message.targetEmail;
-            const content = message.content;
+            const content = JSON.stringify(message.content);
 
-            emailWorker.sendMail(targetEmail, 'Hello', content);
+            emailWorker.sendMail(targetEmail, content);
 
             setTimeout(() => {
               channel.ack(msg);

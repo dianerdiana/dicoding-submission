@@ -21,16 +21,22 @@ class EmailWorker {
     this.transporter = nodemailer.createTransport(smtpConfig);
   }
 
-  async sendMail(targetEmail: string, subject: string, content: string) {
+  async sendMail(targetEmail: string, content: any) {
     if (!this.transporter) {
       throw new Error('Email Transporter not initialized.');
     }
 
     const info = await this.transporter.sendMail({
       from: this.senderEmail,
-      subject,
       to: targetEmail,
-      text: JSON.stringify(content),
+      subject: 'Export Playlist Song',
+      text: 'Export Playlist Song',
+      attachments: [
+        {
+          filename: 'playlist-song.json',
+          content,
+        },
+      ],
     });
 
     console.log(`✅ Message Sent [${targetEmail}]: ${info.messageId}`);
