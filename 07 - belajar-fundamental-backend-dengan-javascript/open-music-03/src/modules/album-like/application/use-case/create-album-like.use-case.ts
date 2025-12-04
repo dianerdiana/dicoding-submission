@@ -1,3 +1,5 @@
+import { redisConfig } from '../../../../app/configs/redis.config';
+import { CACHES } from '../../../../shared/constants/caches.constant';
 import { SERVICE_KEYS } from '../../../../shared/constants/service-keys.constant';
 import { BadRequestError } from '../../../../shared/errors/app-error';
 import { serviceContainer } from '../../../../shared/utils/service-container';
@@ -31,8 +33,10 @@ export class CreateAlbumLikeUseCase {
     }
 
     const albumLike = AlbumLike.create({ albumId: album.id, userId: user.id });
+    const cacheKey = CACHES.albumLike(album.id);
 
     await this.albumLikeRepository.save(albumLike);
+    await redisConfig.delCache(cacheKey);
     return albumLike.toPrimitives().id;
   }
 }

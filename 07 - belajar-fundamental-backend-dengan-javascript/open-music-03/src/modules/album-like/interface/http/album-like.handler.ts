@@ -1,3 +1,4 @@
+import { STATUS_RESPONSE } from '../../../../shared/constants/status-responses.constant';
 import { AuthCredential } from '../../../../shared/types/auth-credential.type';
 import { HapiHandler } from '../../../../shared/types/hapi-handler.type';
 import { ApiResponse } from '../../../../shared/utils/api-response';
@@ -22,10 +23,19 @@ export class AlbumLikeHandler {
     return ApiResponse.created({ data: { albumLikeId }, message: 'Successfully liked album' });
   };
 
-  getCountAlbumLike: HapiHandler = async (req) => {
-    const likes = await this.getAlbumLikeUseCase.execute(req.params.id);
+  getCountAlbumLike: HapiHandler = async (req, h) => {
+    const albumLike = await this.getAlbumLikeUseCase.execute(req.params.id);
 
-    return ApiResponse.success({ data: likes });
+    const response = h
+      .response({
+        data: {
+          likes: albumLike.likes,
+        },
+        status: STATUS_RESPONSE.success,
+      })
+      .header('X-Data-Source', albumLike.source);
+
+    return response;
   };
 
   deleteAlbumLike: HapiHandler = async (req) => {

@@ -1,3 +1,5 @@
+import { redisConfig } from '../../../../app/configs/redis.config';
+import { CACHES } from '../../../../shared/constants/caches.constant';
 import { SERVICE_KEYS } from '../../../../shared/constants/service-keys.constant';
 import { NotFoundError } from '../../../../shared/errors/app-error';
 import { serviceContainer } from '../../../../shared/utils/service-container';
@@ -30,7 +32,10 @@ export class DeleteAlbumLikeUseCase {
       throw new NotFoundError('Not found');
     }
 
+    const cacheKey = CACHES.albumLike(album.id);
     const deleted = await this.albumLikeRepository.delete(albumLike);
+    await redisConfig.delCache(cacheKey);
+
     return deleted;
   }
 }

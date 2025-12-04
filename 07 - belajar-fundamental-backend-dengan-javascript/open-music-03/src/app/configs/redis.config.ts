@@ -1,8 +1,7 @@
 import { createClient, RedisClientType } from 'redis';
 import { env } from './env.config';
-import { NotFoundError } from '../../shared/errors/app-error';
 
-class RedisConfig {
+export class RedisConfig {
   private client: RedisClientType;
 
   constructor() {
@@ -28,14 +27,14 @@ class RedisConfig {
     await this.client.setEx(key, ttl, data);
   }
 
-  async getCache(key: string) {
+  async getCache(key: string): Promise<any | null> {
     const data = await this.client.get(key);
 
     if (!data) {
-      throw new NotFoundError('[Redis]: Cache is not found');
+      return null;
     }
 
-    return JSON.parse(data || '');
+    return JSON.parse(data);
   }
 
   async delCache(key: string) {
