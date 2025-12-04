@@ -29,7 +29,10 @@ export class ExportPlaylistSongsUseCase {
       userId: user.id,
     });
 
-    await this.playlistSongExportProducer.execute({ playlist: playlistSongs }, targetEmail);
+    const contentMessage = {
+      playlist: { id: playlist.id, name: playlist.name, songs: playlistSongs.songs },
+    };
+    await this.playlistSongExportProducer.execute(contentMessage, targetEmail);
 
     return playlistSongs;
   }
