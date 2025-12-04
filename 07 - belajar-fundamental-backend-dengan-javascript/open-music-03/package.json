@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "migrate:create": "npx node-pg-migrate -j ts -d src/database/migrations -m src/database/migrations create",
-    "migrate": "npx node-pg-migrate -d src/database/migrations -m src/database/migrations up",
+    "migrate": "ts-node ./node_modules/node-pg-migrate/bin/node-pg-migrate -d src/database/migrations -m src/database/migrations up",
     "migrate:down": "npx node-pg-migrate -d src/database/migrations -m src/database/migrations down"
   },
   "keywords": [],
