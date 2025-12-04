@@ -1,7 +1,7 @@
-import { Message } from 'amqplib';
-import { QUEUES } from '../../shared/constants/queues.constant';
-import { rabbitMQConfig } from '../configs/rabbitmq.config';
-import { emailWorker } from '../workers/email.worker';
+import type { Message } from 'amqplib';
+import { QUEUES } from '@shared/constants/queues.constant.js';
+import { rabbitMQConfig } from '@app/configs/rabbitmq.config.js';
+import { emailWorker } from '@app/workers/email.worker.js';
 
 class SendPlaylistSongEmailConsumer {
   async execute() {
@@ -33,7 +33,7 @@ class SendPlaylistSongEmailConsumer {
         },
         {
           noAck: false,
-        },
+        }
       );
     } catch (error) {
       console.error('[Consumer] Error starting consumer:', error);

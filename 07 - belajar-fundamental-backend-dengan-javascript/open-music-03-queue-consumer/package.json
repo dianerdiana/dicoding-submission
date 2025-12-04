@@ -1,0 +1,31 @@
+{
+  "name": "open-music-01-queue-consumer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node dist/app",
+    "build": "tsc & tsc-alias",
+    "dev": "tsx watch src/app",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.10.9",
+    "dotenv": "^17.2.3",
+    "nodemailer": "^7.0.11"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.8",
+    "@types/node": "^24.9.1",
+    "@types/nodemailer": "^7.0.4",
+    "autoprefixer": "^10.4.22",
+    "tsc-alias": "^1.8.16",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

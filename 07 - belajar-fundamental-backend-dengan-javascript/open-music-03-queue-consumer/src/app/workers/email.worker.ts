@@ -1,6 +1,6 @@
-import { env } from '../configs/env.config';
-import nodemailer, { Transporter } from 'nodemailer';
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import { env } from '@app/configs/env.config.js';
+import nodemailer, { type Transporter } from 'nodemailer';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 
 class EmailWorker {
   private transporter: Transporter;
