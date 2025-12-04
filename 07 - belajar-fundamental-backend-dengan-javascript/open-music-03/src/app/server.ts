@@ -14,6 +14,7 @@ import { collaborationPlugin } from '../modules/collaboration/infrasctructure/co
 import { playlistSongActivityPlugin } from '../modules/playlist-song-activity/infrasctructure/playlist-song-activity.plugin';
 import { exportPlugin } from '../modules/export/infrastructure/export.plugin';
 import { getUploadDir } from '../shared/utils/get-upload-dir';
+import { albumLikePlugin } from '../modules/album-like/infrasctructure/album-like.plugin';
 
 export const createServer = async () => {
   const server = Hapi.server({
@@ -49,6 +50,7 @@ export const createServer = async () => {
     collaborationPlugin,
     playlistSongActivityPlugin,
     exportPlugin,
+    albumLikePlugin,
   ]);
 
   server.ext('onPreResponse', (req, h) => {

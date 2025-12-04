@@ -1,6 +1,8 @@
 export const SERVICE_KEYS = {
   JWT_SERVICE: 'JwtService',
   PASSWORD_SERVICE: 'PasswordService',
+  // Album
+  GET_ALBUM_BY_ID_USE_CASE: 'GetAlbumByIdUseCase',
   // Song
   GET_ALL_SONGS_USE_CASE: 'GetAllSongsUseCase',
   GET_SONG_BY_ID_USE_CASE: 'GetSongByIdUseCase',

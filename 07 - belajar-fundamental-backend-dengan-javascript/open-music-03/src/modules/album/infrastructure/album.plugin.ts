@@ -7,6 +7,8 @@ import { GetAlbumByIdUseCase } from '../application/use-case/get-album-by-id.use
 import { UpdateAlbumUseCase } from '../application/use-case/update-album.use-case';
 import { DeleteAlbumUseCase } from '../application/use-case/delete-album.use-case';
 import { UploadAlbumCoverUseCase } from '../application/use-case/upload-album-cover.use-case';
+import { serviceContainer } from '../../../shared/utils/service-container';
+import { SERVICE_KEYS } from '../../../shared/constants/service-keys.constant';
 
 export const albumPlugin: Plugin<undefined> = {
   name: 'albums',
@@ -27,6 +29,8 @@ export const albumPlugin: Plugin<undefined> = {
       deleteAlbumUseCase,
       uploadAlbumCoverUseCase,
     );
+
+    serviceContainer.register(SERVICE_KEYS.GET_ALBUM_BY_ID_USE_CASE, getAlbumByIdUseCase);
     server.route(new AlbumRoute(albumHandler).routes());
   },
 };
