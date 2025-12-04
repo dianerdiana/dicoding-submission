@@ -1,6 +1,6 @@
 import { redisConfig } from '../../../../app/configs/redis.config';
 import { CACHES } from '../../../../shared/constants/caches.constant';
-import { DATA_SOURCES } from '../../../../shared/constants/data-sourceS.constant';
+import { DATA_SOURCES } from '../../../../shared/constants/data-sources.constant';
 import { SERVICE_KEYS } from '../../../../shared/constants/service-keys.constant';
 import { serviceContainer } from '../../../../shared/utils/service-container';
 import { GetAlbumByIdUseCase } from '../../../album/application/use-case/get-album-by-id.use-case';
