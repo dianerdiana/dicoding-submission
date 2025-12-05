@@ -1,6 +1,8 @@
 import { createClient, RedisClientType } from 'redis';
 import { env } from './env.config';
 
+const CACHE_EXPIRED = 30 * 60;
+
 export class RedisConfig {
   private client: RedisClientType;
 
@@ -22,7 +24,7 @@ export class RedisConfig {
     console.log('[Redis]: Connected successfuly');
   }
 
-  async setCache(key: string, value: any, ttl: number = 60) {
+  async setCache(key: string, value: any, ttl: number = CACHE_EXPIRED) {
     const data = typeof value === 'string' ? value : JSON.stringify(value);
     await this.client.setEx(key, ttl, data);
   }

@@ -8,6 +8,7 @@ import { validateUpdateSong } from '../validators/update-song.validator';
 import { GetAllSongsUseCase } from '../../application/use-case/get-all-songs.use-case';
 import { validateSongSearchParam } from '../validators/song-search-param.validator';
 import { ApiResponse } from '../../../../shared/utils/api-response';
+import { STATUS_RESPONSE } from '../../../../shared/constants/status-responses.constant';
 
 export class SongHandler {
   constructor(
@@ -32,10 +33,19 @@ export class SongHandler {
     return ApiResponse.success({ data: { songs } });
   };
 
-  getSongById: HapiHandler = async (req) => {
-    const song = await this.getSongByIdUseCase.execute(req.params.id);
+  getSongById: HapiHandler = async (req, h) => {
+    const songData = await this.getSongByIdUseCase.execute(req.params.id);
 
-    return ApiResponse.success({ data: { song } });
+    const response = h
+      .response({
+        data: {
+          song: songData.song,
+        },
+        status: STATUS_RESPONSE.success,
+      })
+      .header('X-Data-Source', songData.source);
+
+    return response;
   };
 
   updateSong: HapiHandler = async (req) => {
