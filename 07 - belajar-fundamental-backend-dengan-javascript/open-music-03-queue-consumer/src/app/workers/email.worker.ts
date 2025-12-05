@@ -2,7 +2,7 @@ import { env } from '@app/configs/env.config.js';
 import nodemailer, { type Transporter } from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
 
-class EmailWorker {
+export class EmailWorker {
   private transporter: Transporter;
   private senderEmail: string;
 
@@ -21,12 +21,12 @@ class EmailWorker {
     this.transporter = nodemailer.createTransport(smtpConfig);
   }
 
-  async sendMail(targetEmail: string, content: any) {
+  sendMail(targetEmail: string, content: string) {
     if (!this.transporter) {
       throw new Error('Email Transporter not initialized.');
     }
 
-    const info = await this.transporter.sendMail({
+    return this.transporter.sendMail({
       from: this.senderEmail,
       to: targetEmail,
       subject: 'Export Playlist Song',
@@ -38,10 +38,5 @@ class EmailWorker {
         },
       ],
     });
-
-    console.log(`✅ Message Sent [${targetEmail}]: ${info.messageId}`);
-    return info.messageId;
   }
 }
-
-export const emailWorker = new EmailWorker();

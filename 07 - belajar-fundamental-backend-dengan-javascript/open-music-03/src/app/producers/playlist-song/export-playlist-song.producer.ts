@@ -1,30 +1,16 @@
 import { QUEUES } from '../../../shared/constants/queues.constant';
 import { rabbitMQConfig } from '../../configs/rabbitmq.config';
 
-type Song = {
-  id: string;
-  title: string;
-  performer: string;
-};
-
-type PlaylistCreatedDto = {
-  playlist: {
-    id: string;
-    name: string;
-    songs: Song[];
-  };
-};
-
-export class PlaylistSongExportProducer {
-  async execute(payload: PlaylistCreatedDto, targetEmail: string) {
+export class ExportPlaylistSongProducer {
+  async execute(payload: { targetEmail: string; playlistId: string }) {
     try {
       const channel = rabbitMQConfig.getProducerChannel();
       await channel.assertQueue(QUEUES.exportPlaylistSong, { durable: true });
 
       const message = Buffer.from(
         JSON.stringify({
-          targetEmail,
-          content: payload,
+          targetEmail: payload.targetEmail,
+          playlistId: payload.playlistId,
         }),
       );
       const success = channel.sendToQueue(QUEUES.exportPlaylistSong, message, {

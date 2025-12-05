@@ -1,6 +1,13 @@
 import 'dotenv/config';
 
 export const env = {
+  db: {
+    host: process.env.PGHOST || 'localhost',
+    port: Number(process.env.PGPORT) || 5432,
+    user: process.env.PGUSER || 'postgres',
+    password: process.env.PGPASSWORD || 'postgres',
+    database: process.env.PGDATABASE || 'dcd_open_music',
+  },
   rabbitmq: {
     server: process.env.RABBITMQ_SERVER || 'http://localhost:15672',
   },
